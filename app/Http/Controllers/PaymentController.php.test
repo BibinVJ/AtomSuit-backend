@@ -1,0 +1,47 @@
+<?php
+
+// app/Http/Controllers/PaymentController.php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Services\BMLPaymentService;
+
+class PaymentController extends Controller
+{
+    protected $bmlService;
+
+    public function __construct(BMLPaymentService $bmlService)
+    {
+        $this->bmlService = $bmlService;
+    }
+
+    public function initiate(Request $request)
+    {
+        $data = $request->validate([
+            'amount' => 'required|numeric',
+            'currency' => 'required|string',
+            'reference' => 'required|string',
+            'customer' => 'required|array',
+            // Add other necessary validations
+        ]);
+
+        $transaction = $this->bmlService->createTransaction($data);
+
+        return response()->json([
+            'payment_url' => $transaction['payment_url'],
+        ]);
+    }
+
+    public function handleCallback(Request $request)
+    {
+        $data = $request->all();
+
+        // Verify and process the transaction
+        $transaction = $this->bmlService->verifyTransaction($data['transaction_id']);
+
+        // Update order status based on $transaction['status']
+
+        return response()->json(['message' => 'Callback processed']);
+    }
+}

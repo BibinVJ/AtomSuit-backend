@@ -1,0 +1,26 @@
+deploy:
+  image: alpine
+  rules:
+    - if: $CI_COMMIT_BRANCH == "staging"
+      variables:
+        SERVER: "techengexpo@91.92.144.94"
+        SSH_KEY: $SSH_PRIVATE_KEY_STAGING
+        PORT: $PORT_STAGING
+    - if: $CI_COMMIT_BRANCH == "master"
+      variables:
+        SERVER: "techengexpo-live@ec2-65-2-67-26.ap-south-1.compute.amazonaws.com"
+        SSH_KEY: $SSH_PRIVATE_KEY_LIVE
+        PORT: $PORT_LIVE
+  before_script:
+    - apk add openssh-client
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh 
+  script:
+    - echo "Deployment started"
+    - echo "$CI_COMMIT_BRANCH"
+    - echo "$SERVER"
+    - ssh -p $PORT -o StrictHostKeyChecking=no "$SERVER" "cd ~; cd api; git pull origin $CI_COMMIT_BRANCH"
+    #- ssh -o StrictHostKeyChecking=no "$SERVER" "cd ~; cd public_html/apis; ./pipeline.sh"
+    - echo "Deployment Completed..!"

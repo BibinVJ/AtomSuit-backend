@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Repositories;
+
+use App\Models\User;
+
+class UserRepository
+{
+    public function findByEmail(string $email): ?User
+    {
+        return User::where('email', $email)->first();
+    }
+
+    public function create(array $data): User
+    {
+        return User::create($data);
+    }
+
+    public function updatePassword(User $user, string $hashedPassword): void
+    {
+        $user->update(['password' => $hashedPassword]);
+    }
+}
