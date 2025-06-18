@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
@@ -16,6 +17,8 @@ class User extends Authenticatable implements OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable, HasApiTokens, HasRoles;
+
+    protected $guard_name = 'api';
 
     /**
      * The attributes that are mass assignable.
@@ -31,8 +34,9 @@ class User extends Authenticatable implements OAuthenticatable
         'provider_id',
         'status',
         'status_updated_at',
-        'last_login_at',
-        'last_login_ip',
+        'profile_image',
+        'phone',
+        'phone_verified_at',
     ];
 
     /**
@@ -55,9 +59,13 @@ class User extends Authenticatable implements OAuthenticatable
         return [
             'email_verified_at' => 'datetime',
             'status_updated_at' => 'datetime',
-            'last_login_at' => 'datetime',
             'status' => UserStatus::class,
             'password' => 'hashed',
         ];
+    }
+
+    public function logindetails(): HasMany
+    {
+        return $this->hasMany(UserLoginDetail::class);
     }
 }

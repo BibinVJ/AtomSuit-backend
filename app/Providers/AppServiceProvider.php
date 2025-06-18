@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Models\User;
+use App\Models\UserLoginDetail;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
@@ -32,9 +32,14 @@ class AppServiceProvider extends ServiceProvider
             if ($event->userId) {
                 $ip = Request::ip(); // gets the real client IP
 
-                User::where('id', $event->userId)->update([
-                    'last_login_at' => now(),
-                    'last_login_ip' => $ip,
+                UserLoginDetail::create([
+                    'user_id' => $event->userId,
+                    'token_id' => $event->tokenId, // Store token ID for logout tracking
+                    'login_at' => now(),
+                    'logout_at' => null, // initially null, will be updated on logout
+                    'ip_address' => $ip,
+                    'user_agent' => Request::userAgent(),
+                    'login_method' => 'oauth', // or determine based on grant type
                 ]);
             }
         });

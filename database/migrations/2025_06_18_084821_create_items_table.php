@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sponsorship_tiers', function (Blueprint $table) {
+        Schema::create('items', function (Blueprint $table) {
             $table->id();
+            $table->string('sku')->unique();
             $table->string('name');
-            $table->string('description')->nullable();
-            $table->double('price')->default(0);
-            $table->string('icon')->nullable();
-            $table->string('image')->nullable();
-            $table->json('benefits')->nullable(); 
-            $table->boolean('is_active')->default(true);           
+            $table->foreignId('category_id')->constrained();
+            $table->foreignId('unit_id')->constrained();
+            $table->text('description')->nullable();
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sponsorship_tiers');
+        Schema::dropIfExists('items');
     }
 };

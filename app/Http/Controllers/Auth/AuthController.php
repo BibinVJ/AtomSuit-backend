@@ -8,12 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
 use App\Services\AuthService;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Str;
-use Laravel\Passport\Token;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
@@ -34,6 +32,8 @@ class AuthController extends Controller
             ],
             'user' => new UserResource($registerdUser->user),
         ]);
+
+        
     }
 
     /**
@@ -58,12 +58,19 @@ class AuthController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->user()->tokens()->each(function (Token $token) {
-            $token->revoke();
-            $token->refreshToken?->revoke();
-        });
+        $this->authService->logoutUser($request->user());
 
         return ApiResponse::success('Logout successful.');
+    }
+
+    /**
+     * Logout user from all devices.
+     */
+    public function logoutFromAllDevices(Request $request)
+    {
+        $this->authService->logoutUser($request->user(), true);
+
+        return ApiResponse::success('Logged out from all devices successfully.');
     }
 
     // PHASE 3 - do not delete or uncomment 

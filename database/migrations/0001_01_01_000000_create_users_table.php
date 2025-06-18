@@ -23,8 +23,9 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('status')->default(UserStatus::Pending);
             $table->timestamp('status_updated_at')->nullable();
-            $table->timestamp('last_login_at')->nullable();
-            $table->string('last_login_ip', 45)->nullable();
+            $table->string('profile_image')->nullable()->comment('URL to the profile image');
+            $table->string('phone')->nullable();
+            $table->string('phone_verified_at')->nullable();
             $table->timestamps();
         });
 

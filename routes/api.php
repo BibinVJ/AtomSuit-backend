@@ -1,14 +1,12 @@
 <?php
 
-use App\Enums\RolesEnum;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ResetTokenController;
-use App\Http\Controllers\BookingController;
-use App\Http\Controllers\BoothController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnquiryController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\SectionController;
+use App\Http\Controllers\ItemController;
+use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,50 +41,21 @@ Route::post('reset-password', [ResetTokenController::class, 'resetPassword']);
 | Authenticated Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Admin Routes
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware('role:'.RolesEnum::ADMIN->value)->group(function () {
-        Route::get('users', [UserController::class, 'index']);
-
-        // booths
-        Route::apiResource('booth', BoothController::class);
-        // Route::post('booth/{id}/update', [BoothController::class, 'update']);
-    });
+    Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
 
-    Route::apiResource('booking', BookingController::class);
+    Route::get('home/dashboard', [DashboardController::class, 'home']);
+
+    Route::apiResource('user', UserController::class);
+    Route::get('user/profile', [UserController::class, 'profile']);
 
 
-    // payments
-    // Route::post('payments/initiate', [PaymentController::class, 'initiate']);
-    // Route::post('payments/callback', [PaymentController::class, 'handleCallback']);
+    Route::apiResource('category', CategoryController::class);
+    Route::apiResource('unit', UnitController::class);
+    Route::apiResource('item', ItemController::class);
 });
-
-
-
-
-// Route::prefix('pages')->group(function () {
-//     Route::get('/', [PageController::class, 'index']);
-//     Route::post('/', [PageController::class, 'store']);
-//     Route::get('/{slug}', [PageController::class, 'show']);
-//     Route::put('/{page}', [PageController::class, 'update']);
-//     Route::delete('/{page}', [PageController::class, 'destroy']);
-
-//     // Section routes nested under pages
-//     Route::post('/{pageId}/sections', [SectionController::class, 'store']);
-//     Route::post('/{page}/sections/reorder', [SectionController::class, 'reorder']);
-// });
-
-// Route::put('sections/{section}', [SectionController::class, 'update']);
-// Route::delete('sections/{section}', [SectionController::class, 'destroy']);
-
-
 
 
 

@@ -3,32 +3,14 @@
 namespace App\Http\Resources;
 
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class BoothResource extends JsonResource
+abstract class BaseResource extends JsonResource
 {
-    public function toArray(Request $request): array
-    {
-        return [
-            'id'           => $this->id,
-            'unique_id'    => $this->unique_id,
-            'name'         => $this->name,
-            'description'  => $this->description,
-            'image'        => $this->image,
-            'size'         => $this->size,
-            'price'        => $this->price,
-            'status'       => $this->status->value,
-            'is_active'    => $this->is_active,
-            'created_at'   => $this->created_at,
-            'updated_at'   => $this->updated_at,
-        ];
-    }
-
     public static function paginated(LengthAwarePaginator $paginator): array
     {
         return [
-            'data' => self::collection($paginator),
+            'data' => static::collection($paginator),
             'current_page' => $paginator->currentPage(),
             'first_page_url' => $paginator->url(1),
             'from' => $paginator->firstItem(),

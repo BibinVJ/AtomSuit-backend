@@ -28,18 +28,25 @@ enum PermissionsEnum: string
     case VIEW_SETTING = 'view-setting';
     case UPDATE_SETTING = 'update-setting';
 
-    // Booth Management
-    case VIEW_BOOTH = 'view-booth';
-    case CREATE_BOOTH = 'create-booth';
-    case UPDATE_BOOTH = 'update-booth';
-    case DELETE_BOOTH = 'delete-booth';
-    case BOOK_BOOTH = 'book-booth';
 
-    // Booking
-    case VIEW_BOOKING = 'view-booking';
-    case CREATE_BOOKING = 'create-booking';
-    case UPDATE_BOOKING = 'update-booking';
-    case DELETE_BOOKING = 'delete-booking';
+    // category management
+    case VIEW_CATEGORY = 'view-category';
+    case CREATE_CATEGORY = 'create-category';
+    case UPDATE_CATEGORY = 'update-category';
+    case DELETE_CATEGORY = 'delete-category';
+
+    // unit management
+    case VIEW_UNIT = 'view-unit';
+    case CREATE_UNIT = 'create-unit';
+    case UPDATE_UNIT = 'update-unit';
+    case DELETE_UNIT = 'delete-unit';
+
+    // item management
+    case VIEW_ITEM = 'view-item';
+    case CREATE_ITEM = 'create-item';
+    case UPDATE_ITEM = 'update-item';
+    case DELETE_ITEM = 'delete-item';
+
 
 
     public function label(): string
@@ -62,16 +69,20 @@ enum PermissionsEnum: string
             self::VIEW_SETTING       => 'View Settings',
             self::UPDATE_SETTING     => 'Update Settings',
 
-            self::VIEW_BOOTH         => 'View Booths',
-            self::CREATE_BOOTH       => 'Create Booth',
-            self::UPDATE_BOOTH       => 'Update Booth',
-            self::DELETE_BOOTH       => 'Delete Booth',
-            self::BOOK_BOOTH         => 'Book Booth',
+            self::VIEW_CATEGORY      => 'View Categories',
+            self::CREATE_CATEGORY    => 'Create Category',
+            self::UPDATE_CATEGORY    => 'Update Category',
+            self::DELETE_CATEGORY    => 'Delete Category',
 
-            self::VIEW_BOOKING       => 'View Bookings',
-            self::CREATE_BOOKING     => 'Create Booking',
-            self::UPDATE_BOOKING     => 'Update Booking',
-            self::DELETE_BOOKING     => 'Delete Booking',
+            self::VIEW_UNIT          => 'View Units',
+            self::CREATE_UNIT        => 'Create Unit',
+            self::UPDATE_UNIT        => 'Update Unit',
+            self::DELETE_UNIT        => 'Delete Unit',
+
+            self::VIEW_ITEM          => 'View Items',
+            self::CREATE_ITEM        => 'Create Item',
+            self::UPDATE_ITEM        => 'Update Item',
+            self::DELETE_ITEM        => 'Delete Item',
 
             default                  => 'Unknown',
         };

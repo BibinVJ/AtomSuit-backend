@@ -35,35 +35,25 @@ class RolesAndPermissionsSeeder extends Seeder
          * Create and assign permissions to roles
          */
         // ADMIN - Assign all permissions
+        $adminRole = Role::firstOrCreate(['name' => RolesEnum::SUPER_ADMIN->value]);
+        $adminRole->syncPermissions(Permission::all());
+
         $adminRole = Role::firstOrCreate(['name' => RolesEnum::ADMIN->value]);
         $adminRole->syncPermissions(Permission::all());
 
-        // SPONSOR
-        $sponsorRole = Role::firstOrCreate(['name' => RolesEnum::SPONSOR->value]);
+        
+        // INVENTORY MANAGER
+        $sponsorRole = Role::firstOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value]);
         $sponsorRole->syncPermissions([
             PermissionsEnum::VIEW_DASHBOARD->value,
-
-            PermissionsEnum::VIEW_BOOTH->value,
-            PermissionsEnum::BOOK_BOOTH->value,
-
-            PermissionsEnum::VIEW_BOOKING->value,
-            PermissionsEnum::CREATE_BOOKING->value,
-            PermissionsEnum::UPDATE_BOOKING->value,
-            PermissionsEnum::DELETE_BOOKING->value,
         ]);
 
-        // EXHIBITOR
-        $exhibitorRole = Role::firstOrCreate(['name' => RolesEnum::EXHIBITOR->value]);
+
+        // SALES PERSON
+        $exhibitorRole = Role::firstOrCreate(['name' => RolesEnum::SALES_PERSON->value]);
         $exhibitorRole->syncPermissions([
             PermissionsEnum::VIEW_DASHBOARD->value,
 
-            PermissionsEnum::VIEW_BOOTH->value,
-            PermissionsEnum::BOOK_BOOTH->value,
-
-            PermissionsEnum::VIEW_BOOKING->value,
-            PermissionsEnum::CREATE_BOOKING->value,
-            PermissionsEnum::UPDATE_BOOKING->value,
-            PermissionsEnum::DELETE_BOOKING->value,
         ]);
     }
 }

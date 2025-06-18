@@ -47,12 +47,4 @@ return [
         'redirect' => env('LINKEDIN_REDIRECT_URI'),
     ],
 
-    'bml' => [
-        'api_key' => env('BML_API_KEY'),
-        'app_id' => env('BML_APP_ID'),
-        'environment' => env('BML_ENVIRONMENT', 'sandbox'),
-        'callback_url' => env('BML_CALLBACK_URL'),
-        'return_url' => env('BML_RETURN_URL'),
-    ],
-
 ];

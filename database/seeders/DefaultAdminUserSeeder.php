@@ -19,7 +19,7 @@ class DefaultAdminUserSeeder extends Seeder
             ['email' => 'admin@example.com'],
             [
                 'name' => 'Admin User',
-                'password' => Hash::make('Cubet@123'),
+                'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
                 'status' => UserStatus::Active,
                 'status_updated_at' => now(),

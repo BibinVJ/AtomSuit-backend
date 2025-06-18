@@ -6,18 +6,19 @@ enum RolesEnum: string
 {
     // note: case NAME_IN_APP = 'name-in-database';
 
+    case SUPER_ADMIN = 'super_admin';
     case ADMIN = 'admin';
-    case SPONSOR = 'sponsor';
-    case EXHIBITOR = 'exhibitor';
-    case GUEST     = 'guest';
+    case INVENTORY_MANAGER = 'inventory_manager';
+    case SALES_PERSON = 'sales_person';
 
     public function label(): string
     {
         return match ($this) {
+            static::SUPER_ADMIN => 'Super Admin',
             static::ADMIN => 'Admin',
-            static::SPONSOR => 'Sponsor',
-            static::EXHIBITOR => 'Exhibitor',
-            self::GUEST     => 'Guest',
+            static::INVENTORY_MANAGER => 'Inventory Manager',
+            static::SALES_PERSON => 'Sales Person',
+            default => 'Unknown Role',
         };
     }
 }

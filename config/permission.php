@@ -6,6 +6,10 @@ return [
         'guard' => 'api',
     ],
 
+    'guards' => [
+        'api',
+    ],
+
     'models' => [
 
         /*

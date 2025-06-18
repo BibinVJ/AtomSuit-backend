@@ -25,9 +25,9 @@ class UserResource extends JsonResource
             'is_admin' => $this->hasRole('admin'),
             'role_names' => $this->getRoleNames(),
             'permissions' => $this->getAllPermissions()->pluck('name'),
-
-            'last_login_at' => $this->last_login_at,
-            'last_login_ip' => $this->last_login_ip,
+            'profile_image' => $this->profile_image,
+            'phone' => $this->phone,
+            'phone_verified_at' => $this->phone_verified_at,
         ];
     }
 }

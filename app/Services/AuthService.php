@@ -5,10 +5,12 @@ namespace App\Services;
 use App\DataTransferObjects\AuthenticatedUserDTO;
 use App\Enums\UserStatus;
 use App\Jobs\SendPasswordResetOtpMailJob;
+use App\Models\UserLoginDetail;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\Token;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthService
@@ -38,6 +40,10 @@ class AuthService
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw new UnauthorizedHttpException('', 'Invalid credentials');
+        }
+
+        if ($user->status !== UserStatus::Active) {
+            throw new UnauthorizedHttpException('', 'User account is not active');
         }
 
         $authToken = $user->createToken('Personal Access Token');
@@ -75,5 +81,36 @@ class AuthService
 
         DB::table('reset_tokens')->where('email', $email)->delete();
         return true;
+    }
+
+    public function logoutUser($user, $fromAlldevices = false): void
+    {
+        if ($fromAlldevices) {
+            // revoke all tokens for the user
+            $user->tokens()->each(function (Token $token) {
+                $token->revoke();
+                $token->refreshToken?->revoke();
+            });
+
+            // Update all active login sessions
+            UserLoginDetail::where('user_id', $user->id)
+                ->whereNull('logout_at')
+                ->update(['logout_at' => now()]);
+        } else {
+            $user->token()?->revoke();
+            $user->token()?->refreshToken?->revoke();
+
+            $this->updateSessionByToken($user->token()->id);
+        }
+    }
+
+    private function updateSessionByToken($tokenId)
+    {
+        // If you store token_id, you can update specific session
+        UserLoginDetail::where('token_id', $tokenId)
+            ->whereNull('logout_at')
+            ->update([
+                'logout_at' => now(),
+            ]);
     }
 }
