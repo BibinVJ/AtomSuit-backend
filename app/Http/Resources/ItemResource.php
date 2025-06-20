@@ -21,6 +21,11 @@ class ItemResource extends BaseResource
             'is_active' => $this->is_active,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'unit' => new UnitResource($this->whenLoaded('unit')),
+            'type' => $this->type,
+            'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),
+            'cogs_account' => new ChartOfAccountResource($this->whenLoaded('cogsAccount')),
+            'inventory_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAccount')),
+            'inventory_adjustment_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAdjustmentAccount')),
         ];
     }
 }

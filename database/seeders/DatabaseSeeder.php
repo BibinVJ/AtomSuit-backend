@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
             DefaultAdminUserSeeder::class,
             UsersSeeder::class,
 
+            CategorySeeder::class,
+            UnitSeeder::class,
+            ItemSeeder::class,
+
         ]);
     }
 }

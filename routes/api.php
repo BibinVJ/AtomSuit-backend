@@ -46,15 +46,67 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
 
-    Route::get('home/dashboard', [DashboardController::class, 'home']);
+    // Route::get('home/dashboard', [DashboardController::class, 'home']);
 
-    Route::apiResource('user', UserController::class);
-    Route::get('user/profile', [UserController::class, 'profile']);
+    // Route::apiResource('user', UserController::class);
+    // Route::get('user/profile', [UserController::class, 'profile']);
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Accounting
+    |--------------------------------------------------------------------------
+    */
+    // chart of account groups
+    // Route::apiResource('chart-of-account', ChartOfAccountController::class);
+    // taxes
+    // tax groups
+    // item tax types
+    // currency
+    // exchange rate
+    // gl settings
+
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Inventory
+    |--------------------------------------------------------------------------
+    */
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('unit', UnitController::class);
     Route::apiResource('item', ItemController::class);
+    // warehouse
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Sales
+    |--------------------------------------------------------------------------
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Purchases
+    |--------------------------------------------------------------------------
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Reports
+    |--------------------------------------------------------------------------
+    */
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Settings
+    |--------------------------------------------------------------------------
+    */
+    // update settings
+
 });
 
 

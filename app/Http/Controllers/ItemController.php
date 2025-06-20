@@ -25,8 +25,15 @@ class ItemController extends Controller
 
     public function index(Request $request)
     {
-        $items = $this->itemRepo->all(true, $request->query('perPage', 15));
-        return ApiResponse::success('Items fetched successfully.', ItemResource::paginated($items));
+        $filters = $request->only(['is_active', 'search']);
+        $paginate = !$request->boolean('unpaginated');
+        $perPage = $request->integer('perPage', 15);
+
+        $items = $this->itemRepo->all($paginate, $perPage, $filters);
+
+        return $paginate
+            ? ApiResponse::success('Items fetched successfully.', ItemResource::paginated($items))
+            : ApiResponse::success('Items fetched successfully.', ItemResource::collection($items));
     }
 
     public function store(ItemRequest $request)

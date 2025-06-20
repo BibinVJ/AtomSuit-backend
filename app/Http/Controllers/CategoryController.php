@@ -25,8 +25,15 @@ class CategoryController extends Controller
 
     public function index(Request $request)
     {
-        $categories = $this->categoryRepo->all(true, $request->query('perPage', 15));
-        return ApiResponse::success('Category fetched successfully', CategoryResource::paginated($categories));
+        $filters = $request->only(['is_active', 'search']);
+        $paginate = !$request->boolean('unpaginated');
+        $perPage = $request->integer('perPage', 15);
+
+        $categories = $this->categoryRepo->all($paginate, $perPage, $filters);
+
+        return $paginate
+            ? ApiResponse::success('Categories fetched.', CategoryResource::paginated($categories))
+            : ApiResponse::success('Categories fetched.', CategoryResource::collection($categories));
     }
 
     public function store(CategoryRequest $request)

@@ -25,8 +25,15 @@ class UnitController extends Controller
 
     public function index(Request $request)
     {
-        $units = $this->unitRepo->all(true, $request->get('perPage', 15));
-        return ApiResponse::success('Units fetched successfully.', UnitResource::paginated($units));
+        $filters = $request->only(['is_active', 'search']);
+        $paginate = !$request->boolean('unpaginated');
+        $perPage = $request->integer('perPage', 15);
+
+        $units = $this->unitRepo->all($paginate, $perPage, $filters);
+
+        return $paginate
+            ? ApiResponse::success('Units fetched successfully.', UnitResource::paginated($units))
+            : ApiResponse::success('Units fetched successfully.', UnitResource::collection($units));
     }
 
     public function store(UnitRequest $request)
