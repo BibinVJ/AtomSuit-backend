@@ -31,9 +31,10 @@ class CategoryController extends Controller
 
         $categories = $this->categoryRepo->all($paginate, $perPage, $filters);
 
-        return $paginate
-            ? ApiResponse::success('Categories fetched.', CategoryResource::paginated($categories))
-            : ApiResponse::success('Categories fetched.', CategoryResource::collection($categories));
+        return ApiResponse::success(
+            'Categories fetched successfully.',
+            $paginate ? CategoryResource::paginated($categories) : CategoryResource::collection($categories)
+        );
     }
 
     public function store(CategoryRequest $request)
@@ -44,8 +45,8 @@ class CategoryController extends Controller
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $this->categoryRepo->update($category, $request->validated());
-        return ApiResponse::success('Category updated successfully.', CategoryResource::make($category));
+        $updatedCategory = $this->categoryRepo->update($category, $request->validated());
+        return ApiResponse::success('Category updated successfully.', CategoryResource::make($updatedCategory));
     }
 
     public function destroy(Category $category)

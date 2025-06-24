@@ -2,68 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\UserRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use App\Repositories\UserRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        $users = User::all();
-
-        return ApiResponse::success('Users list fetched successfully.', ['users' => UserResource::collection($users)]);
+    public function __construct(
+        protected UserRepository $userRepository,
+        protected UserService $userService
+    ) {
+        $this->middleware("permission:" . PermissionsEnum::VIEW_USER->value)->only(['index']);
+        $this->middleware("permission:" . PermissionsEnum::CREATE_USER->value)->only(['store']);
+        $this->middleware("permission:" . PermissionsEnum::UPDATE_USER->value)->only(['update']);
+        $this->middleware("permission:" . PermissionsEnum::DELETE_USER->value)->only(['destroy']);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $filters = $request->only(['is_active', 'search']);
+        $paginate = !$request->boolean('unpaginated');
+        $perPage = $request->integer('perPage', 15);
+
+        $users = $this->userRepository->all($paginate, $perPage, $filters);
+
+        return ApiResponse::success(
+            'Users fetched successfully.',
+            $paginate ? UserResource::paginated($users) : UserResource::collection($users)
+        );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        //
+        $user = $this->userRepository->create($request->validated());
+        return ApiResponse::success('User created successfully.', UserResource::make($user));
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function update(UserRequest $request, User $user)
     {
-        //
+        $updatedUser = $this->userRepository->update($user, $request->validated());
+        return ApiResponse::success('User updated successfully.', UserResource::make($updatedUser));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function destroy(User $user)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $this->userService->ensureUserIsDeletable($user);
+        $this->userRepository->delete($user);
+        return ApiResponse::success('User deleted successfully.');
     }
 }

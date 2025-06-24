@@ -29,11 +29,12 @@ class ItemController extends Controller
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $items = $this->itemRepo->all($paginate, $perPage, $filters);
+        $items = $this->itemRepo->all($paginate, $perPage, $filters, ['category', 'unit']);
 
-        return $paginate
-            ? ApiResponse::success('Items fetched successfully.', ItemResource::paginated($items))
-            : ApiResponse::success('Items fetched successfully.', ItemResource::collection($items));
+        return ApiResponse::success(
+            'Items fetched successfully.',
+            $paginate ? ItemResource::paginated($items) : ItemResource::collection($items)
+        );
     }
 
     public function store(ItemRequest $request)
@@ -44,8 +45,8 @@ class ItemController extends Controller
 
     public function update(ItemRequest $request, Item $item)
     {
-        $this->itemRepo->update($item, $request->validated());
-        return ApiResponse::success('Item updated successfully.', ItemResource::make($item));
+        $updatedItem = $this->itemRepo->update($item, $request->validated());
+        return ApiResponse::success('Item updated successfully.', ItemResource::make($updatedItem));
     }
 
     public function destroy(Item $item)

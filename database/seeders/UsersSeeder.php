@@ -21,7 +21,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Manager User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
-                'status' => UserStatus::Active,
+                'status' => UserStatus::ACTIVE,
                 'status_updated_at' => now(),
             ]
         );
@@ -33,7 +33,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Sales Person User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
-                'status' => UserStatus::Active,
+                'status' => UserStatus::ACTIVE,
                 'status_updated_at' => now(),
             ]
         );

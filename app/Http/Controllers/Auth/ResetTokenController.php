@@ -2,58 +2,64 @@
 
 namespace App\Http\Controllers\Auth;
 
-
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Http\Requests\Auth\SendResetOtpRequest;
 use App\Http\Requests\Auth\VerifyOtpRequest;
-use App\Services\AuthService;
-use Illuminate\Http\Request;
+use App\Repositories\UserRepository;
+use App\Services\Auth\AuthService;
+use App\Services\OtpService;
+use App\Enums\OtpPurposeEnum;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResetTokenController extends Controller
 {
-    public function __construct(protected AuthService $authService) {}
-
+    public function __construct(
+        protected AuthService $authService,
+        protected UserRepository $userRepository,
+        protected OtpService $otpService
+    ) {}
 
     /**
-     * Send reset OTP to user email.
+     * Step 1: Send OTP to user’s email and mobile
      */
     public function sendResetOtp(SendResetOtpRequest $request)
     {
-        $this->authService->sendResetOtp($request->validated()['email']);
+        $user = $this->userRepository->findByEmail($request->validated()['email']);
 
-        return ApiResponse::success('OTP sent to your email.');
+        $this->otpService->generate($user, OtpPurposeEnum::PASSWORD_RESET);
+
+        return ApiResponse::success('OTP sent to your email and mobile.');
     }
 
     /**
-     * Verify reset OTP.
+     * Step 2: Verify OTP (optional pre-check)
      */
     public function verifyOtp(VerifyOtpRequest $request)
     {
-        $validatedData = $request->validated();
-        if (!$this->authService->verifyOtp($validatedData['email'], $validatedData['otp'])) {
+        $user = $this->userRepository->findByEmail($request->validated()['email']);
+
+        if (! $this->otpService->verify($user, OtpPurposeEnum::PASSWORD_RESET, $request->validated()['otp'])) {
             return ApiResponse::error('Invalid or expired OTP.', [], Response::HTTP_BAD_REQUEST);
         }
 
-        return ApiResponse::success('OTP verified.');
+        return ApiResponse::success('OTP verified successfully.');
     }
 
     /**
-     * Reset user password.
+     * Step 3: Final reset password after verifying OTP
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $validatedData = $request->validated();
+        $user = $this->userRepository->findByEmail($request->validated()['email']);
 
-        // if (!$this->authService->verifyOtp($validatedData['email'], $validatedData['otp'])) {
-        //     return ApiResponse::error('Invalid or expired OTP.', [], Response::HTTP_BAD_REQUEST);
-        // }
+        if (! $this->otpService->verify($user, OtpPurposeEnum::PASSWORD_RESET, $request->validated()['otp'])) {
+            return ApiResponse::error('Invalid or expired OTP.', [], Response::HTTP_BAD_REQUEST);
+        }
 
-        $this->authService->resetPassword($validatedData['email'], $validatedData['new_password'], $validatedData['otp']);
+        $this->authService->resetUserPassword($user, $request->validated()['new_password']);
 
-        return ApiResponse::success('Password reset successful.');
+        return ApiResponse::success('Password reset successfully.');
     }
-
 }

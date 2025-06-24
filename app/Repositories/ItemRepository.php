@@ -3,13 +3,19 @@
 namespace App\Repositories;
 
 use App\Models\Item;
+use App\Repositories\Traits\HasCrudRepository;
+use Illuminate\Database\Eloquent\Builder;
 
 class ItemRepository
-{
-    public function all(bool $paginate = false, int $perPage = 15, array $filters = [])
-    {
-        $query = Item::with(['category', 'unit', 'salesAccount', 'cogsAccount', 'inventoryAccount', 'inventoryAdjustmentAccount']);
+{    use HasCrudRepository;
 
+    public function __construct()
+    {
+        $this->model = new Item();
+    }
+
+    protected function applyFilters(Builder $query, array $filters): Builder
+    {
         if (isset($filters['is_active'])) {
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
@@ -18,32 +24,14 @@ class ItemRepository
             $query->where(function ($q) use ($filters) {
                 $q->where('name', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('sku', 'like', '%' . $filters['search'] . '%');
-                    // ->orWhereHas('category', fn($catQ) =>
-                    //     $catQ->where('name', 'like', '%' . $filters['search'] . '%'))
-                    // ->orWhereHas('unit', fn($unitQ) =>
-                    //     $unitQ->where('name', 'like', '%' . $filters['search'] . '%'));
+                // ->orWhereHas('category', fn($catQ) =>
+                //     $catQ->where('name', 'like', '%' . $filters['search'] . '%'))
+                // ->orWhereHas('unit', fn($unitQ) =>
+                //     $unitQ->where('name', 'like', '%' . $filters['search'] . '%'));
             });
         }
 
-        $query->orderBy('name');
-
-        return $paginate
-            ? $query->paginate($perPage)
-            : $query->get();
+        return $query;
     }
 
-    public function create(array $data): Item
-    {
-        return Item::create($data)->refresh();
-    }
-
-    public function update(Item $item, array $data): bool
-    {
-        return $item->update($data);
-    }
-
-    public function delete(Item $item): ?bool
-    {
-        return $item->delete();
-    }
 }

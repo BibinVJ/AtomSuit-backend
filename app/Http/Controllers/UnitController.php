@@ -31,9 +31,10 @@ class UnitController extends Controller
 
         $units = $this->unitRepo->all($paginate, $perPage, $filters);
 
-        return $paginate
-            ? ApiResponse::success('Units fetched successfully.', UnitResource::paginated($units))
-            : ApiResponse::success('Units fetched successfully.', UnitResource::collection($units));
+        return ApiResponse::success(
+            'Units fetched successfully.',
+            $paginate ? UnitResource::paginated($units) : UnitResource::collection($units)
+        );
     }
 
     public function store(UnitRequest $request)
@@ -44,8 +45,8 @@ class UnitController extends Controller
 
     public function update(UnitRequest $request, Unit $unit)
     {
-        $this->unitRepo->update($unit, $request->validated());
-        return ApiResponse::success('Unit updated successfully.', UnitResource::make($unit));
+        $updatedUnit = $this->unitRepo->update($unit, $request->validated());
+        return ApiResponse::success('Unit updated successfully.', UnitResource::make($updatedUnit));
     }
 
     public function destroy(Unit $unit)

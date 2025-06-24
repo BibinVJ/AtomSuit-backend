@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('provider')->nullable()->comment('provider name, google, linkedin');
             $table->string('provider_id')->nullable();
             $table->rememberToken();
-            $table->string('status')->default(UserStatus::Pending);
+            $table->string('status')->default(UserStatus::PENDING);
             $table->timestamp('status_updated_at')->nullable();
             $table->string('profile_image')->nullable()->comment('URL to the profile image');
             $table->string('phone')->nullable();
@@ -29,11 +29,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('reset_tokens', function (Blueprint $table) {
-            $table->string('email')->primary();
-            $table->string('token')->comment('token or hashed OTP');
-            $table->timestamp('created_at')->nullable();
-        });
+        // Schema::create('reset_tokens', function (Blueprint $table) {
+        //     $table->string('email')->primary();
+        //     $table->string('token')->comment('token or hashed OTP');
+        //     $table->timestamp('created_at')->nullable();
+        // });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();

@@ -27,9 +27,12 @@ Route::post('contact', [EnquiryController::class, 'store']);
 */
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
-Route::post('send-reset-otp', [ResetTokenController::class, 'sendResetOtp']);
-Route::post('verify-otp', [ResetTokenController::class, 'verifyOtp']);
-Route::post('reset-password', [ResetTokenController::class, 'resetPassword']);
+
+Route::prefix('auth')->group(function () {
+    Route::post('send-reset-otp', [ResetTokenController::class, 'sendResetOtp']);
+    Route::post('verify-otp', [ResetTokenController::class, 'verifyOtp']);
+    Route::post('reset-password', [ResetTokenController::class, 'resetPassword']);
+});
 
 // Social Login (phase 3)
 // Route::get('auth/{provider}/redirect', [AuthController::class, 'socialRedirect']);
@@ -48,7 +51,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     // Route::get('home/dashboard', [DashboardController::class, 'home']);
 
-    // Route::apiResource('user', UserController::class);
     // Route::get('user/profile', [UserController::class, 'profile']);
 
 
@@ -105,6 +107,9 @@ Route::middleware(['auth:api'])->group(function () {
     | Settings
     |--------------------------------------------------------------------------
     */
+    /* User Management */
+    Route::apiResource('user', UserController::class);
+
     // update settings
 
 });

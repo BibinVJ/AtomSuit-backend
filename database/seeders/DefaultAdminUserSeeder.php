@@ -21,7 +21,7 @@ class DefaultAdminUserSeeder extends Seeder
                 'name' => 'Admin User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
-                'status' => UserStatus::Active,
+                'status' => UserStatus::ACTIVE,
                 'status_updated_at' => now(),
             ]
         );

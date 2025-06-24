@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Contact Form Submission</title>
+    <title>{{ ucfirst(str_replace('_', ' ', $purpose->value)) }} OTP</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,7 +45,7 @@
 </head>
 <body>
     <div class="email-container">
-        <p>Your OTP for password reset is: <strong>{{ $otp }}</strong></p>
+        <p>Your OTP for {{ ucfirst(str_replace('_', ' ', $purpose->value)) }} is: <strong>{{ $otp }}</strong></p>
         <p>This OTP is valid for 10 minutes.</p>
     </div>
 </body>

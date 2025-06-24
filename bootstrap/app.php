@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\OtpVerificationException;
 use App\Helpers\ApiResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -33,7 +34,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(fn(\Laravel\Passport\Exceptions\AuthenticationException $e) => ApiResponse::error('Unauthenticated.', [], Response::HTTP_UNAUTHORIZED));
         $exceptions->render(fn(\Illuminate\Auth\AuthenticationException $e) => ApiResponse::error('Unauthenticated.', [], Response::HTTP_UNAUTHORIZED));
 
-
         // Validation errors
         $exceptions->render(
             fn(\Illuminate\Validation\ValidationException $e, $req) =>
@@ -44,6 +44,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->render(
             fn(\Spatie\Permission\Exceptions\UnauthorizedException $e, $req) =>
             ApiResponse::error('You do not have the required authorization.', [], Response::HTTP_FORBIDDEN)
+        );
+
+        $exceptions->render(
+            fn(OtpVerificationException $e, $req) =>
+            ApiResponse::error($e->getMessage(), [], Response::HTTP_BAD_REQUEST)
         );
 
         // Catch-all for unhandled exceptions

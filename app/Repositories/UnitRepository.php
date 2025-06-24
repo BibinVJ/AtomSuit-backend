@@ -3,13 +3,20 @@
 namespace App\Repositories;
 
 use App\Models\Unit;
+use App\Repositories\Traits\HasCrudRepository;
+use Illuminate\Database\Eloquent\Builder;
 
 class UnitRepository
 {
-    public function all(bool $paginate = false, int $perPage = 15, array $filters = [])
-    {
-        $query = Unit::query();
+    use HasCrudRepository;
 
+    public function __construct()
+    {
+        $this->model = new Unit();
+    }
+
+    protected function applyFilters(Builder $query, array $filters): Builder
+    {
         if (isset($filters['is_active'])) {
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
@@ -22,25 +29,7 @@ class UnitRepository
             });
         }
 
-        $query->orderBy('name');
-
-        return $paginate
-            ? $query->paginate($perPage)
-            : $query->get();
+        return $query;
     }
 
-    public function create(array $data): Unit
-    {
-        return Unit::create($data)->refresh();
-    }
-
-    public function update(Unit $unit, array $data): bool
-    {
-        return $unit->update($data);
-    }
-
-    public function delete(Unit $unit): ?bool
-    {
-        return $unit->delete();
-    }
 }
