@@ -47,6 +47,33 @@ enum PermissionsEnum: string
     case UPDATE_ITEM = 'update-item';
     case DELETE_ITEM = 'delete-item';
 
+    // batch management
+    case VIEW_BATCH = 'view-batch';
+
+    // vendor management
+    case VIEW_VENDOR = 'view-vendor';
+    case CREATE_VENDOR = 'create-vendor';
+    case UPDATE_VENDOR = 'update-vendor';
+    case DELETE_VENDOR = 'delete-vendor';
+
+    // customer management
+    case VIEW_CUSTOMER = 'view-customer';
+    case CREATE_CUSTOMER = 'create-customer';
+    case UPDATE_CUSTOMER = 'update-customer';
+    case DELETE_CUSTOMER = 'delete-customer';
+
+    // purchase management
+    case VIEW_PURCHASE = 'view-purchase';
+    case CREATE_PURCHASE = 'create-purchase';
+    case UPDATE_PURCHASE = 'update-purchase';
+    case DELETE_PURCHASE = 'delete-purchase';
+
+    // sale management
+    case VIEW_SALE = 'view-sale';
+    case CREATE_SALE = 'create-sale';
+    case UPDATE_SALE = 'update-sale';
+    case DELETE_SALE = 'delete-sale';
+
 
 
     public function label(): string
@@ -83,6 +110,28 @@ enum PermissionsEnum: string
             self::CREATE_ITEM        => 'Create Item',
             self::UPDATE_ITEM        => 'Update Item',
             self::DELETE_ITEM        => 'Delete Item',
+
+            self::VIEW_BATCH         => 'View Batches',
+
+            self::VIEW_VENDOR        => 'View Vendors',
+            self::CREATE_VENDOR      => 'Create Vendor',
+            self::UPDATE_VENDOR      => 'Update Vendor',
+            self::DELETE_VENDOR      => 'Delete Vendor',
+
+            self::VIEW_CUSTOMER      => 'View Customers',
+            self::CREATE_CUSTOMER    => 'Create Customer',
+            self::UPDATE_CUSTOMER    => 'Update Customer',
+            self::DELETE_CUSTOMER    => 'Delete Customer',
+
+            self::VIEW_PURCHASE      => 'View Purchases',
+            self::CREATE_PURCHASE    => 'Create Purchase',
+            self::UPDATE_PURCHASE    => 'Update Purchase',
+            self::DELETE_PURCHASE    => 'Delete Purchase',
+
+            self::VIEW_SALE          => 'View Sales',
+            self::CREATE_SALE        => 'Create Sale',
+            self::UPDATE_SALE        => 'Update Sale',
+            self::DELETE_SALE        => 'Delete Sale',
 
             default                  => 'Unknown',
         };

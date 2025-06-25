@@ -4,11 +4,8 @@ namespace App\Services\Auth;
 
 use App\DataTransferObjects\AuthenticatedUserDTO;
 use App\Enums\UserStatus;
-use App\Jobs\SendPasswordResetOtpMailJob;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 

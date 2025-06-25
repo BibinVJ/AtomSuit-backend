@@ -15,9 +15,9 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
-            $table->string('invoice_number');
+            $table->string('invoice_number')->unique();
             $table->date('purchase_date');
-            $table->string('payment_status')->default(PaymentStatus::PENDING); // paid, unpaid, partial
+            $table->string('payment_status')->default(PaymentStatus::PENDING);
             $table->timestamps();
         });
     }

@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('batches', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->constrained();
-            $table->string('batch_no');
+            $table->string('batch_no')->nullable();
+            $table->date('manufacture_date')->nullable();
             $table->date('expiry_date')->nullable();
-            $table->date('manufactured_at')->nullable();
             $table->decimal('cost_price', 10, 2);
-            $table->decimal('mrp', 10, 2)->nullable();
             $table->timestamps();
         });
     }

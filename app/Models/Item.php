@@ -37,23 +37,33 @@ class Item extends Model
         return $this->belongsTo(Unit::class);
     }
 
-    public function salesAccount(): BelongsTo
-    {
-        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
-    }
+    // public function salesAccount(): BelongsTo
+    // {
+    //     return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
+    // }
 
-    public function cogsAccount(): BelongsTo
-    {
-        return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
-    }
+    // public function cogsAccount(): BelongsTo
+    // {
+    //     return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
+    // }
 
-    public function inventoryAccount(): BelongsTo
-    {
-        return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
-    }
+    // public function inventoryAccount(): BelongsTo
+    // {
+    //     return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
+    // }
 
-    public function inventoryAdjustmentAccount(): BelongsTo
+    // public function inventoryAdjustmentAccount(): BelongsTo
+    // {
+    //     return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
+    // }
+
+    /**
+     * Get the stock on hand for this item.
+     */
+    public function stockOnHand(): int
     {
-        return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
+        return $this->batches()->withSum('stockMovements', 'quantity')
+            ->get()
+            ->sum('stock_movements_sum_quantity');
     }
 }

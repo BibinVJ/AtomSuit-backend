@@ -1,13 +1,18 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\Auth\ResetTokenController;
+use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\BatchController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -29,14 +34,10 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::prefix('auth')->group(function () {
-    Route::post('send-reset-otp', [ResetTokenController::class, 'sendResetOtp']);
-    Route::post('verify-otp', [ResetTokenController::class, 'verifyOtp']);
-    Route::post('reset-password', [ResetTokenController::class, 'resetPassword']);
+    Route::post('send-reset-otp', [PasswordResetController::class, 'sendResetOtp']);
+    Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp']);
+    Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
 });
-
-// Social Login (phase 3)
-// Route::get('auth/{provider}/redirect', [AuthController::class, 'socialRedirect']);
-// Route::get('auth/{provider}/callback', [AuthController::class, 'socialCallback']);
 
 
 /*
@@ -78,21 +79,26 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('unit', UnitController::class);
     Route::apiResource('item', ItemController::class);
+    Route::apiResource('batch', BatchController::class);
     // warehouse
 
 
     /*
     |--------------------------------------------------------------------------
-    | Sales
+    | Customer & Sales
     |--------------------------------------------------------------------------
     */
+    Route::apiResource('customer', CustomerController::class);
+    Route::apiResource('sale', SaleController::class);
 
 
     /*
     |--------------------------------------------------------------------------
-    | Purchases
+    | Vendor & Purchases
     |--------------------------------------------------------------------------
     */
+    Route::apiResource('vendor', VendorController::class);
+    Route::apiResource('purchase', PurchaseController::class);
 
 
     /*

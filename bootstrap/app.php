@@ -51,6 +51,13 @@ return Application::configure(basePath: dirname(__DIR__))
             ApiResponse::error($e->getMessage(), [], Response::HTTP_BAD_REQUEST)
         );
 
+        // resource not found errors
+        $exceptions->render(function (Symfony\Component\HttpKernel\Exception\NotFoundHttpException $e, $request) {
+            if ($e->getPrevious() instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
+                return ApiResponse::error('Resource not found.', [], Response::HTTP_NOT_FOUND);
+            }
+        });
+
         // Catch-all for unhandled exceptions
         $exceptions->render(function (Throwable $e, $request) {
             if ($request->expectsJson()) {

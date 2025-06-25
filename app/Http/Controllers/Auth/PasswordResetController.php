@@ -13,7 +13,7 @@ use App\Services\OtpService;
 use App\Enums\OtpPurposeEnum;
 use Symfony\Component\HttpFoundation\Response;
 
-class ResetTokenController extends Controller
+class PasswordResetController extends Controller
 {
     public function __construct(
         protected AuthService $authService,

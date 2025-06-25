@@ -4,25 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class PurchaseItem extends Model
+class StockMovement extends Model
 {
     protected $fillable = [
-        'purchase_id',
         'item_id',
         'batch_id',
+        'transaction_date',
         'quantity',
-        'unit_cost',
+        'rate',
+        'standard_cost',
+        'source_type',
+        'source_id',
+        'description',
+        'reference',
     ];
 
     protected $casts = [
+        'transaction_date' => 'datetime',
         'quantity' => 'integer',
-        'unit_cost' => 'decimal:2',
+        'rate' => 'decimal:2',
+        'standard_cost' => 'decimal:2',
     ];
-
-    public function purchase()
-    {
-        return $this->belongsTo(Purchase::class);
-    }
 
     public function item()
     {
@@ -33,4 +35,10 @@ class PurchaseItem extends Model
     {
         return $this->belongsTo(Batch::class);
     }
+
+    public function source()
+    {
+        return $this->morphTo();
+    }
+
 }
