@@ -45,7 +45,9 @@ class UserRepository
             'is_active' => $data['is_active'] ?? true,
         ]);
 
-        $user->assignRole($data['role']);
+        if (isset($data['role'])) {
+            $user->assignRole($data['role']);
+        }
 
         return $user;
     }

@@ -18,6 +18,7 @@ class PurchaseResource extends BaseResource
             'invoice_number' => $this->invoice_number,
             'purchase_date' => $this->purchase_date->toDateString(),
             'total' => $this->total,
+            'payment_status' => $this->payment_status,
             'items' => $this->items->map(fn($item) => [
                 'id'         => $item->id,
                 'item'       => $item->item->name,

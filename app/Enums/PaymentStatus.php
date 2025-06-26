@@ -9,7 +9,7 @@ enum PaymentStatus: string
     case RECEIPT_RECEIVED = 'receipt_received';
     case UNDER_VERIFICATION = 'under_verification';
     case PARTIALLY_PAID = 'partially_paid';
-    case COMPLETED = 'completed';
+    case PAID = 'paid';
     case REFUNDED = 'refunded';
     case CANCELLED = 'cancelled';
     case FAILED = 'failed';

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Sales;
 
 use App\Enums\PaymentStatus;
-use App\Jobs\CreateStockMovementsJob;
 use App\Models\Sale;
 use App\Repositories\SaleRepository;
+use App\Services\BatchService;
 use App\Services\StockMovementService;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +13,7 @@ class CreateSaleAction
 {
     public function __construct(
         protected SaleRepository $saleRepo,
+        protected BatchService $batchService,
         protected StockMovementService $stockMoveService
     ) {}
 
@@ -29,7 +30,6 @@ class CreateSaleAction
             $this->saleRepo->addItems($sale, $data['items']);
 
             // add stock movements for the sale
-            // dispatch(new CreateStockMovementsJob($sale));
             $this->stockMoveService->createStockMovements($sale);
 
             return $sale->load('items.batch', 'items.item');

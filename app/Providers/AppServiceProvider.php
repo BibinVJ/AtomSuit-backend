@@ -19,7 +19,6 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             \App\Contracts\Stock\CreateStockMovementsActionInterface::class,
-            \App\Actions\StockMovement\CreatePurchaseStockMovementsAction::class
         );
     }
 

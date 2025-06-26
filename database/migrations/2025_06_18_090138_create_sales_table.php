@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\PaymentStatus;
+use App\Enums\TransactionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +18,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->string('invoice_number');
             $table->date('sale_date');
-            $table->string('payment_status')->default(PaymentStatus::PENDING); // paid, unpaid, partial
+            $table->string('status')->default(TransactionStatus::DRAFT);
+            $table->string('payment_status')->default(PaymentStatus::PENDING);
             $table->timestamps();
         });
     }

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('batch_no')->nullable();
             $table->date('manufacture_date')->nullable();
             $table->date('expiry_date')->nullable();
-            $table->decimal('cost_price', 10, 2);
+            $table->decimal('cost_price', 10, 2)->default(0);
             $table->timestamps();
         });
     }

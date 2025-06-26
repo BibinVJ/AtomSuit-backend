@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions;
+namespace App\Actions\Purchases;
 
 use App\Enums\PaymentStatus;
-use App\Jobs\CreateStockMovementsJob;
 use App\Models\Purchase;
 use App\Repositories\PurchaseRepository;
+use App\Services\BatchService;
 use App\Services\StockMovementService;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +13,7 @@ class CreatePurchaseAction
 {
     public function __construct(
         protected PurchaseRepository $purchaseRepo,
+        protected BatchService $batchService,
         protected StockMovementService $stockMoveService
     ) {}
 
@@ -26,10 +27,14 @@ class CreatePurchaseAction
                 'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,
             ]);
 
-            $this->purchaseRepo->addItems($purchase, $data['items']);
+            $preparedItems = collect($data['items'])->map(function ($item) {
+                $batch = $this->batchService->create($item);
+                return array_merge($item, ['batch_id' => $batch->id]);
+            })->toArray();
 
-            // add stock movements for the purchase
-            // dispatch(new CreateStockMovementsJob($purchase));
+            $this->purchaseRepo->addItems($purchase, $preparedItems);
+            
+            // create stock moves
             $this->stockMoveService->createStockMovements($purchase);
 
             return $purchase->load('items.batch', 'items.item');
