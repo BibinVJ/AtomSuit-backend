@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ItemRequest extends FormRequest
+class MassDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,7 @@ class ItemRequest extends FormRequest
     {
         return [
             'ids' => 'required|array|min:1',
-            'ids.*' => 'integer|exists:exhibitor_categories,id',
+            'ids.*' => 'integer',
         ];
     }
 }
