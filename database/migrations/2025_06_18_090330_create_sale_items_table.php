@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->foreignId('item_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('batch_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
             $table->timestamps();

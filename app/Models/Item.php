@@ -64,13 +64,42 @@ class Item extends Model
     //     return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
     // }
 
+    public function saleItems(): HasMany
+    {
+        return $this->hasMany(SaleItem::class);
+    }
+
+    public function stockMovements(): HasMany
+    {
+        return $this->hasMany(StockMovement::class);
+    }
+
+
     /**
      * Get the stock on hand for this item.
      */
     public function stockOnHand(): int
     {
-        return $this->batches()->withSum('stockMovements', 'quantity')
-            ->get()
-            ->sum('stock_movements_sum_quantity');
+        return $this->stockMovements->sum('quantity');
+    }
+
+    /**
+     * Get the total purchased quantity for this item.
+     */
+    public function totalPurchased(): int
+    {
+        return $this->stockMovements()
+            ->where('source_type', Purchase::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
+            ->sum('quantity');
+    }
+
+    /**
+     * Get the total sold quantity for this item.
+     */
+    public function totalSold(): int
+    {
+        return abs($this->stockMovements()
+            ->where('source_type', Sale::class) // TODO: Change to DeliveryNote::class, when using proper structure later
+            ->sum('quantity'));
     }
 }

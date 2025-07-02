@@ -34,7 +34,7 @@ class StorePurchaseRequest extends FormRequest
             'items' => 'required|array|min:1',
             'items.*.id' => 'nullable|exists:purchase_items,id',
             'items.*.item_id' => 'required|exists:items,id',
-            'items.*.batch_no' => 'required',
+            'items.*.batch_number' => 'required',
             'items.*.expiry_date' => 'nullable|date|after:purchase_date',
             'items.*.manufacture_date' => 'nullable|date|before:purchase_date',
             'items.*.quantity' => 'required|integer|min:1',

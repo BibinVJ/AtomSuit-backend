@@ -29,7 +29,7 @@ class ItemController extends Controller
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $items = $this->itemRepo->all($paginate, $perPage, $filters, ['category', 'unit']);
+        $items = $this->itemRepo->all($paginate, $perPage, $filters, ['category', 'unit', 'stockMovements']);
 
         return ApiResponse::success(
             'Items fetched successfully.',

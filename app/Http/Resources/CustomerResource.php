@@ -19,6 +19,7 @@ class CustomerResource extends BaseResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            // 'total_spent' => $this->totalSpent(),
             'is_active' => $this->is_active,
         ];
     }

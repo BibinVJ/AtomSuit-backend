@@ -30,7 +30,6 @@ class SaleController extends Controller
         $perPage = $request->integer('perPage', 15);
 
         $sales = $this->saleRepo->all($paginate, $perPage, with: [
-            'items.batch',
             'items.item',
             'customer',
         ]);
@@ -44,7 +43,6 @@ class SaleController extends Controller
     public function show(Sale $sale)
     {
         $sale = $this->saleRepo->find($sale->id, with: [
-            'items.batch',
             'items.item',
             'customer',
         ]);

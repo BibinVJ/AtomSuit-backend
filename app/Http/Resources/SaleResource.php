@@ -15,18 +15,12 @@ class SaleResource extends BaseResource
     {
         return [
             'id'             => $this->id,
-            'customer'       => $this->customer?->name,
+            'customer'       => CustomerResource::make($this->customer),
             'invoice_number' => $this->invoice_number,
             'sale_date'      => $this->sale_date->toDateString(),
+            'total'          => $this->total,
             'payment_status' => $this->payment_status,
-            'items'          => $this->items->map(fn($item) => [
-                'id'          => $item->id,
-                'item'        => $item->item->name,
-                'batch'       => $item->batch?->batch_no,
-                'quantity'   => $item->quantity,
-                'unit_price' => $item->unit_price,
-                'total_price' => $item->quantity * $item->unit_price,
-            ]),
+            'items'          => SaleItemResource::collection($this->items),
         ];
     }
 }

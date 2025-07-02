@@ -10,7 +10,7 @@ class Batch extends Model
 {
     protected $fillable = [
         'item_id',
-        'batch_no',
+        'batch_number',
         'manufacture_date',
         'expiry_date',
         'cost_price',
@@ -35,11 +35,6 @@ class Batch extends Model
     public function purchaseItems(): HasMany
     {
         return $this->hasMany(PurchaseItem::class);
-    }
-
-    public function saleItems(): HasMany
-    {
-        return $this->hasMany(SaleItem::class);
     }
 
     /**

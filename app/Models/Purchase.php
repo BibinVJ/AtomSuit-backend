@@ -34,16 +34,16 @@ class Purchase extends Model
         return $this->belongsTo(Vendor::class);
     }
 
+    public function stockMovements(): MorphMany
+    {
+        return $this->morphMany(StockMovement::class, 'source');
+    }
+
     /**
      * Get the total cost of the purchase.
      */
     public function getTotalAttribute(): float
     {
         return $this->items->sum(fn($i) => $i->quantity * $i->unit_cost);
-    }
-
-    public function stockMovements(): MorphMany
-    {
-        return $this->morphMany(StockMovement::class, 'source');
     }
 }

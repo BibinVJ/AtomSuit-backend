@@ -32,7 +32,7 @@ class CreateSaleAction
             // add stock movements for the sale
             $this->stockMoveService->createStockMovements($sale);
 
-            return $sale->load('items.batch', 'items.item');
+            return $sale->load('items.item');
         });
     }
 }

@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', fn() => response()->json(['message' => 'Ping successful!']));
-Route::post('contact', [EnquiryController::class, 'store']);
+Route::post('enquiry', [EnquiryController::class, 'store']);
 
 
 /*
@@ -50,7 +50,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
 
-    // Route::get('home/dashboard', [DashboardController::class, 'home']);
+    Route::get('dashboard', [DashboardController::class, 'home']);
 
     // Route::get('user/profile', [UserController::class, 'profile']);
 

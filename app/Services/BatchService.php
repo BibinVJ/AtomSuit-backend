@@ -19,7 +19,7 @@ class BatchService
     {
         return $this->repo->firstOrCreate([
             'item_id' => $data['item_id'],
-            'batch_no' => $data['batch_no'],
+            'batch_number' => $data['batch_number'],
             'expiry_date' => $data['expiry_date'] ?? null,
             'manufacture_date' => $data['manufacture_date'] ?? null,
         ], [

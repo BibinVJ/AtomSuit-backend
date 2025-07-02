@@ -19,7 +19,7 @@ class BatchRepository
     {
         if (!empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('batch_no', 'like', '%' . $filters['search'] . '%');
+                $q->where('batch_number', 'like', '%' . $filters['search'] . '%');
             });
         }
 

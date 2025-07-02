@@ -16,7 +16,7 @@ class BatchResource extends BaseResource
         return [
             'id' => $this->id,
             'item_id' => $this->item_id,
-            'batch_no' => $this->batch_no,
+            'batch_number' => $this->batch_number,
             'manufacture_date' => $this->manufacture_date,
             'expiry_date' => $this->expiry_date,
             'cost_price' => $this->cost_price,

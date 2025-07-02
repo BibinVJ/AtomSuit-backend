@@ -35,7 +35,7 @@ class UpdateSaleAction
             // Recreate stock movements
             $this->stockMovementService->createStockMovements($sale);
 
-            return $sale->load('items.item', 'items.batch');
+            return $sale->load('items.item');
         });
     }
 }

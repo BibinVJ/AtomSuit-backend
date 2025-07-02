@@ -37,7 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Validation errors
         $exceptions->render(
             fn(\Illuminate\Validation\ValidationException $e, $req) =>
-            ApiResponse::error('Validation error.', $e->errors(), Response::HTTP_UNPROCESSABLE_ENTITY)
+            ApiResponse::error('Validation error.', $e ? $e->errors() : [], Response::HTTP_UNPROCESSABLE_ENTITY)
         );
 
         // Authorization errors (Spatie)

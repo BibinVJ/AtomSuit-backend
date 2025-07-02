@@ -5,7 +5,9 @@ namespace App\Actions\StockMovement;
 use App\Contracts\Stock\CreateStockMovementsActionInterface;
 use App\Models\Sale;
 use App\Repositories\StockMovementRepository;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\HttpFoundation\Response;
 
 class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterface
 {
@@ -42,7 +44,7 @@ class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterf
             }
 
             if ($remainingQty > 0) {
-                throw new \RuntimeException("Not enough stock for item ID: {$saleItem->item_id}");
+                throw new Exception("Not enough stock for item {$saleItem->item->name}", Response::HTTP_UNPROCESSABLE_ENTITY);
             }
         }
     }

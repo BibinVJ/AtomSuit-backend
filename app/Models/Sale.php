@@ -34,6 +34,11 @@ class Sale extends Model
         return $this->hasMany(SaleItem::class);
     }
 
+    public function stockMovements(): MorphMany
+    {
+        return $this->morphMany(StockMovement::class, 'source');
+    }
+
     /**
      * Get the total cost of the sale.
      */
@@ -42,8 +47,5 @@ class Sale extends Model
         return $this->items->sum(fn($i) => $i->quantity * $i->unit_price);
     }
 
-    public function stockMovements(): MorphMany
-    {
-        return $this->morphMany(StockMovement::class, 'source');
-    }
+
 }

@@ -23,4 +23,9 @@ class Customer extends Model
     {
         return $this->hasMany(Sale::class);
     }
+
+    public function totalSpent(): float
+    {
+        return $this->sales->sum(fn($sale) => $sale->total);
+    }
 }

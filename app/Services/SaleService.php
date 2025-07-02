@@ -43,7 +43,7 @@ class SaleService
     public function void(Sale $sale): Sale
     {
         if ($sale->payment_status === PaymentStatus::PAID) {
-            throw new ConflictHttpException("Sale can't be edited because it has been paid.");
+            throw new ConflictHttpException("Sale can't be voided because it has been paid.");
         }
 
         return $this->voidSale->execute($sale);
