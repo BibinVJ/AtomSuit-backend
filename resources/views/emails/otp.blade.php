@@ -1,7 +1,7 @@
 @component('mail::message')
 # Your OTP
 
-Here is your OTP for {{ ucfirst(str_replace('_', ' ', $purpose->value)) }}:
+Here is your OTP for {{ $purpose->label() }}:
 
 ## {{ $otp }}
 

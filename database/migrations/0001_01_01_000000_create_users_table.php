@@ -29,11 +29,11 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // Schema::create('reset_tokens', function (Blueprint $table) {
-        //     $table->string('email')->primary();
-        //     $table->string('token')->comment('token or hashed OTP');
-        //     $table->timestamp('created_at')->nullable();
-        // });
+        Schema::create('reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token')->comment('token or hashed OTP');
+            $table->timestamp('created_at')->nullable();
+        });
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();

@@ -28,7 +28,7 @@ class OtpMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: "Your OTP for {$this->purpose->name}",
+            subject: "Your OTP for {$this->purpose->label()}",
         );
     }
 
@@ -38,7 +38,7 @@ class OtpMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.otp',
+            markdown: 'emails.otp',
             with: [
                 'otp' => $this->otp,            ],
         );

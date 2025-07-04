@@ -29,6 +29,7 @@ php artisan queue:restart
 
 - php artisan passport:keys --force  # Generates Passport keys
 - php artisan passport:client --personal  # Generates a personal access client
+- php artisan vendor:publish --tag=laravel-mail # To publish mail package
 
 - php artisan queue:listen
 ```
