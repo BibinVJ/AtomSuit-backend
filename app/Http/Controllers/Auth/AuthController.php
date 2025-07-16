@@ -55,4 +55,9 @@ class AuthController extends Controller
         $this->authService->logout($request->user(), true);
         return ApiResponse::success('Logged out from all devices successfully.');
     }
+
+    public function profile(Request $request)
+    {
+        return ApiResponse::success('User profile retrieved successfully.', $request->user());
+    }
 }
