@@ -1,20 +1,18 @@
-# Pharmacy Manager backend api
-This is an **API-only** backend for **Pharmacy Manager**.
+# PharmacyManager API Backend
 
+This repository contains the API-only backend for the **PharmacyManager** platform. It is built using the Laravel framework (v12).
 
-## Requirements
-- PHP 8.1+
-- MySQL
+## System Requirements
+
+- PHP 8.2+
 - Composer
-- **Supervisor** (for managing queue workers in production)
+- Node.js & npm
+- A supported database (like MySQL, PostgreSQL, or SQLite)
+- **For Production:**
+    - **Supervisor:** To ensure the queue worker process remains active.
+    - **Cron:** For running scheduled tasks.
 
-
-yml commands to run
-php artisan optimize:clear
-composer install --no-interaction --prefer-dist --optimize-autoloader
-php artisan migrate --force
-php artisan optimize
-php artisan queue:restart
+## Key Features
 
 
 ## Developer Setup (Local)
@@ -26,13 +24,52 @@ php artisan queue:restart
 
 - php artisan migrate --seed
 - php artisan db:seed --class=UsersSeeder # (Optional) Create default users for each role if needed
+- php artisan db:seed --class=RolesAndPermissionsSeeder # (Optional) to sync the newly added roles and permission
 
 - php artisan passport:keys --force  # Generates Passport keys
 - php artisan passport:client --personal  # Generates a personal access client
-- php artisan vendor:publish --tag=laravel-mail # To publish mail package
 
 - php artisan queue:listen
 ```
+
+## Contribution Guidelines
+
+To maintain code quality and consistency, please adhere to the following guidelines when contributing to the project.
+
+### General Principles
+- **Keep it DRY:** Don't repeat yourself. Utilize existing services, actions, and helpers where possible.
+- **Thin Controllers:** Controllers should only be responsible for receiving requests and returning responses.
+- **Use Request Classes:** All request validation and authorization logic must be handled within dedicated `Request` classes.
+- **Business Logic:** Complex business logic should be encapsulated within `Service` or `Action` classes.
+- **Permissions over Roles:** Whenever checking for authorization, prefer using specific permissions (`$user->can('do_something')`) instead of checking for roles directly (`$user->hasRole('admin')`). This makes the system more flexible.
+
+### Git Workflow
+1.  **Create a Feature/Bug Branch:** All new work should be done on a feature/bug branch as required.
+    ```bash
+    # Example:
+    git checkout -b feature/user-export-endpoint
+    git checkout -b bug/invalid-status-code
+    ```
+2.  **Write Clear Commit Messages:** Write a concise, imperative-style subject line (e.g., "Add user export functionality"). Add more details in the body if necessary.
+3.  **Submit a Merge Request:** Once your feature is complete and tested, push your branch and create a Merge Request against the `main` or `staging` branch.
+
+### Coding Standards
+- **Laravel Pint:** The project uses Laravel Pint to enforce PSR-12 coding standards. Run it before committing to ensure your code is formatted correctly.
+  ```bash
+  ./vendor/bin/pint
+  ```
+- **Naming Conventions:** Follow Laravel's standard naming conventions for models, controllers, migrations, etc.
+
+### Database
+- **Migrations:** Never modify a migration that has already been merged into a shared branch. If you need to alter a table, create a new migration file.
+- **Seeders:** If you add data required for the application to function correctly, update the relevant database seeders.
+
+
+
+
+
+TODO: 
+move the dashboard repo methods to their corect service dashboardServiceor repo
 
 
 ## transaction workflow
