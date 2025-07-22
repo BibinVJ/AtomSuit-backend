@@ -39,7 +39,7 @@ class PurchaseService
     {
         // Check if any stock from this purchase has been consumed
         if ($this->stockMovementService->hasStockBeenConsumed($purchase)) {
-            throw new ConflictHttpException("Purchase can't be deleted because stock has already been consumed.");
+            throw new ConflictHttpException("Purchase can't be voided because stock has already been consumed.");
         }
 
         return $this->voidPurchase->execute($purchase);

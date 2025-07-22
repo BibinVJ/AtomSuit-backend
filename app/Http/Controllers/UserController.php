@@ -25,7 +25,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search']);
+        $filters = $request->only(['is_active', 'search', 'is_not_admin', 'sort_by', 'sort_direction']);
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 

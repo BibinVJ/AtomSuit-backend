@@ -9,8 +9,13 @@ trait HasCrudRepository
 {
     protected Model $model;
 
-    public function all(bool $paginate = false, int $perPage = 15, array $filters = [], array $with = []): Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator
-    {
+    public function all(
+        bool $paginate = false,
+        int $perPage = 15,
+        array $filters = [],
+        array $with = [],
+    ): Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator {
+
         $query = $this->model->newQuery();
 
         // Eager load relationships
@@ -22,6 +27,11 @@ trait HasCrudRepository
         if (method_exists($this, 'applyFilters')) {
             $query = $this->applyFilters($query, $filters);
         }
+
+        // for sort
+        $sortBy = $filters['sort_by'] ?? 'id';
+        $sortDir = $filters['sort_direction'] ?? 'desc';
+        $query->orderBy($sortBy, $sortDir);
 
         return $paginate ? $query->paginate($perPage) : $query->get();
     }

@@ -30,6 +30,11 @@ class PurchaseRepository
         $purchase->items()->create($item);
     }
 
+    /**
+     * $purchase - existing purchase
+     * $items - new items to be synced.
+     * todo: move this to service/action/repo as required
+     */
     public function syncItems(Purchase $purchase, array $items): void
     {
         // Get item IDs

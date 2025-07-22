@@ -30,7 +30,7 @@ class UpdatePurchaseAction
                 'payment_status' => $data['payment_status'] ?? $purchase->payment_status,
             ]);
 
-            // Update items
+            // add batch
             $preparedItems = collect($data['items'])->map(function ($item) {
                 $batch = $this->batchService->create($item);
                 return array_merge($item, ['batch_id' => $batch->id]);

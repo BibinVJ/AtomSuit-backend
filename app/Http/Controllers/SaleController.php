@@ -26,13 +26,11 @@ class SaleController extends Controller
 
     public function index(Request $request)
     {
+        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $sales = $this->saleRepo->all($paginate, $perPage, with: [
-            'items.item',
-            'customer',
-        ]);
+        $sales = $this->saleRepo->all($paginate, $perPage, $filters, ['items.item','customer']);
 
         return ApiResponse::success(
             'Sales fetched successfully.',

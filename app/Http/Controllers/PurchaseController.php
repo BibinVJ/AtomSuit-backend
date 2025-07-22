@@ -26,10 +26,11 @@ class PurchaseController extends Controller
 
     public function index(Request $request)
     {
+        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $purchases = $this->purchaseRepo->all($paginate, $perPage, with: [
+        $purchases = $this->purchaseRepo->all($paginate, $perPage, $filters, [
             'items.batch',
             'items.item',
             'vendor',

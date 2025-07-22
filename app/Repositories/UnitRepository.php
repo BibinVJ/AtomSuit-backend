@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\RolesEnum;
 use App\Models\Unit;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,12 @@ class UnitRepository
                 $q->where('name', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('code', 'like', '%' . $filters['search'] . '%')
                     ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+            });
+        }
+
+        if (!empty($filters['is_not_admin'])) {
+            $query->whereDoesntHave('roles', function ($q) {
+                $q->where('name', RolesEnum::ADMIN->value);
             });
         }
 

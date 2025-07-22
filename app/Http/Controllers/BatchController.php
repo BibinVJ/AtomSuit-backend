@@ -18,7 +18,7 @@ class BatchController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['search']);
+        $filters = $request->only(['search', 'sort_by', 'sort_direction']);
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('per_page', 15);
 
