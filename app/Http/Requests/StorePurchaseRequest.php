@@ -39,6 +39,7 @@ class StorePurchaseRequest extends FormRequest
             'items.*.manufacture_date' => 'nullable|date|before:purchase_date',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_cost' => 'required|numeric|min:0',
+            'items.*.description' => 'nullable'
         ];
     }
 }

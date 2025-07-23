@@ -18,7 +18,7 @@ class SaleResource extends BaseResource
             'customer'       => CustomerResource::make($this->customer),
             'invoice_number' => $this->invoice_number,
             'sale_date'      => $this->sale_date->toDateString(),
-            'total'          => $this->total,
+            'total_amount'   => $this->total,
             'payment_status' => $this->payment_status,
             'items'          => SaleItemResource::collection($this->items),
         ];

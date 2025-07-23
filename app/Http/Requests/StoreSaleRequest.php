@@ -37,6 +37,7 @@ class StoreSaleRequest extends FormRequest
             'items.*.batch_id' => 'nullable|exists:batches,id',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_price' => 'required|numeric|min:0',
+            'items.*.description' => 'nullable'
         ];
     }
 }

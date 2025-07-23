@@ -47,6 +47,12 @@ class SaleController extends Controller
         return ApiResponse::success('Sale fetched successfully.', SaleResource::make($sale));
     }
 
+    public function getNextInvoiceNumber()
+    {
+        $invoiceNumber = $this->saleService->getNextInvoiceNumber();
+        return ApiResponse::success('Invoice Number fetched.', ['invoice_number' => $invoiceNumber]);
+    }
+
     public function store(StoreSaleRequest $request)
     {
         $sale = $this->saleService->create($request->validated());

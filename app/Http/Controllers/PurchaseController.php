@@ -17,8 +17,7 @@ class PurchaseController extends Controller
         protected PurchaseService $purchaseService,
         protected PurchaseRepository $purchaseRepo
     ) {
-        $this->middleware("permission:" . PermissionsEnum::VIEW_PURCHASE->value)->only(['index']);
-        $this->middleware("permission:" . PermissionsEnum::VIEW_PURCHASE->value)->only(['show']);
+        $this->middleware("permission:" . PermissionsEnum::VIEW_PURCHASE->value)->only(['index', 'show']);
         $this->middleware("permission:" . PermissionsEnum::CREATE_PURCHASE->value)->only(['store']);
         $this->middleware("permission:" . PermissionsEnum::UPDATE_PURCHASE->value)->only(['update']);
         $this->middleware("permission:" . PermissionsEnum::DELETE_PURCHASE->value)->only(['destroy']);
@@ -50,6 +49,12 @@ class PurchaseController extends Controller
             'vendor',
         ]);
         return ApiResponse::success('Purchase fetched successfully.', PurchaseResource::make($purchase));
+    }
+
+    public function getNextInvoiceNumber()
+    {
+        $invoiceNumber = $this->purchaseService->getNextInvoiceNumber();
+        return ApiResponse::success('Invoice Number fetched.', ['invoice_number' => $invoiceNumber]);
     }
 
     public function store(StorePurchaseRequest $request)

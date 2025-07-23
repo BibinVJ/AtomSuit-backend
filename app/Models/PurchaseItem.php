@@ -13,6 +13,7 @@ class PurchaseItem extends Model
         'batch_id',
         'quantity',
         'unit_cost',
+        'description'
     ];
 
     protected $casts = [

@@ -90,7 +90,9 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::apiResource('customer', CustomerController::class);
+    Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
     Route::apiResource('sale', SaleController::class);
+
 
 
     /*
@@ -99,6 +101,7 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::apiResource('vendor', VendorController::class);
+    Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
     Route::apiResource('purchase', PurchaseController::class);
 
 

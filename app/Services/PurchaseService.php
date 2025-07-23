@@ -18,6 +18,29 @@ class PurchaseService
         protected StockMovementService $stockMovementService
     ) {}
 
+    
+    /**
+     * Get the next invoice number for a purchase.
+     */
+    public function getNextInvoiceNumber(): string
+    {
+        $prefix = 'P-INV';
+        
+        $lastInvoice = Purchase::whereNotNull('invoice_number')
+            ->orderByDesc('id') // or created_at
+            ->value('invoice_number');
+
+        $lastNumber = 0;
+
+        if ($lastInvoice && preg_match('/\d+$/', $lastInvoice, $matches)) {
+            $lastNumber = intval($matches[0]);
+        }
+
+        $nextNumber = $lastNumber + 1;
+
+        return "{$prefix}-" . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+    }
+
     public function create(array $data): Purchase
     {
         // additional checks if purchase can be added
@@ -37,6 +60,10 @@ class PurchaseService
 
     public function void(Purchase $purchase): Purchase
     {
+        // check if already voided
+
+
+
         // Check if any stock from this purchase has been consumed
         if ($this->stockMovementService->hasStockBeenConsumed($purchase)) {
             throw new ConflictHttpException("Purchase can't be voided because stock has already been consumed.");

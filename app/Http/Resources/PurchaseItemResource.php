@@ -16,7 +16,7 @@ class PurchaseItemResource extends BaseResource
         return [
             'id'          => $this->id,
             'item'        => ItemResource::make($this->item),
-            'batch'       => $this->batch?->batch_number,
+            'batch'       => BatchResource::make($this->batch),
             'quantity'    => $this->quantity,
             'unit_cost'  => $this->unit_cost,
             'total_cost' => $this->quantity * $this->unit_cost,

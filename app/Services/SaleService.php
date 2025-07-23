@@ -20,6 +20,28 @@ class SaleService
     ) {}
 
 
+    /**
+     * Get the next invoice number for a sale.
+     */
+    public function getNextInvoiceNumber(): string
+    {
+        $prefix = 'S-INV';
+
+        $lastInvoice = Sale::whereNotNull('invoice_number')
+            ->orderByDesc('id') // or created_at
+            ->value('invoice_number');
+
+        $lastNumber = 0;
+
+        if ($lastInvoice && preg_match('/\d+$/', $lastInvoice, $matches)) {
+            $lastNumber = intval($matches[0]);
+        }
+
+        $nextNumber = $lastNumber + 1;
+
+        return "{$prefix}-" . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+    }
+
     public function create(array $data): Sale
     {
         // additional checks if sales can be added

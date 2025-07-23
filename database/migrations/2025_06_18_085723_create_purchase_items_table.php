@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('batch_id')->constrained()->cascadeOnDelete();
             $table->integer('quantity')->default(1);
             $table->decimal('unit_cost', 10, 2);
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
