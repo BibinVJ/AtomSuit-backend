@@ -51,7 +51,7 @@ class CategoryController extends Controller
 
     public function destroy(Category $category)
     {
-        $this->categoryService->ensureCategoryIsDeletable($category);
+        $this->categoryService->ensureCategoryIsDeletable($category); // move this check to delete service
         $this->categoryRepo->delete($category);
         return ApiResponse::success('Category deleted successfully.');
     }

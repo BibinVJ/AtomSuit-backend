@@ -83,6 +83,20 @@ class Item extends Model
         return $this->stockMovements->sum('quantity');
     }
 
+    public function nonExpiredStock(): int
+    {
+        return $this->batches
+            ->filter(fn($batch) => $batch->expiry_date?->isFuture())
+            ->sum(fn($batch) => $batch->stockOnHand());
+    }
+
+    public function expiredStock(): int
+    {
+        return $this->batches
+            ->filter(fn($batch) => $batch->expiry_date?->isPast())
+            ->sum(fn($batch) => $batch->stockOnHand());
+    }
+
     /**
      * Get the total purchased quantity for this item.
      */

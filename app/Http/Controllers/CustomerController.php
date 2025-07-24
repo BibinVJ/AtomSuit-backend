@@ -52,7 +52,7 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
-        $this->customerService->ensureCustomerIsDeletable($customer);
+        $this->customerService->ensureCustomerIsDeletable($customer); // move this check to delete service
         $this->customerRepository->delete($customer);
         return ApiResponse::success('Customer deleted successfully.');
     }

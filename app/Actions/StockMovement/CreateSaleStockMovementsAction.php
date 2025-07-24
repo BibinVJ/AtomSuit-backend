@@ -15,6 +15,8 @@ class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterf
 
     public function execute(Model $sale): void
     {
+        $allowExpired = false; // todo: change this later to getch from the settings
+
         foreach ($sale->items as $saleItem) {
             $remainingQty = $saleItem->quantity;
 
@@ -23,6 +25,12 @@ class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterf
 
             foreach ($batches as $batch) {
                 if ($remainingQty <= 0) break;
+
+                // Block expired batch if setting says so
+                if (!$allowExpired && $batch->expiry_date && $batch->expiry_date->isPast()) {
+                    \Log::info('wer');
+                    continue; // Skip this batch
+                }
 
                 $available = $batch->available_qty;
                 $toDeduct = min($available, $remainingQty);

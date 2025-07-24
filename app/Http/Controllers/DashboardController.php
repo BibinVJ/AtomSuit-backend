@@ -17,14 +17,8 @@ class DashboardController extends Controller
      */
     public function home()
     {
-
-        
         $dto = $this->dashboardService->getMetrics();
         return ApiResponse::success('Dashboard data fetched.', new DashboardResource($dto));
-
-
-        $data = $this->dashboardService->getMetrics();
-        return ApiResponse::success('Dashboard data fetched.', DashboardResource::make($data));
     }
 
 }

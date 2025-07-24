@@ -20,6 +20,7 @@ class BatchResource extends BaseResource
             'manufacture_date' => $this->manufacture_date,
             'expiry_date' => $this->expiry_date,
             'cost_price' => $this->cost_price,
+            'stock_on_hand' => $this->stockOnHand(),
         ];
     }
 }

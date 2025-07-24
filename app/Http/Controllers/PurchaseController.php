@@ -57,6 +57,7 @@ class PurchaseController extends Controller
         return ApiResponse::success('Invoice Number fetched.', ['invoice_number' => $invoiceNumber]);
     }
 
+    // todo: mak ethe batch optional and if batch not given generate one in the backend or have vendor_batch_number and system_batch_number
     public function store(StorePurchaseRequest $request)
     {
         $purchase = $this->purchaseService->create($request->validated());

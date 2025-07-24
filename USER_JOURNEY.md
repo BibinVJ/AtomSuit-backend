@@ -113,3 +113,26 @@ Editable: ❌
 
 Voidable: ❌
 
+
+
+
+
+
+
+
+tranaction creations:
+
+no automatic creation, eveything has to be created manually, (may change after user feedback).
+
+
+| Flow                    | Allowed?   | When to use                                    |
+| ----------------------- | ---------- | ---------------------------------------------- |
+| PO → GRN → Invoice      | yes        | Default, strict mode                           |
+| PO → Invoice → GRN      | yes        | Vendor invoices before delivery                |
+| Direct Invoice → No GRN | yes        | For services or non-stock items                |
+| Direct Invoice → GRN    | yes        | Only if user confirms with warehouse           |
+| Direct GRN → Invoice    | yes        | when order is received first and adding invoice|
+
+| POS Purchase → Invoice -> GRN | yes  | for pos sales, automate these creations        |
+
+same goes for sale also.

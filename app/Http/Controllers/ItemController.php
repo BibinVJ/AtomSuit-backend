@@ -37,6 +37,17 @@ class ItemController extends Controller
         );
     }
 
+    public function show(Item $item)
+    {
+        $item = $this->itemRepo->find($item->id, with: [
+            'category',
+            'unit',
+            'stockMovements',
+            'batches'
+        ]);
+        return ApiResponse::success('Item fetched successfully.', ItemResource::make($item));
+    }
+
     public function store(ItemRequest $request)
     {
         $item = $this->itemRepo->create($request->validated());
@@ -51,7 +62,7 @@ class ItemController extends Controller
 
     public function destroy(Item $item)
     {
-        $this->itemService->ensureItemIsDeletable($item);
+        $this->itemService->ensureItemIsDeletable($item); // move this check to delete service
         $this->itemRepo->delete($item);
         return ApiResponse::success('Item deleted successfully.');
     }

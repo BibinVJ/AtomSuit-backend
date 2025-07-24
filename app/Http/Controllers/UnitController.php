@@ -51,7 +51,7 @@ class UnitController extends Controller
 
     public function destroy(Unit $unit)
     {
-        $this->unitService->ensureUnitIsDeletable($unit);
+        $this->unitService->ensureUnitIsDeletable($unit); // move this check to delete service
         $this->unitRepo->delete($unit);
         return ApiResponse::success('Unit deleted successfully.');
     }

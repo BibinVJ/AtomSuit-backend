@@ -23,6 +23,10 @@ class ItemResource extends BaseResource
             'unit' => new UnitResource($this->whenLoaded('unit')),
             'type' => $this->type,
             'stock_on_hand' => $this->stockOnHand(),
+            'non_expired_stock' => $this->nonExpiredStock(),
+            'expired_stock' => $this->expiredStock(),
+            'is_expired_sale_enabled' => false, // todo: change this later to getch from the settings
+            'batches' => BatchResource::collection($this->whenLoaded('batches')),
             // 'total_sold' => $this->totalSold(),
             // 'total_purchased' => $this->totalPurchased(),
             // 'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),
