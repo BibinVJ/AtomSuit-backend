@@ -28,7 +28,6 @@ class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterf
 
                 // Block expired batch if setting says so
                 if (!$allowExpired && $batch->expiry_date && $batch->expiry_date->isPast()) {
-                    \Log::info('wer');
                     continue; // Skip this batch
                 }
 
@@ -52,7 +51,10 @@ class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterf
             }
 
             if ($remainingQty > 0) {
-                throw new Exception("Not enough stock for item {$saleItem->item->name}", Response::HTTP_UNPROCESSABLE_ENTITY);
+                throw new Exception(
+                    "Not enough " . ($allowExpired ? '' : 'unexpired ') . "stock for item {$saleItem->item->name}",
+                    Response::HTTP_UNPROCESSABLE_ENTITY
+                );
             }
         }
     }

@@ -29,7 +29,7 @@ class StockMovementRepository
     public function getFifoAvailableStock(array $filters = []): Collection
     {
         return StockMovement::query()
-            ->where('quantity', '>', 0)
+            // ->where('quantity', '>', 0)
             ->when(isset($filters['item_id']), fn($q) => $q->where('item_id', $filters['item_id']))
             ->when(isset($filters['warehouse_id']), fn($q) => $q->where('warehouse_id', $filters['warehouse_id']))
             ->with('batch')
