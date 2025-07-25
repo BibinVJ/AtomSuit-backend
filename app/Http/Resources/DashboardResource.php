@@ -17,6 +17,8 @@ class DashboardResource extends BaseResource
             'metrics' => [
                 'total_sales_amount' => $this->resource->total_sales_amount,
                 'total_purchase_amount' => $this->resource->total_purchase_amount,
+                'total_customers' => $this->resource->total_customers,
+                'total_items' => $this->resource->total_items,
             ],
             'top_items' => [
                 'sold' => $this->resource->top_selling_items,

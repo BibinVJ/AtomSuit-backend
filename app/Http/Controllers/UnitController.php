@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class UnitController extends Controller
 {
     public function __construct(
-        protected UnitRepository $unitRepo,
+        protected UnitRepository $unitRepository,
         protected UnitService $unitService
     ) {
         $this->middleware("permission:" . PermissionsEnum::VIEW_UNIT->value)->only(['index']);
@@ -29,7 +29,7 @@ class UnitController extends Controller
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $units = $this->unitRepo->all($paginate, $perPage, $filters);
+        $units = $this->unitRepository->all($paginate, $perPage, $filters);
 
         return ApiResponse::success(
             'Units fetched successfully.',
@@ -39,20 +39,19 @@ class UnitController extends Controller
 
     public function store(UnitRequest $request)
     {
-        $unit = $this->unitRepo->create($request->validated());
+        $unit = $this->unitRepository->create($request->validated());
         return ApiResponse::success('Unit created successfully.', UnitResource::make($unit));
     }
 
     public function update(UnitRequest $request, Unit $unit)
     {
-        $updatedUnit = $this->unitRepo->update($unit, $request->validated());
+        $updatedUnit = $this->unitRepository->update($unit, $request->validated());
         return ApiResponse::success('Unit updated successfully.', UnitResource::make($updatedUnit));
     }
 
     public function destroy(Unit $unit)
     {
-        $this->unitService->ensureUnitIsDeletable($unit); // move this check to delete service
-        $this->unitRepo->delete($unit);
+        $this->unitService->delete($unit);
         return ApiResponse::success('Unit deleted successfully.');
     }
 }

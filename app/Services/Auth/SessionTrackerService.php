@@ -14,7 +14,7 @@ class SessionTrackerService
             ->update(['logout_at' => now()]);
     }
 
-    public function markSessionByToken(string $tokenId): void
+    public function markSessionLoggedOutByToken(string $tokenId): void
     {
         UserLoginDetail::where('token_id', $tokenId)
             ->whereNull('logout_at')

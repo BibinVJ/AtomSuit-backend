@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class ItemController extends Controller
 {
     public function __construct(
-        protected ItemRepository $itemRepo,
+        protected ItemRepository $itemRepository,
         protected ItemService $itemService
     ) {
         $this->middleware("permission:" . PermissionsEnum::VIEW_ITEM->value)->only(['index']);
@@ -29,7 +29,7 @@ class ItemController extends Controller
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $items = $this->itemRepo->all($paginate, $perPage, $filters, ['category', 'unit', 'stockMovements']);
+        $items = $this->itemRepository->all($paginate, $perPage, $filters, ['category', 'unit', 'stockMovements']);
 
         return ApiResponse::success(
             'Items fetched successfully.',
@@ -39,7 +39,7 @@ class ItemController extends Controller
 
     public function show(Item $item)
     {
-        $item = $this->itemRepo->find($item->id, with: [
+        $item = $this->itemRepository->find($item->id, with: [
             'category',
             'unit',
             'stockMovements',
@@ -50,20 +50,19 @@ class ItemController extends Controller
 
     public function store(ItemRequest $request)
     {
-        $item = $this->itemRepo->create($request->validated());
+        $item = $this->itemRepository->create($request->validated());
         return ApiResponse::success('Item created successfully.', ItemResource::make($item));
     }
 
     public function update(ItemRequest $request, Item $item)
     {
-        $updatedItem = $this->itemRepo->update($item, $request->validated());
+        $updatedItem = $this->itemRepository->update($item, $request->validated());
         return ApiResponse::success('Item updated successfully.', ItemResource::make($updatedItem));
     }
 
     public function destroy(Item $item)
     {
-        $this->itemService->ensureItemIsDeletable($item); // move this check to delete service
-        $this->itemRepo->delete($item);
+        $this->itemService->delete($item);
         return ApiResponse::success('Item deleted successfully.');
     }
 }

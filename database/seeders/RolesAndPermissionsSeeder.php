@@ -16,7 +16,8 @@ class RolesAndPermissionsSeeder extends Seeder
         // Clear cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        
+        $guard = config('permission.defaults.guard');
+
         /**
          * Create all permissions
          * 
@@ -26,7 +27,7 @@ class RolesAndPermissionsSeeder extends Seeder
         foreach (PermissionsEnum::cases() as $permissionEnum) {
             Permission::firstOrCreate([
                 'name' => $permissionEnum->value,
-                'guard_name' => config('permission.defaults.guard')
+                'guard_name' => $guard
             ]);
         }
 
@@ -34,23 +35,25 @@ class RolesAndPermissionsSeeder extends Seeder
         /**
          * Create and assign permissions to roles
          */
-        // ADMIN - Assign all permissions
-        $adminRole = Role::firstOrCreate(['name' => RolesEnum::SUPER_ADMIN->value]);
-        $adminRole->syncPermissions(Permission::all());
+        // SUPER ADMIN - Assign all permissions
+        $superAdminRole = Role::firstOrCreate(['name' => RolesEnum::SUPER_ADMIN->value, 'guard_name' => $guard]);
+        $superAdminRole->syncPermissions(Permission::all());
 
-        $adminRole = Role::firstOrCreate(['name' => RolesEnum::ADMIN->value]);
+        
+        // ADMIN - Assign all permissions
+        $adminRole = Role::firstOrCreate(['name' => RolesEnum::ADMIN->value, 'guard_name' => $guard]);
         $adminRole->syncPermissions(Permission::all());
 
         
         // INVENTORY MANAGER
-        $sponsorRole = Role::firstOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value]);
+        $sponsorRole = Role::firstOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value, 'guard_name' => $guard]);
         $sponsorRole->syncPermissions([
             PermissionsEnum::VIEW_DASHBOARD->value,
         ]);
 
 
         // SALES PERSON
-        $exhibitorRole = Role::firstOrCreate(['name' => RolesEnum::SALES_PERSON->value]);
+        $exhibitorRole = Role::firstOrCreate(['name' => RolesEnum::SALES_PERSON->value, 'guard_name' => $guard]);
         $exhibitorRole->syncPermissions([
             PermissionsEnum::VIEW_DASHBOARD->value,
 

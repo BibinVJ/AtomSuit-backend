@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,46 +29,17 @@ class UserRepository
             });
         }
 
+        if (!empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
+
+        if (!empty($filters['role'])) {
+            $query->whereHas('roles', function ($q) use ($filters) {
+                $q->where('name', $filters['role']);
+            });
+        }
+
         return $query;
-    }
-
-    public function create(array $data): User
-    {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'status' => UserStatus::ACTIVE,
-            'status_updated_at' => now(),
-            'phone' => $data['phone'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
-
-        if (isset($data['role'])) {
-            $user->assignRole($data['role']);
-        }
-
-        return $user;
-    }
-
-    public function update(User $user, array $data): User
-    {
-        $user->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
-
-        if (isset($data['password'])) {
-            $user->update(['password' => Hash::make($data['password'])]);
-        }
-
-        if (isset($data['role'])) {
-            $user->syncRoles($data['role']);
-        }
-
-        return $user;
     }
 
     public function findByEmail(string $email): ?User
@@ -80,5 +50,17 @@ class UserRepository
     public function updatePassword(User $user, string $password): void
     {
         $user->update(['password' => Hash::make($password)]);
+    }
+
+    public function userCount(?array $statuses = null, ?array $roles = null): int
+    {
+        return User::when($statuses, fn($query) => $query->whereIn('status', $statuses))
+            ->when($roles, fn($query) => $query->whereHas('roles', fn($q) => $q->whereIn('name', $roles)))
+            ->count();
+    }
+
+    public function changeStatus(User $user, string $status)
+    {
+        $user->update(['status' => $status, 'status_updated_at' => now()]);
     }
 }

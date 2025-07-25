@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('provider')->nullable()->comment('provider name, google, linkedin');
+            $table->string('provider')->nullable()->comment('provider name, google, linkedin, etc...');
             $table->string('provider_id')->nullable();
             $table->rememberToken();
             $table->string('status')->default(UserStatus::PENDING);
@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('profile_image')->nullable()->comment('URL to the profile image');
             $table->string('phone')->nullable();
             $table->string('phone_verified_at')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
 

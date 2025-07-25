@@ -9,6 +9,8 @@ class DashboardMetricsDTO
     public function __construct(
         public float $total_sales_amount,
         public float $total_purchase_amount,
+        public int $total_customers,
+        public int $total_items,
         public Collection $top_selling_items,
         public Collection $top_purchased_items,
         public Collection $expiring_items,

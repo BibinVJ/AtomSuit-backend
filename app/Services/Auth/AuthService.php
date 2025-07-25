@@ -4,6 +4,7 @@ namespace App\Services\Auth;
 
 use App\DataTransferObjects\AuthenticatedUserDTO;
 use App\Enums\UserStatus;
+use App\Jobs\SendWelcomeUserMailJob;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
@@ -28,8 +29,11 @@ class AuthService
         ]);
 
         $user->assignRole($data['role']);
-
         $token = $this->tokenService->create($user);
+
+        // dispatch welcome mail with user credentials
+        dispatch(new SendWelcomeUserMailJob($user, $data['password']));
+        
         return new AuthenticatedUserDTO($user, $token);
     }
 
@@ -56,7 +60,7 @@ class AuthService
             $this->sessionTracker->markAllSessionsLoggedOut($user);
         } else {
             $this->tokenService->revokeCurrent($user);
-            $this->sessionTracker->markSessionByToken($user->token()?->id);
+            $this->sessionTracker->markSessionLoggedOutByToken($user->token()?->id);
         }
     }
 

@@ -2,14 +2,13 @@
 
 namespace App\Actions\StockMovement;
 
-use App\Contracts\Stock\CreateStockMovementsActionInterface;
 use App\Models\Sale;
 use App\Repositories\StockMovementRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 
-class CreateSaleStockMovementsAction implements CreateStockMovementsActionInterface
+class CreateSaleStockMovementsAction
 {
     public function __construct(protected StockMovementRepository $stockMovementRepo) {}
 

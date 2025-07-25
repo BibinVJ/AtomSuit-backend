@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 class CategoryController extends Controller
 {
     public function __construct(
-        protected CategoryRepository $categoryRepo,
+        protected CategoryRepository $categoryRepository,
         protected CategoryService $categoryService
     ) {
         $this->middleware("permission:" . PermissionsEnum::VIEW_CATEGORY->value)->only(['index']);
@@ -29,7 +29,7 @@ class CategoryController extends Controller
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $categories = $this->categoryRepo->all($paginate, $perPage, $filters);
+        $categories = $this->categoryRepository->all($paginate, $perPage, $filters);
 
         return ApiResponse::success(
             'Categories fetched successfully.',
@@ -39,20 +39,19 @@ class CategoryController extends Controller
 
     public function store(CategoryRequest $request)
     {
-        $category = $this->categoryRepo->create($request->validated());
+        $category = $this->categoryRepository->create($request->validated());
         return ApiResponse::success('Category created successfully.', CategoryResource::make($category));
     }
 
     public function update(CategoryRequest $request, Category $category)
     {
-        $updatedCategory = $this->categoryRepo->update($category, $request->validated());
+        $updatedCategory = $this->categoryRepository->update($category, $request->validated());
         return ApiResponse::success('Category updated successfully.', CategoryResource::make($updatedCategory));
     }
 
     public function destroy(Category $category)
     {
-        $this->categoryService->ensureCategoryIsDeletable($category); // move this check to delete service
-        $this->categoryRepo->delete($category);
+        $this->categoryService->delete($category);
         return ApiResponse::success('Category deleted successfully.');
     }
 }

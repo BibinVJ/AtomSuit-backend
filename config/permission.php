@@ -3,11 +3,7 @@
 return [
 
     'defaults' => [
-        'guard' => 'api',
-    ],
-
-    'guards' => [
-        'api',
+        'guard' => env('AUTH_GUARD', 'web'),
     ],
 
     'models' => [

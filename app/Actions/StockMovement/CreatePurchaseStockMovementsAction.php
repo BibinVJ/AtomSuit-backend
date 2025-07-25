@@ -2,12 +2,11 @@
 
 namespace App\Actions\StockMovement;
 
-use App\Contracts\Stock\CreateStockMovementsActionInterface;
 use App\Models\Purchase;
 use App\Repositories\StockMovementRepository;
 use Illuminate\Database\Eloquent\Model;
 
-class CreatePurchaseStockMovementsAction implements CreateStockMovementsActionInterface
+class CreatePurchaseStockMovementsAction
 {
     public function __construct(protected StockMovementRepository $stockRepo) {}
 

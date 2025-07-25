@@ -23,6 +23,9 @@ class DatabaseSeeder extends Seeder
             VendorSeeder::class,
             CustomerSeeder::class,
 
+            PurchaseSeeder::class,
+            SaleSeeder::class,
+
         ]);
     }
 }

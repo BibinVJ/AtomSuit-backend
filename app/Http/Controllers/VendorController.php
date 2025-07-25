@@ -52,8 +52,7 @@ class VendorController extends Controller
 
     public function destroy(Vendor $vendor)
     {
-        $this->vendorService->ensureVendorIsDeletable($vendor); // move this check to delete service
-        $this->vendorRepository->delete($vendor);
+        $this->vendorService->delete($vendor);
         return ApiResponse::success('Vendor deleted successfully.');
     }
 }

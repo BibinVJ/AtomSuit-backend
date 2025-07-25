@@ -9,6 +9,8 @@ enum PermissionsEnum: string
     // Dashboard
     case VIEW_DASHBOARD = 'view-dashboard';
 
+    case MANAGE_NOTIFICATIONS = 'manage-notifications';
+
     // User Management
     case VIEW_USER = 'view-user';
     case CREATE_USER = 'create-user';

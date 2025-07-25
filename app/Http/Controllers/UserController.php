@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\SendUserMailAction;
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserSendMailRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -15,7 +17,8 @@ class UserController extends Controller
 {
     public function __construct(
         protected UserRepository $userRepository,
-        protected UserService $userService
+        protected UserService $userService,
+        protected SendUserMailAction $sendUserMailAction
     ) {
         $this->middleware("permission:" . PermissionsEnum::VIEW_USER->value)->only(['index']);
         $this->middleware("permission:" . PermissionsEnum::CREATE_USER->value)->only(['store']);
@@ -25,7 +28,7 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'is_not_admin', 'sort_by', 'sort_direction']);
+        $filters = $request->only(['is_active', 'search', 'is_not_admin', 'role', 'sort_by', 'sort_direction']);
         $paginate = !$request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
@@ -39,20 +42,25 @@ class UserController extends Controller
 
     public function store(UserRequest $request)
     {
-        $user = $this->userRepository->create($request->validated());
+        $user = $this->userService->create($request->validated());
         return ApiResponse::success('User created successfully.', UserResource::make($user));
     }
 
     public function update(UserRequest $request, User $user)
     {
-        $updatedUser = $this->userRepository->update($user, $request->validated());
+        $updatedUser = $this->userService->update($user, $request->validated());
         return ApiResponse::success('User updated successfully.', UserResource::make($updatedUser));
     }
 
     public function destroy(User $user)
     {
-        $this->userService->ensureUserIsDeletable($user);
-        $this->userRepository->delete($user);
+        $this->userService->delete($user);
         return ApiResponse::success('User deleted successfully.');
+    }
+
+    public function sendMail(UserSendMailRequest $request, User $user)
+    {
+        $this->sendUserMailAction->execute($user, $request->validated()['subject'], $request->validated()['body']);
+        return ApiResponse::success('Mail sent successfully.');
     }
 }

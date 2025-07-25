@@ -37,7 +37,6 @@ class CustomerController extends Controller
         );
     }
 
-
     public function store(CustomerRequest $request)
     {
         $customer = $this->customerRepository->create($request->validated());
@@ -52,8 +51,7 @@ class CustomerController extends Controller
 
     public function destroy(Customer $customer)
     {
-        $this->customerService->ensureCustomerIsDeletable($customer); // move this check to delete service
-        $this->customerRepository->delete($customer);
+        $this->customerService->delete($customer);
         return ApiResponse::success('Customer deleted successfully.');
     }
 }

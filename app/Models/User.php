@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Enums\UserStatus;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements OAuthenticatable
+class User extends Authenticatable implements OAuthenticatable, MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles;
+    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
 
     protected $guard_name = 'api';
+
+    const PROFILE_IMAGE_PATH = 'users/profile-images';
+
 
     /**
      * The attributes that are mass assignable.
@@ -64,6 +67,11 @@ class User extends Authenticatable implements OAuthenticatable
         ];
     }
 
+    public function getUserRole()
+    {
+        return $this->roles->pluck('name')->first();
+    }
+    
     public function logindetails(): HasMany
     {
         return $this->hasMany(UserLoginDetail::class);

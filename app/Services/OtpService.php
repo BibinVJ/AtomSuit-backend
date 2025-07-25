@@ -37,11 +37,14 @@ class OtpService
             'expires_at' => $expiresAt,
         ]);
 
-        dispatch(new SendOtpJob($user, $otp, $purpose));
-
         return $otp;
     }
 
+    public function sendPasswordResetOtp(User $user)
+    {
+        $otp = $this->generate($user, OtpPurposeEnum::PASSWORD_RESET);
+        dispatch(new SendOtpJob($user, $otp, OtpPurposeEnum::PASSWORD_RESET));
+    }
 
     public function verify(User $user, OtpPurposeEnum $purpose, string $inputOtp): bool
     {

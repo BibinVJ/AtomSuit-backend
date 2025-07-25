@@ -14,6 +14,7 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\StockMovement;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
 
 class DashboardRepository
@@ -148,7 +149,6 @@ class DashboardRepository
     {
         return Sale::with('items')
             ->orderBy('sale_date')
-            ->limit(30)
             ->get()
             ->groupBy(fn($sale) => $sale->sale_date->toDateString())
             ->map(fn($sales, $date) => new DashboardChartPointDTO(
@@ -163,7 +163,6 @@ class DashboardRepository
     {
         return Purchase::with('items')
             ->orderBy('purchase_date')
-            ->limit(30)
             ->get()
             ->groupBy(fn($purchase) => $purchase->purchase_date->toDateString())
             ->map(fn($purchases, $date) => new DashboardChartPointDTO(

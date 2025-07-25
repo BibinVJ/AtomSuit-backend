@@ -8,10 +8,14 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,7 +38,7 @@ Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 Route::prefix('auth')->group(function () {
-    Route::post('send-reset-otp', [PasswordResetController::class, 'sendResetOtp']);
+    Route::post('send-reset-otp', [PasswordResetController::class, 'sendPasswordResetOtp']);
     Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp']);
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
 });
@@ -46,14 +50,25 @@ Route::prefix('auth')->group(function () {
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:api'])->group(function () {
-    Route::get('profile', [AuthController::class, 'profile']);
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
 
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('unread', [NotificationController::class, 'unread']);
+        Route::post('read/{id?}', [NotificationController::class, 'markAsRead']);
+    });
+
     Route::get('dashboard', [DashboardController::class, 'home']);
 
-    // Route::get('user/profile', [UserController::class, 'profile']);
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [UserProfileController::class, 'show']);
+        Route::post('/', [UserProfileController::class, 'update']);
+        Route::post('profile-image', [UserProfileController::class, 'updateProfileImage']);
+        Route::delete('profile-image', [UserProfileController::class, 'removeProfileImage']);
+    });
+
 
 
     /*
@@ -114,11 +129,16 @@ Route::middleware(['auth:api'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Settings
+    | Others
     |--------------------------------------------------------------------------
     */
     /* User Management */
+    Route::post('user/{user}/send-mail', [UserController::class, 'sendMail']);
     Route::apiResource('user', UserController::class);
+
+    /* Role Management */
+    Route::apiResource('role', RoleController::class);
+    Route::get('permissions', [PermissionController::class, 'index']);
 
     // update settings
 

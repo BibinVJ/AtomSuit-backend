@@ -24,12 +24,10 @@ class PasswordResetController extends Controller
     /**
      * Step 1: Send OTP to user’s email and mobile
      */
-    public function sendResetOtp(SendResetOtpRequest $request)
+    public function sendPasswordResetOtp(SendResetOtpRequest $request)
     {
         $user = $this->userRepository->findByEmail($request->validated()['email']);
-
-        $this->otpService->generate($user, OtpPurposeEnum::PASSWORD_RESET);
-
+        $this->otpService->sendPasswordResetOtp($user, OtpPurposeEnum::PASSWORD_RESET);
         return ApiResponse::success('OTP sent to your email and mobile.');
     }
 
