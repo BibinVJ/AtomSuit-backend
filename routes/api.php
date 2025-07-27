@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Route;
 | Public Routes
 |--------------------------------------------------------------------------
 */
+
 Route::get('/', fn() => response()->json(['message' => 'Ping successful!']));
 Route::post('enquiry', [EnquiryController::class, 'store']);
 
@@ -53,14 +54,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
+    Route::get('dashboard', [DashboardController::class, 'home']);
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);
         Route::get('unread', [NotificationController::class, 'unread']);
         Route::post('read/{id?}', [NotificationController::class, 'markAsRead']);
     });
-
-    Route::get('dashboard', [DashboardController::class, 'home']);
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [UserProfileController::class, 'show']);
@@ -153,5 +153,4 @@ Route::middleware(['auth:api'])->group(function () {
 */
 Route::prefix('callback')->middleware('log.webhook')->group(function () {
     Route::get('/', fn() => response()->json(['message' => 'Webhook ping successful!']));
-
 });

@@ -20,6 +20,7 @@ class NotificationController extends Controller
     public function index(Request $request)
     {
         $notifications = $this->notificationService->getAll();
+        \Log::info(json_encode($notifications));
         return ApiResponse::success('Notifications fetched', NotificationResource::collection($notifications));
     }
 

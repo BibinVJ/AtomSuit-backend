@@ -13,9 +13,6 @@ use Carbon\Carbon;
 
 class SaleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $customer = Customer::first();
@@ -27,52 +24,54 @@ class SaleSeeder extends Seeder
         $items = Item::all();
 
         if ($items->count() < 3) {
-            $this->command->info('Not enough items to seed a sale. Please run the PurchaseSeeder first.');
+            $this->command->info('Not enough items to seed a sale. Please seed purchases first.');
             return;
         }
 
-        $sale = Sale::create([
-            'customer_id' => $customer->id,
-            'invoice_number' => 'S-INV-000001',
-            'sale_date' => Carbon::now(),
-            'payment_status' => PaymentStatus::PENDING,
-        ]);
+        $sale = Sale::updateOrCreate(
+            ['invoice_number' => 'S-INV-000001'],
+            [
+                'customer_id' => $customer->id,
+                'sale_date' => Carbon::now(),
+                'payment_status' => PaymentStatus::PENDING,
+            ]
+        );
 
-        $saleItems = $items->take(3);
+        foreach ($items->take(3) as $item) {
+            $batch = $item->batches
+                ->filter(fn($batch) => $batch->stockOnHand() > 0)
+                ->first();
 
-        foreach ($saleItems as $item) {
-            $batch = $item->batches()->where('id', '>', 0)->first();
-
-            if (!$batch) {
-                $this->command->info("No stock available for item: {$item->name}. Skipping sale item.");
+            if (!$batch || $batch->stockOnHand() <= 0) {
+                $this->command->info("No stock available for item: {$item->name}. Skipping.");
                 continue;
             }
 
-            $quantityToSell = 10;
-            if ($batch->stockOnHand() < $quantityToSell) {
-                $quantityToSell = $batch->stockOnHand();
-            }
+            $quantityToSell = min(10, $batch->stockOnHand());
 
-            if ($quantityToSell <= 0) {
-                $this->command->info("No stock available for item: {$item->name}. Skipping sale item.");
-                continue;
-            }
+            $saleItem = SaleItem::updateOrCreate(
+                [
+                    'sale_id' => $sale->id,
+                    'item_id' => $item->id,
+                ],
+                [
+                    'quantity' => $quantityToSell,
+                    'unit_price' => 20.00,
+                ]
+            );
 
-            SaleItem::create([
-                'sale_id' => $sale->id,
-                'item_id' => $item->id,
-                'quantity' => $quantityToSell,
-                'unit_price' => 20.00,
-            ]);
-
-            StockMovement::create([
-                'item_id' => $item->id,
-                'batch_id' => $batch->id,
-                'source_type' => Sale::class,
-                'source_id' => $sale->id,
-                'quantity' => -$quantityToSell,
-                'transaction_date' => $sale->sale_date,
-            ]);
+            StockMovement::updateOrCreate(
+                [
+                    'source_type' => Sale::class,
+                    'source_id' => $sale->id,
+                    'item_id' => $item->id,
+                    'batch_id' => $batch->id,
+                ],
+                [
+                    'quantity' => -$quantityToSell,
+                    'transaction_date' => $sale->sale_date,
+                ]
+            );
         }
     }
 }

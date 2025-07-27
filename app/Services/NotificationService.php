@@ -10,7 +10,9 @@ class NotificationService
     {
         return Auth::user()
             ->notifications()
-            ->latest();
+            ->latest()
+            ->take($limit)
+            ->get();
     }
 
     public function getUnread(): array

@@ -28,6 +28,10 @@ class RoleRepository
             });
         }
 
+        if (!empty($filters['exclude_roles'])) {
+            $query->whereNotIn('name', $filters['exclude_roles']);
+        }
+
         return $query;
     }
 }

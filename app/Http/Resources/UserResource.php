@@ -25,8 +25,10 @@ class UserResource extends BaseResource
             'profile_image' => $this->profile_image,
 
             'is_admin' => $this->hasRole('admin'),
-            'role' => $this->getRoleNames()->first(),
-            'permissions' => $this->getAllPermissions()->pluck('name'),
+            'role' => $this->roles->isNotEmpty()
+                ? new RoleResource($this->roles->first()->withoutRelations())
+                : null,
+            'permissions' => PermissionResource::collection($this->getAllPermissions()),
 
             'created_at' => $this->created_at,
         ];

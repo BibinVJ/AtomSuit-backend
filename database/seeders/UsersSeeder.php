@@ -15,17 +15,17 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        $manager = User::firstOrCreate(
-            ['email' => 'manager@example.com'],
+        $inventoryManager = User::firstOrCreate(
+            ['email' => 'inventory.manager@example.com'],
             [
-                'name' => 'Manager User',
+                'name' => 'Inventory Manager User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
                 'status' => UserStatus::ACTIVE,
                 'status_updated_at' => now(),
             ]
         );
-        $manager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
+        $inventoryManager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
 
         $salesPerson = User::firstOrCreate(
             ['email' => 'salesperson@example.com'],
