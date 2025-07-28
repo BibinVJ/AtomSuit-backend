@@ -27,7 +27,7 @@ class UserRequest extends FormRequest
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . $this->route('user')?->id,
             'password' => 'required|string|min:6',
-            'role'     => ['required', new Enum(RolesEnum::class)],
+            'role_id'     => 'required|exists:roles,id',
             'phone' => 'nullable|string|max:20|unique:users,phone,' . $this->route('user')?->id,
             'is_active' => 'boolean',
         ];

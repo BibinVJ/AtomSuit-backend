@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository
@@ -37,6 +38,10 @@ class UserRepository
             $query->whereHas('roles', function ($q) use ($filters) {
                 $q->where('name', $filters['role']);
             });
+        }
+
+        if (!empty($filters['exclude_current']) && $filters['exclude_current'] === true) {
+            $query->where('id', '!=', Auth::id());
         }
 
         return $query;

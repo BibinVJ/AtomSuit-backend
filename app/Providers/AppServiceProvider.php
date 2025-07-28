@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Enums\RolesEnum;
 use App\Models\UserLoginDetail;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
@@ -25,6 +27,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Gate::before(function ($user, $ability) {
+            return $user->hasRole(RolesEnum::SUPER_ADMIN->value) ? true : null;
+        });
+
         Passport::tokensExpireIn(CarbonInterval::days(15));
         Passport::refreshTokensExpireIn(CarbonInterval::days(30));
 

@@ -29,8 +29,8 @@ class UserService
             'is_active' => $data['is_active'] ?? true,
         ]);
 
-        if (isset($data['role'])) {
-            $user->assignRole($data['role']);
+        if (isset($data['role_id'])) {
+            $user->assignRole($data['role_id']);
         }
 
         return $user;
@@ -49,8 +49,8 @@ class UserService
             $user->update(['password' => Hash::make($data['password'])]);
         }
 
-        if (isset($data['role'])) {
-            $user->syncRoles($data['role']);
+        if (isset($data['role_id'])) {
+            $user->syncRoles($data['role_id']);
         }
 
         return $user;
