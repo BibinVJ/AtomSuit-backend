@@ -28,6 +28,7 @@ class UserResource extends BaseResource
             'role' => $this->roles->isNotEmpty()
                 ? new RoleResource($this->roles->first()->withoutRelations())
                 : null,
+            'permission_names' => $this->getAllPermissions()->pluck('name'),
 
             'created_at' => $this->created_at,
         ];

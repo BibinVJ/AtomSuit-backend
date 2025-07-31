@@ -33,7 +33,6 @@ class RoleController extends Controller
 
         $filters['exclude_roles'] = [
             RolesEnum::SUPER_ADMIN->value,
-            RolesEnum::ADMIN->value,
         ];
 
         $roles = $this->roleRepository->all($paginate, $perPage, $filters, ['permissions']);
