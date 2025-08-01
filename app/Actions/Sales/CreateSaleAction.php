@@ -21,9 +21,9 @@ class CreateSaleAction
     {
         return DB::transaction(function () use ($data) {
             $sale = $this->saleRepo->create([
-                'customer_id'    => $data['customer_id'],
+                'customer_id' => $data['customer_id'],
                 'invoice_number' => $data['invoice_number'],
-                'sale_date'  => $data['sale_date'],
+                'sale_date' => $data['sale_date'],
                 'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,
             ]);
 

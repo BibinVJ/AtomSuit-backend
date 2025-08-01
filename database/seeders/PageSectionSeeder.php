@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Page;
-use App\Models\Section;
+use Illuminate\Database\Seeder;
 
 class PageSectionSeeder extends Seeder
 {
@@ -40,7 +39,7 @@ class PageSectionSeeder extends Seeder
                 'background_image' => null,
                 'type' => 'html',
                 'content' => '<div class="cta"><h2>Join Now</h2><p>Sign up for the event!</p></div>',
-            ]
+            ],
         ]);
 
         // 2. Sponsors Page
@@ -81,7 +80,7 @@ class PageSectionSeeder extends Seeder
                 'background_image' => null,
                 'type' => 'html',
                 'content' => '<div class="exhibitor-list"><ul><li>Company A</li><li>Company B</li></ul></div>',
-            ]
+            ],
         ]);
     }
 }

@@ -12,7 +12,7 @@ class VendorRepository
 
     public function __construct()
     {
-        $this->model = new Vendor();
+        $this->model = new Vendor;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
@@ -21,13 +21,12 @@ class VendorRepository
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%');
             });
         }
 
         return $query;
     }
-
 }

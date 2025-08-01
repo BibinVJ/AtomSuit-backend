@@ -10,8 +10,8 @@ class ApiResponse
     {
         return response()->json([
             'message' => $message,
-            'error'   => false,
-            'code'    => $code,
+            'error' => false,
+            'code' => $code,
             'results' => $data,
         ], $code);
     }
@@ -20,9 +20,9 @@ class ApiResponse
     {
         return response()->json([
             'message' => $message,
-            'error'   => true,
-            'code'    => $code,
-            'errors'  => $errors,
+            'error' => true,
+            'code' => $code,
+            'errors' => $errors,
         ], $code);
     }
 }

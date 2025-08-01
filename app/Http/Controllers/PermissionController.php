@@ -13,7 +13,7 @@ class PermissionController extends Controller
     public function __construct(
         protected PermissionService $permissionService,
     ) {
-        $this->middleware("permission:" . PermissionsEnum::VIEW_PERMISSION->value)->only(['index']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_PERMISSION->value)->only(['index']);
     }
 
     public function index(Request $request)

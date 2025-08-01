@@ -30,7 +30,6 @@ enum PermissionsEnum: string
     case VIEW_SETTING = 'view-setting';
     case UPDATE_SETTING = 'update-setting';
 
-
     // category management
     case VIEW_CATEGORY = 'view-category';
     case CREATE_CATEGORY = 'create-category';

@@ -21,11 +21,10 @@ class AuthService
     public function register(array $data): AuthenticatedUserDTO
     {
         $user = $this->userRepository->create([
-            'name'     => $data['name'],
-            'email'    => $data['email'],
+            'name' => $data['name'],
+            'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'status'   => UserStatus::PENDING,
-            'status_updated_at' => now(),
+            'status' => UserStatus::PENDING,
         ]);
 
         $user->assignRole($data['role']);
@@ -33,7 +32,7 @@ class AuthService
 
         // dispatch welcome mail with user credentials
         dispatch(new SendWelcomeUserMailJob($user, $data['password']));
-        
+
         return new AuthenticatedUserDTO($user, $token);
     }
 
@@ -41,7 +40,7 @@ class AuthService
     {
         $user = $this->userRepository->findByEmail($email);
 
-        if (!$user || !Hash::check($password, $user->password)) {
+        if (! $user || ! Hash::check($password, $user->password)) {
             throw new UnauthorizedHttpException('', 'Invalid credentials');
         }
 
@@ -50,6 +49,7 @@ class AuthService
         }
 
         $token = $this->tokenService->create($user);
+
         return new AuthenticatedUserDTO($user, $token);
     }
 

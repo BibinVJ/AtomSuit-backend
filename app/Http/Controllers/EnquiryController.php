@@ -6,7 +6,6 @@ use App\Helpers\ApiResponse;
 use App\Http\Requests\EnquiryRequest;
 use App\Repositories\EnquiryRepository;
 use App\Services\ContactService;
-use Illuminate\Http\Request;
 
 class EnquiryController extends Controller
 {

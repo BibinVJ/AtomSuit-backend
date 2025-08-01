@@ -12,7 +12,7 @@ class RoleRepository
 
     public function __construct()
     {
-        $this->model = new Role();
+        $this->model = new Role;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
@@ -21,14 +21,14 @@ class RoleRepository
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('email', 'like', '%'.$filters['search'].'%');
             });
         }
 
-        if (!empty($filters['exclude_roles'])) {
+        if (! empty($filters['exclude_roles'])) {
             $query->whereNotIn('name', $filters['exclude_roles']);
         }
 

@@ -14,10 +14,10 @@ enum RolesEnum: string
     public function label(): string
     {
         return match ($this) {
-            static::SUPER_ADMIN => 'Super Admin',
-            static::ADMIN => 'Admin',
-            static::INVENTORY_MANAGER => 'Inventory Manager',
-            static::SALES_PERSON => 'Sales Person',
+            self::SUPER_ADMIN => 'Super Admin',
+            self::ADMIN => 'Admin',
+            self::INVENTORY_MANAGER => 'Inventory Manager',
+            self::SALES_PERSON => 'Sales Person',
             default => 'Unknown Role',
         };
     }

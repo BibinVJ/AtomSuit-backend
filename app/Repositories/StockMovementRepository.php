@@ -12,7 +12,7 @@ class StockMovementRepository
 
     public function __construct()
     {
-        $this->model = new StockMovement();
+        $this->model = new StockMovement;
     }
 
     public function getAvailableStockByItemFifo(int $itemId): Collection
@@ -30,24 +30,26 @@ class StockMovementRepository
     {
         return StockMovement::query()
             // ->where('quantity', '>', 0)
-            ->when(isset($filters['item_id']), fn($q) => $q->where('item_id', $filters['item_id']))
-            ->when(isset($filters['warehouse_id']), fn($q) => $q->where('warehouse_id', $filters['warehouse_id']))
+            ->when(isset($filters['item_id']), fn ($q) => $q->where('item_id', $filters['item_id']))
+            ->when(isset($filters['warehouse_id']), fn ($q) => $q->where('warehouse_id', $filters['warehouse_id']))
             ->with('batch')
             ->orderBy('transaction_date') // FIFO style
             ->get()
-            ->groupBy(fn($movement) => $movement->batch_id . '_' . $movement->item_id)
+            ->groupBy(fn ($movement) => $movement->batch_id.'_'.$movement->item_id)
             ->map(function ($group) {
                 $totalQty = $group->sum('quantity');
-                if ($totalQty <= 0) return null;
+                if ($totalQty <= 0) {
+                    return null;
+                }
 
                 $first = $group->first();
 
                 return (object) [
-                    'batch_id'       => $first->batch_id,
-                    'item_id'        => $first->item_id,
-                    'available_qty'  => $totalQty,
+                    'batch_id' => $first->batch_id,
+                    'item_id' => $first->item_id,
+                    'available_qty' => $totalQty,
                     'transaction_date' => $first->transaction_date,
-                    'expiry_date'      => $first->batch->expiry_date ?? null,
+                    'expiry_date' => $first->batch->expiry_date ?? null,
                 ];
             })
             ->filter()
@@ -55,7 +57,6 @@ class StockMovementRepository
             ->sortBy('transaction_date')
             ->values();
     }
-
 
     public function totalByItem(int $itemId): int
     {

@@ -6,7 +6,6 @@ use App\DataTransferObjects\DashboardMetricsDTO;
 use App\Repositories\CustomerRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\ItemRepository;
-use Exception;
 
 class DashboardService
 {

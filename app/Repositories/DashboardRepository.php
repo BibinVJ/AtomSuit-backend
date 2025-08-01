@@ -2,8 +2,8 @@
 
 namespace App\Repositories;
 
-use App\DataTransferObjects\DashboardCustomerDTO;
 use App\DataTransferObjects\DashboardChartPointDTO;
+use App\DataTransferObjects\DashboardCustomerDTO;
 use App\DataTransferObjects\DashboardExpiringItemDTO;
 use App\DataTransferObjects\DashboardStockItemDTO;
 use App\DataTransferObjects\DashboardTopItemDTO;
@@ -14,19 +14,18 @@ use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\StockMovement;
 use Carbon\Carbon;
-use Carbon\CarbonPeriod;
 use Illuminate\Support\Collection;
 
 class DashboardRepository
 {
     public function getTotalSalesAmount(): float
     {
-        return Sale::with('items')->get()->sum(fn($sale) => $sale->total);
+        return Sale::with('items')->get()->sum(fn ($sale) => $sale->total);
     }
 
     public function getTotalPurchaseAmount(): float
     {
-        return Purchase::with('items')->get()->sum(fn($purchase) => $purchase->total);
+        return Purchase::with('items')->get()->sum(fn ($purchase) => $purchase->total);
     }
 
     public function getTopSellingItems(int $limit = 5): Collection
@@ -38,7 +37,7 @@ class DashboardRepository
             ->orderByDesc('total_quantity')
             ->limit($limit)
             ->get()
-            ->map(fn($row) => new DashboardTopItemDTO(
+            ->map(fn ($row) => new DashboardTopItemDTO(
                 id: $row->item_id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
@@ -55,7 +54,7 @@ class DashboardRepository
             ->orderByDesc('total_quantity')
             ->limit($limit)
             ->get()
-            ->map(fn($row) => new DashboardTopItemDTO(
+            ->map(fn ($row) => new DashboardTopItemDTO(
                 id: $row->item_id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
@@ -69,7 +68,7 @@ class DashboardRepository
             ->where('expiry_date', '<', now()->addDays(30))
             // ->whereBetween('expiry_date', [now(), now()->addDays(30)])
             ->get()
-            ->map(fn($batch) => new DashboardExpiringItemDTO(
+            ->map(fn ($batch) => new DashboardExpiringItemDTO(
                 id: $batch->item->id,
                 sku: $batch->item->sku ?? '',
                 name: $batch->item->name,
@@ -86,7 +85,7 @@ class DashboardRepository
             ->havingRaw('total_quantity <= 0')
             ->with('item:id,sku,name')
             ->get()
-            ->map(fn($row) => new DashboardStockItemDTO(
+            ->map(fn ($row) => new DashboardStockItemDTO(
                 id: $row->item_id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
@@ -98,10 +97,10 @@ class DashboardRepository
     {
         return StockMovement::selectRaw('item_id, SUM(quantity) as total_quantity')
             ->groupBy('item_id')
-            ->havingRaw('total_quantity <= ' . 30) // TODO: later take this from settings
+            ->havingRaw('total_quantity <= '. 30) // TODO: later take this from settings
             ->with('item:id,sku,name')
             ->get()
-            ->map(fn($row) => new DashboardStockItemDTO(
+            ->map(fn ($row) => new DashboardStockItemDTO(
                 id: $row->item_id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
@@ -114,34 +113,34 @@ class DashboardRepository
         $cutoff = now()->subDays($days);
 
         return Item::whereDoesntHave('stockMovements', function ($query) use ($cutoff) {
-                $query->where('source_type', Sale::class) // TODO: Later: change to DeliveryNote::class
-                    ->where('created_at', '>=', $cutoff);
-            })
+            $query->where('source_type', Sale::class) // TODO: Later: change to DeliveryNote::class
+                ->where('created_at', '>=', $cutoff);
+        })
             ->with('stockMovements')
             ->get()
-            ->map(fn($item) => new DashboardStockItemDTO(
+            ->map(fn ($item) => new DashboardStockItemDTO(
                 id: $item->id,
                 sku: $item->sku,
                 name: $item->name,
                 stock_remaining: $item->stockMovements->sum('quantity'),
             ))
-            ->filter(fn($dto) => $dto->stock_remaining > 0);
+            ->filter(fn ($dto) => $dto->stock_remaining > 0);
     }
 
     public function getBestCustomers(int $limit = 5): Collection
     {
         return Customer::with('sales.items')
             ->get()
-            ->map(fn($customer) => new DashboardCustomerDTO(
+            ->map(fn ($customer) => new DashboardCustomerDTO(
                 id: $customer->id,
                 name: $customer->name,
                 email: $customer->email ?? null,
                 phone: $customer->phone ?? null,
                 total_spent: $customer->totalSpent()
             ))
-            ->sortByDesc(fn($dto) => $dto->total_spent)
+            ->sortByDesc(fn ($dto) => $dto->total_spent)
             ->take($limit)
-            ->filter(fn($dto) => $dto->total_spent > 0)
+            ->filter(fn ($dto) => $dto->total_spent > 0)
             ->values();
     }
 
@@ -150,10 +149,10 @@ class DashboardRepository
         return Sale::with('items')
             ->orderBy('sale_date')
             ->get()
-            ->groupBy(fn($sale) => $sale->sale_date->toDateString())
-            ->map(fn($sales, $date) => new DashboardChartPointDTO(
+            ->groupBy(fn ($sale) => $sale->sale_date->toDateString())
+            ->map(fn ($sales, $date) => new DashboardChartPointDTO(
                 date: Carbon::parse($date),
-                total: $sales->sum(fn($sale) => $sale->total)
+                total: $sales->sum(fn ($sale) => $sale->total)
             ))
             ->values()
             ->toArray();
@@ -164,10 +163,10 @@ class DashboardRepository
         return Purchase::with('items')
             ->orderBy('purchase_date')
             ->get()
-            ->groupBy(fn($purchase) => $purchase->purchase_date->toDateString())
-            ->map(fn($purchases, $date) => new DashboardChartPointDTO(
+            ->groupBy(fn ($purchase) => $purchase->purchase_date->toDateString())
+            ->map(fn ($purchases, $date) => new DashboardChartPointDTO(
                 date: \Carbon\Carbon::parse($date),
-                total: $purchases->sum(fn($purchase) => $purchase->total)
+                total: $purchases->sum(fn ($purchase) => $purchase->total)
             ))
             ->values()
             ->toArray();

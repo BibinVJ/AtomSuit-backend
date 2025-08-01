@@ -12,14 +12,14 @@ class BatchRepository
 
     public function __construct()
     {
-        $this->model = new Batch();
+        $this->model = new Batch;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('batch_number', 'like', '%' . $filters['search'] . '%');
+                $q->where('batch_number', 'like', '%'.$filters['search'].'%');
             });
         }
 

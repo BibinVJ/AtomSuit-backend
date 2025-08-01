@@ -4,12 +4,11 @@ namespace App\Services;
 
 use App\Enums\OtpPurposeEnum;
 use App\Exceptions\OtpVerificationException;
+use App\Jobs\SendOtpJob;
 use App\Models\Otp;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
-use App\Jobs\SendOtpJob;
+use Illuminate\Support\Facades\Hash;
 
 class OtpService
 {
@@ -23,7 +22,7 @@ class OtpService
         if ($latestOtp && $latestOtp->created_at->diffInSeconds(now()) < 60) {
             throw new \Exception('Please wait before requesting another OTP.');
         }
-        
+
         $otp = rand(100000, 999999);
         $expiresAt = now()->addMinutes($validForMinutes);
 
@@ -31,9 +30,9 @@ class OtpService
         Otp::where('user_id', $user->id)->where('purpose', $purpose->value)->delete();
 
         Otp::create([
-            'user_id'    => $user->id,
-            'otp'        => Hash::make($otp),
-            'purpose'    => $purpose->value,
+            'user_id' => $user->id,
+            'otp' => Hash::make($otp),
+            'purpose' => $purpose->value,
             'expires_at' => $expiresAt,
         ]);
 
@@ -53,7 +52,7 @@ class OtpService
             ->latest()
             ->first();
 
-        if (!$record || $record->verified_at) {
+        if (! $record || $record->verified_at) {
             throw new OtpVerificationException('No valid OTP found');
         }
 
@@ -61,7 +60,7 @@ class OtpService
             throw new OtpVerificationException('OTP has expired');
         }
 
-        if (!Hash::check($inputOtp, $record->otp)) {
+        if (! Hash::check($inputOtp, $record->otp)) {
             throw new OtpVerificationException('OTP is incorrect');
         }
 

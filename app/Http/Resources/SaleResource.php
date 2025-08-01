@@ -14,13 +14,13 @@ class SaleResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            'id'             => $this->id,
-            'customer'       => CustomerResource::make($this->customer),
+            'id' => $this->id,
+            'customer' => CustomerResource::make($this->customer),
             'invoice_number' => $this->invoice_number,
-            'sale_date'      => $this->sale_date->toDateString(),
-            'total_amount'   => $this->total,
+            'sale_date' => $this->sale_date->toDateString(),
+            'total_amount' => $this->total,
             'payment_status' => $this->payment_status,
-            'items'          => SaleItemResource::collection($this->items),
+            'items' => SaleItemResource::collection($this->items),
         ];
     }
 }

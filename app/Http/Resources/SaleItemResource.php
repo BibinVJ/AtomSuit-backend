@@ -14,11 +14,11 @@ class SaleItemResource extends BaseResource
     public function toArray(Request $request): array
     {
         return [
-            'id'          => $this->id,
-            'item'        => ItemResource::make($this->item),
-            'batches'     => BatchResource::collection($this->batches),
-            'quantity'    => $this->quantity,
-            'unit_price'  => $this->unit_price,
+            'id' => $this->id,
+            'item' => ItemResource::make($this->item),
+            'batches' => BatchResource::collection($this->batches),
+            'quantity' => $this->quantity,
+            'unit_price' => $this->unit_price,
             'total_price' => $this->quantity * $this->unit_price,
         ];
     }

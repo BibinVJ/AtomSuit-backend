@@ -23,7 +23,7 @@ class UnitRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => 'required|string|max:100|unique:units,code,' . $this->route('unit')?->id,
+            'code' => 'required|string|max:100|unique:units,code,'.$this->route('unit')?->id,
             'description' => 'nullable|string',
             'is_active' => 'boolean',
         ];

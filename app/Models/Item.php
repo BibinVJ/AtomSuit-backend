@@ -43,7 +43,6 @@ class Item extends Model
         return $this->hasMany(Batch::class);
     }
 
-
     // public function salesAccount(): BelongsTo
     // {
     //     return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
@@ -74,7 +73,6 @@ class Item extends Model
         return $this->hasMany(StockMovement::class);
     }
 
-
     /**
      * Get the stock on hand for this item.
      */
@@ -86,15 +84,15 @@ class Item extends Model
     public function nonExpiredStock(): int
     {
         return $this->batches
-            ->filter(fn($batch) => $batch->expiry_date?->isFuture())
-            ->sum(fn($batch) => $batch->stockOnHand());
+            ->filter(fn ($batch) => $batch->expiry_date?->isFuture())
+            ->sum(fn ($batch) => $batch->stockOnHand());
     }
 
     public function expiredStock(): int
     {
         return $this->batches
-            ->filter(fn($batch) => $batch->expiry_date?->isPast())
-            ->sum(fn($batch) => $batch->stockOnHand());
+            ->filter(fn ($batch) => $batch->expiry_date?->isPast())
+            ->sum(fn ($batch) => $batch->stockOnHand());
     }
 
     /**

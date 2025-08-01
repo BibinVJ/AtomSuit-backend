@@ -22,9 +22,9 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:customers,name,' . $this->route('customer')?->id,
-            'email' => 'nullable|email|max:255|unique:customers,email,' . $this->route('customer')?->id,
-            'phone' => 'nullable|string|max:20|unique:customers,phone,' . $this->route('customer')?->id,
+            'name' => 'required|string|max:255|unique:customers,name,'.$this->route('customer')?->id,
+            'email' => 'nullable|email|max:255|unique:customers,email,'.$this->route('customer')?->id,
+            'phone' => 'nullable|string|max:20|unique:customers,phone,'.$this->route('customer')?->id,
             'address' => 'nullable|string|max:500',
             'is_active' => 'boolean',
         ];

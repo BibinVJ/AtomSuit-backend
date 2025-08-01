@@ -2,29 +2,31 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PaymentStatus;
+use App\Models\Batch;
+use App\Models\Item;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\StockMovement;
 use App\Models\Vendor;
-use App\Models\Item;
-use App\Models\Batch;
-use App\Enums\PaymentStatus;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class PurchaseSeeder extends Seeder
 {
     public function run(): void
     {
         $vendor = Vendor::first();
-        if (!$vendor) {
+        if (! $vendor) {
             $this->command->info('No vendors found. Please seed vendors first.');
+
             return;
         }
 
         $items = Item::all();
         if ($items->count() < 5) {
             $this->command->info('Not enough items found. Please seed items first.');
+
             return;
         }
 
@@ -42,7 +44,7 @@ class PurchaseSeeder extends Seeder
 
         foreach ($purchase1Items as $item) {
             $batch = Batch::updateOrCreate(
-                ['batch_number' => 'B' . $item->id . 'P1'],
+                ['batch_number' => 'B'.$item->id.'P1'],
                 [
                     'item_id' => $item->id,
                     'manufacture_date' => Carbon::now()->subMonths(6),
@@ -91,7 +93,7 @@ class PurchaseSeeder extends Seeder
 
         foreach ($purchase2Items as $item) {
             $batch = Batch::updateOrCreate(
-                ['batch_number' => 'B' . $item->id . 'P2'],
+                ['batch_number' => 'B'.$item->id.'P2'],
                 [
                     'item_id' => $item->id,
                     'manufacture_date' => Carbon::now()->subMonths(4),

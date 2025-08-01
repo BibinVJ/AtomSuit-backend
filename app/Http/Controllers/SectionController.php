@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Section;
 use App\Models\Page;
+use App\Models\Section;
 use Illuminate\Http\Request;
 
 class SectionController extends Controller
@@ -42,6 +41,7 @@ class SectionController extends Controller
     public function destroy(Section $section)
     {
         $section->delete();
+
         return response()->noContent();
     }
 

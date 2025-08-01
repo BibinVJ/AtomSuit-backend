@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RolesEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class UserRequest extends FormRequest
 {
@@ -25,10 +23,10 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $this->route('user')?->id,
+            'email' => 'required|email|max:255|unique:users,email,'.$this->route('user')?->id,
             'password' => 'required|string|min:6',
-            'role_id'     => 'required|exists:roles,id',
-            'phone' => 'nullable|string|max:20|unique:users,phone,' . $this->route('user')?->id,
+            'role_id' => 'required|exists:roles,id',
+            'phone' => 'nullable|string|max:20|unique:users,phone,'.$this->route('user')?->id,
             'is_active' => 'boolean',
         ];
     }

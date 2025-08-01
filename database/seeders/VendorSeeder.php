@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Vendor;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class VendorSeeder extends Seeder
@@ -27,7 +26,7 @@ class VendorSeeder extends Seeder
                 'phone' => '9876543210',
                 'address' => '456 Vendor Ave',
                 'is_active' => true,
-            ]
+            ],
         ];
 
         foreach ($vendors as $vendor) {

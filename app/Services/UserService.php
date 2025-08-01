@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,8 +13,7 @@ class UserService
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly FileUploadService $fileUploadService,
-    ) {
-    }
+    ) {}
 
     public function create(array $data): User
     {
@@ -24,7 +22,6 @@ class UserService
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'status' => UserStatus::ACTIVE,
-            'status_updated_at' => now(),
             'phone' => $data['phone'] ?? null,
             'is_active' => $data['is_active'] ?? true,
         ]);
@@ -60,11 +57,8 @@ class UserService
     {
         // add check for if user is deletable
 
-
-
         $this->userRepository->delete($user);
     }
-    
 
     public function updateProfile(User $user, array $data)
     {
@@ -82,7 +76,7 @@ class UserService
 
     public function removeProfileImage(User $user): void
     {
-        if (!empty($user->profile_image)) {
+        if (! empty($user->profile_image)) {
             $this->fileUploadService->deleteFromS3($user->profile_image);
             $this->userRepository->update($user, ['profile_image' => null]);
         }

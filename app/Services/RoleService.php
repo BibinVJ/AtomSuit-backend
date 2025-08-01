@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-
 use App\Repositories\RoleRepository;
 use Spatie\Permission\Models\Role;
 
@@ -10,8 +9,7 @@ class RoleService
 {
     public function __construct(
         private readonly RoleRepository $roleRepository,
-    ) {
-    }
+    ) {}
 
     public function create(array $data): Role
     {
@@ -45,5 +43,4 @@ class RoleService
     {
         $this->roleRepository->delete($role);
     }
-    
 }

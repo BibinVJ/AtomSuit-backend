@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Batch;
 use App\Repositories\BatchRepository;
-use Exception;
 
 class BatchService
 {

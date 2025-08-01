@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\Vendor;
 use App\Repositories\VendorRepository;
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

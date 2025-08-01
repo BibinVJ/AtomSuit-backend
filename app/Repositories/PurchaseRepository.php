@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Purchase;
 use App\Repositories\Traits\HasCrudRepository;
-use Illuminate\Database\Eloquent\Builder;
 
 class PurchaseRepository
 {
@@ -12,7 +11,7 @@ class PurchaseRepository
 
     public function __construct()
     {
-        $this->model = new Purchase();
+        $this->model = new Purchase;
     }
 
     public function sanitizePurchaseItem(array $item): array
@@ -43,7 +42,7 @@ class PurchaseRepository
 
         // Delete removed items
         $toDelete = array_diff($existingIds, $incomingIds);
-        if (!empty($toDelete)) {
+        if (! empty($toDelete)) {
             $purchase->items()->whereIn('id', $toDelete)->delete();
         }
 

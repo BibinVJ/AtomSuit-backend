@@ -23,10 +23,12 @@ class CreateSaleStockMovementsAction
             $batches = $this->stockMovementRepo->getFifoAvailableStock(['item_id' => $saleItem->item_id]);
 
             foreach ($batches as $batch) {
-                if ($remainingQty <= 0) break;
+                if ($remainingQty <= 0) {
+                    break;
+                }
 
                 // Block expired batch if setting says so
-                if (!$allowExpired && $batch->expiry_date && $batch->expiry_date->isPast()) {
+                if (! $allowExpired && $batch->expiry_date && $batch->expiry_date->isPast()) {
                     continue; // Skip this batch
                 }
 
@@ -34,16 +36,16 @@ class CreateSaleStockMovementsAction
                 $toDeduct = min($available, $remainingQty);
 
                 $this->stockMovementRepo->create([
-                    'item_id'         => $saleItem->item_id,
-                    'batch_id'        => $batch->batch_id,
+                    'item_id' => $saleItem->item_id,
+                    'batch_id' => $batch->batch_id,
                     'transaction_date' => $sale->sale_date,
-                    'quantity'        => -($toDeduct),
-                    'rate'            => $saleItem->unit_price,
-                    'standard_cost'   => $saleItem->unit_price, // Or calculate avg cost
-                    'source_type'     => Sale::class,
-                    'source_id'       => $sale->id,
-                    'description'     => 'Sale of item',
-                    'reference'       => $sale->invoice_number,
+                    'quantity' => -($toDeduct),
+                    'rate' => $saleItem->unit_price,
+                    'standard_cost' => $saleItem->unit_price, // Or calculate avg cost
+                    'source_type' => Sale::class,
+                    'source_id' => $sale->id,
+                    'description' => 'Sale of item',
+                    'reference' => $sale->invoice_number,
                 ]);
 
                 $remainingQty -= $toDeduct;
@@ -51,7 +53,7 @@ class CreateSaleStockMovementsAction
 
             if ($remainingQty > 0) {
                 throw new Exception(
-                    "Not enough " . ($allowExpired ? '' : 'unexpired ') . "stock for item {$saleItem->item->name}",
+                    'Not enough '.($allowExpired ? '' : 'unexpired ')."stock for item {$saleItem->item->name}",
                     Response::HTTP_UNPROCESSABLE_ENTITY
                 );
             }

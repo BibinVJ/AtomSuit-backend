@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class UserSendMailRequest extends FormRequest
 {
@@ -25,7 +23,7 @@ class UserSendMailRequest extends FormRequest
     {
         return [
             'subject' => 'required',
-            'body' => 'required'
+            'body' => 'required',
         ];
     }
 }

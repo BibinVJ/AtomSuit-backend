@@ -14,7 +14,7 @@ class UserRepository
 
     public function __construct()
     {
-        $this->model = new User();
+        $this->model = new User;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
@@ -23,24 +23,24 @@ class UserRepository
             $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('email', 'like', '%'.$filters['search'].'%');
             });
         }
 
-        if (!empty($filters['status'])) {
+        if (! empty($filters['status'])) {
             $query->where('status', $filters['status']);
         }
 
-        if (!empty($filters['role'])) {
+        if (! empty($filters['role'])) {
             $query->whereHas('roles', function ($q) use ($filters) {
                 $q->where('name', $filters['role']);
             });
         }
 
-        if (!empty($filters['exclude_current']) && $filters['exclude_current'] === true) {
+        if (! empty($filters['exclude_current']) && $filters['exclude_current'] === true) {
             $query->where('id', '!=', Auth::id());
         }
 
@@ -59,13 +59,8 @@ class UserRepository
 
     public function userCount(?array $statuses = null, ?array $roles = null): int
     {
-        return User::when($statuses, fn($query) => $query->whereIn('status', $statuses))
-            ->when($roles, fn($query) => $query->whereHas('roles', fn($q) => $q->whereIn('name', $roles)))
+        return User::when($statuses, fn ($query) => $query->whereIn('status', $statuses))
+            ->when($roles, fn ($query) => $query->whereHas('roles', fn ($q) => $q->whereIn('name', $roles)))
             ->count();
-    }
-
-    public function changeStatus(User $user, string $status)
-    {
-        $user->update(['status' => $status, 'status_updated_at' => now()]);
     }
 }

@@ -33,6 +33,7 @@ class UpdatePurchaseAction
             // add batch
             $preparedItems = collect($data['items'])->map(function ($item) {
                 $batch = $this->batchService->create($item);
+
                 return array_merge($item, ['batch_id' => $batch->id]);
             })->toArray();
 

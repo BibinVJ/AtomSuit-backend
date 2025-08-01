@@ -23,7 +23,7 @@ class StockMovementService
     {
         match (true) {
             $model instanceof Purchase => $this->createPurchaseStockMovements->execute($model),
-            $model instanceof Sale     => $this->createSaleStockMovements->execute($model),
+            $model instanceof Sale => $this->createSaleStockMovements->execute($model),
             default => throw new InvalidArgumentException('Unsupported model for stock movement.'),
         };
     }
@@ -38,12 +38,12 @@ class StockMovementService
                     'rate',
                     'standard_cost',
                     'source_type',
-                    'source_id'
+                    'source_id',
                 ]),
                 'transaction_date' => now(),
-                'quantity'         => -($movement->quantity), // opposie of the original movement
-                'description'      => "Reversal of movement ID: {$movement->id}",
-                'reference'        => 'VOID-' . ($movement->reference ?? $model->invoice_number),
+                'quantity' => -($movement->quantity), // opposie of the original movement
+                'description' => "Reversal of movement ID: {$movement->id}",
+                'reference' => 'VOID-'.($movement->reference ?? $model->invoice_number),
             ]);
         }
     }

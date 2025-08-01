@@ -14,7 +14,6 @@ class ExchangeRate extends Model
         'effective_date',
     ];
 
-
     public function baseCurrency(): BelongsTo
     {
         return $this->belongsTo(Currency::class, 'base_currency_id');

@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Sale;
 use App\Repositories\Traits\HasCrudRepository;
-use Illuminate\Database\Eloquent\Builder;
 
 class SaleRepository
 {
@@ -12,7 +11,7 @@ class SaleRepository
 
     public function __construct()
     {
-        $this->model = new Sale();
+        $this->model = new Sale;
     }
 
     public function sanitizeSaleItem(array $item): array
@@ -38,7 +37,7 @@ class SaleRepository
 
         // Delete removed items
         $toDelete = array_diff($existingIds, $incomingIds);
-        if (!empty($toDelete)) {
+        if (! empty($toDelete)) {
             $sale->items()->whereIn('id', $toDelete)->delete();
         }
 

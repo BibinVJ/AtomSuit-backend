@@ -2,8 +2,6 @@
 
 namespace App\DataTransferObjects;
 
-use Carbon\Carbon;
-
 class DashboardStockItemDTO
 {
     public function __construct(

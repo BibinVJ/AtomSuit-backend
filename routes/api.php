@@ -19,16 +19,14 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
 use Illuminate\Support\Facades\Route;
 
-
 /*
 |--------------------------------------------------------------------------
 | Public Routes
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', fn() => response()->json(['message' => 'Ping successful!']));
+Route::get('/', fn () => response()->json(['message' => 'Ping successful!']));
 Route::post('enquiry', [EnquiryController::class, 'store']);
-
 
 /*
 |--------------------------------------------------------------------------
@@ -43,7 +41,6 @@ Route::prefix('auth')->group(function () {
     Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp']);
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -69,8 +66,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('profile-image', [UserProfileController::class, 'removeProfileImage']);
     });
 
-
-
     /*
     |--------------------------------------------------------------------------
     | Accounting
@@ -85,8 +80,6 @@ Route::middleware(['auth:api'])->group(function () {
     // exchange rate
     // gl settings
 
-
-
     /*
     |--------------------------------------------------------------------------
     | Inventory
@@ -98,7 +91,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('batch', BatchController::class);
     // warehouse
 
-
     /*
     |--------------------------------------------------------------------------
     | Customer & Sales
@@ -107,8 +99,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('customer', CustomerController::class);
     Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
     Route::apiResource('sale', SaleController::class);
-
-
 
     /*
     |--------------------------------------------------------------------------
@@ -119,13 +109,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
     Route::apiResource('purchase', PurchaseController::class);
 
-
     /*
     |--------------------------------------------------------------------------
     | Reports
     |--------------------------------------------------------------------------
     */
-
 
     /*
     |--------------------------------------------------------------------------
@@ -144,13 +132,11 @@ Route::middleware(['auth:api'])->group(function () {
 
 });
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Webhook Callback Routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('callback')->middleware('log.webhook')->group(function () {
-    Route::get('/', fn() => response()->json(['message' => 'Webhook ping successful!']));
+    Route::get('/', fn () => response()->json(['message' => 'Webhook ping successful!']));
 });

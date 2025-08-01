@@ -15,7 +15,7 @@ class Otp extends Model
     ];
 
     protected $casts = [
-        'expires_at'  => 'datetime',
+        'expires_at' => 'datetime',
         'verified_at' => 'datetime',
     ];
 }

@@ -18,20 +18,20 @@ class LogWebhookRequests
     {
         $response = $next($request);
         \Log::info('Incoming Webhook Request', [
-            'url'     => $request->fullUrl(),
-            'method'  => $request->method(),
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
             'headers' => $request->headers->all(),
             'payload' => $request->all(),
         ]);
 
         // Store Webhook Log in Database
         WebhookLog::create([
-            'url'            => $request->fullUrl(),
-            'method'         => $request->method(),
-            'headers'        => $request->headers->all(),
-            'payload'        => $request->all(),
+            'url' => $request->fullUrl(),
+            'method' => $request->method(),
+            'headers' => $request->headers->all(),
+            'payload' => $request->all(),
             'response_status' => $response->getStatusCode(),
-            'response_body'  => $response->getContent(),
+            'response_body' => $response->getContent(),
         ]);
 
         return $response;

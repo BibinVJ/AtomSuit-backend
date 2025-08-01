@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
-            
+
             $table->foreignId('item_id')->constrained()->cascadeOnDelete();
             $table->foreignId('batch_id')->nullable()->constrained()->nullOnDelete();
 

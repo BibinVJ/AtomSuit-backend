@@ -14,6 +14,7 @@ class UserMail extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     protected string $customSubject;
+
     protected string $body;
 
     public function __construct(string $subject, string $body)

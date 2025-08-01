@@ -19,16 +19,16 @@ class RoleController extends Controller
         protected RoleRepository $roleRepository,
         protected RoleService $roleService,
     ) {
-        $this->middleware("permission:" . PermissionsEnum::VIEW_ROLE->value)->only(['index']);
-        $this->middleware("permission:" . PermissionsEnum::CREATE_ROLE->value)->only(['store']);
-        $this->middleware("permission:" . PermissionsEnum::UPDATE_ROLE->value)->only(['update']);
-        $this->middleware("permission:" . PermissionsEnum::DELETE_ROLE->value)->only(['destroy']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_ROLE->value)->only(['index']);
+        $this->middleware('permission:'.PermissionsEnum::CREATE_ROLE->value)->only(['store']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_ROLE->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::DELETE_ROLE->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
         $filters = $request->only(['is_active', 'search']);
-        $paginate = !$request->boolean('unpaginated');
+        $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
         $filters['exclude_roles'] = [
@@ -50,12 +50,14 @@ class RoleController extends Controller
         }
 
         $role = $this->roleRepository->find($role->id, ['permissions']);
+
         return ApiResponse::success('Role fetched successfully.', RoleResource::make($role));
     }
 
     public function store(RoleRequest $request)
     {
         $role = $this->roleService->create($request->validated());
+
         return ApiResponse::success('Role created successfully.', RoleResource::make($role));
     }
 
@@ -66,6 +68,7 @@ class RoleController extends Controller
         }
 
         $updatedRole = $this->roleService->update($role, $request->validated());
+
         return ApiResponse::success('Role updated successfully.', RoleResource::make($updatedRole));
     }
 
@@ -76,6 +79,7 @@ class RoleController extends Controller
         }
 
         $this->roleService->delete($role);
+
         return ApiResponse::success('Role deleted successfully.');
     }
 }

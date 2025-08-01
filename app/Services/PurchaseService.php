@@ -8,7 +8,6 @@ use App\Actions\Purchases\VoidPurchaseAction;
 use App\Models\Purchase;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 
-
 class PurchaseService
 {
     public function __construct(
@@ -18,14 +17,13 @@ class PurchaseService
         protected StockMovementService $stockMovementService
     ) {}
 
-    
     /**
      * Get the next invoice number for a purchase.
      */
     public function getNextInvoiceNumber(): string
     {
         $prefix = 'P-INV';
-        
+
         $lastInvoice = Purchase::whereNotNull('invoice_number')
             ->orderByDesc('id') // or created_at
             ->value('invoice_number');
@@ -38,7 +36,7 @@ class PurchaseService
 
         $nextNumber = $lastNumber + 1;
 
-        return "{$prefix}-" . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        return "{$prefix}-".str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     public function create(array $data): Purchase
@@ -61,8 +59,6 @@ class PurchaseService
     public function void(Purchase $purchase): Purchase
     {
         // check if already voided
-
-
 
         // Check if any stock from this purchase has been consumed
         if ($this->stockMovementService->hasStockBeenConsumed($purchase)) {

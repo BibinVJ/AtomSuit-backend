@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Jobs\SendContactMailJob;
 
-
 class ContactService
 {
     public function sendContactMail(array $data): void

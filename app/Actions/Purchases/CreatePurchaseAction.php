@@ -21,19 +21,20 @@ class CreatePurchaseAction
     {
         return DB::transaction(function () use ($data) {
             $purchase = $this->purchaseRepo->create([
-                'vendor_id'      => $data['vendor_id'],
+                'vendor_id' => $data['vendor_id'],
                 'invoice_number' => $data['invoice_number'],
-                'purchase_date'  => $data['purchase_date'],
+                'purchase_date' => $data['purchase_date'],
                 'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,
             ]);
 
             $preparedItems = collect($data['items'])->map(function ($item) {
                 $batch = $this->batchService->create($item);
+
                 return array_merge($item, ['batch_id' => $batch->id]);
             })->toArray();
 
             $this->purchaseRepo->addItems($purchase, $preparedItems);
-            
+
             // create stock moves
             $this->stockMoveService->createStockMovements($purchase);
 

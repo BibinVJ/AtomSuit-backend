@@ -11,9 +11,9 @@ enum OtpPurposeEnum: string
     public function label(): string
     {
         return match ($this) {
-            static::PASSWORD_RESET => 'Password Reset',
-            static::ORDER_VERIFICATION => 'Order Verfication',
-            static::TWO_FACTOR => 'Two Factor'
+            self::PASSWORD_RESET => 'Password Reset',
+            self::ORDER_VERIFICATION => 'Order Verfication',
+            self::TWO_FACTOR => 'Two Factor'
         };
     }
 }

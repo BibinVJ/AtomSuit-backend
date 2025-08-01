@@ -32,6 +32,7 @@ class UserLoginDetail extends Model
         if ($this->logout_at) {
             return $this->logout_at->diffInSeconds($this->login_at);
         }
+
         return now()->diffInSeconds($this->login_at);
     }
 

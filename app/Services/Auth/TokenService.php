@@ -3,8 +3,8 @@
 namespace App\Services\Auth;
 
 use App\Models\User;
-use Laravel\Passport\Token;
 use Laravel\Passport\PersonalAccessTokenResult;
+use Laravel\Passport\Token;
 
 class TokenService
 {

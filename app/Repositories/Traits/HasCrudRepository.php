@@ -2,8 +2,8 @@
 
 namespace App\Repositories\Traits;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 trait HasCrudRepository
 {
@@ -19,7 +19,7 @@ trait HasCrudRepository
         $query = $this->model->newQuery();
 
         // Eager load relationships
-        if (!empty($with)) {
+        if (! empty($with)) {
             $query->with($with);
         }
 
@@ -59,6 +59,7 @@ trait HasCrudRepository
     public function update(Model $model, array $data): Model
     {
         $model->update($data);
+
         return $model;
     }
 

@@ -12,7 +12,7 @@ class AuthResponseFormatter
         return [
             'token' => [
                 'access_token' => $dto->authToken->accessToken,
-                'expires_in'   => $dto->authToken->token->expires_at->diffInSeconds(now()),
+                'expires_in' => $dto->authToken->token->expires_at->diffInSeconds(now()),
             ],
             'user' => new UserResource($dto->user),
         ];

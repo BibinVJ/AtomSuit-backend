@@ -26,11 +26,11 @@ class StorePurchaseRequest extends FormRequest
     {
         return [
             'vendor_id' => 'required|exists:vendors,id',
-            'invoice_number' => 'required|unique:purchases,invoice_number,' . $this->route('purchase')?->id,
+            'invoice_number' => 'required|unique:purchases,invoice_number,'.$this->route('purchase')?->id,
             'purchase_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatus::class)],
-            
+
             'items' => 'required|array|min:1',
             'items.*.id' => 'nullable|exists:purchase_items,id',
             'items.*.item_id' => 'required|exists:items,id',
@@ -39,7 +39,7 @@ class StorePurchaseRequest extends FormRequest
             'items.*.manufacture_date' => 'nullable|date|before:purchase_date',
             'items.*.quantity' => 'required|integer|min:1',
             'items.*.unit_cost' => 'required|numeric|min:0',
-            'items.*.description' => 'nullable'
+            'items.*.description' => 'nullable',
         ];
     }
 }

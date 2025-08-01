@@ -17,16 +17,16 @@ class VendorController extends Controller
         protected VendorRepository $vendorRepository,
         protected VendorService $vendorService
     ) {
-        $this->middleware("permission:" . PermissionsEnum::VIEW_VENDOR->value)->only(['index']);
-        $this->middleware("permission:" . PermissionsEnum::CREATE_VENDOR->value)->only(['store']);
-        $this->middleware("permission:" . PermissionsEnum::UPDATE_VENDOR->value)->only(['update']);
-        $this->middleware("permission:" . PermissionsEnum::DELETE_VENDOR->value)->only(['destroy']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_VENDOR->value)->only(['index']);
+        $this->middleware('permission:'.PermissionsEnum::CREATE_VENDOR->value)->only(['store']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_VENDOR->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::DELETE_VENDOR->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
         $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = !$request->boolean('unpaginated');
+        $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
         $vendors = $this->vendorRepository->all($paginate, $perPage, $filters);
@@ -37,22 +37,24 @@ class VendorController extends Controller
         );
     }
 
-
     public function store(VendorRequest $request)
     {
         $vendor = $this->vendorRepository->create($request->validated());
+
         return ApiResponse::success('Vendor created successfully.', VendorResource::make($vendor));
     }
 
     public function update(VendorRequest $request, Vendor $vendor)
     {
         $updatedVendor = $this->vendorRepository->update($vendor, $request->validated());
+
         return ApiResponse::success('Vendor updated successfully.', VendorResource::make($updatedVendor));
     }
 
     public function destroy(Vendor $vendor)
     {
         $this->vendorService->delete($vendor);
+
         return ApiResponse::success('Vendor deleted successfully.');
     }
 }

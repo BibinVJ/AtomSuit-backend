@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Page extends Model
@@ -21,7 +21,7 @@ class Page extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
-    
+
     public function sections(): HasMany
     {
         return $this->hasMany(Section::class)->orderBy('order');

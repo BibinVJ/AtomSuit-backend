@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserProfileUpdateRequest extends FormRequest
@@ -23,8 +22,8 @@ class UserProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'nullable|string|max:255',
-            'phone'    => 'nullable|string|max:255',
+            'name' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:255',
         ];
     }
 }

@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Enums\RolesEnum;
+use App\Models\User;
 use App\Models\UserLoginDetail;
+use App\Observers\UserObserver;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
@@ -17,10 +19,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -49,5 +48,7 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         });
+
+        User::observe(UserObserver::class);
     }
 }

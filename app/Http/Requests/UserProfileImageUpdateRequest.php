@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RolesEnum;
-use App\Enums\UserStatus;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class UserProfileImageUpdateRequest extends FormRequest
 {
@@ -25,7 +22,7 @@ class UserProfileImageUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'profile_image' => 'required|image|max:2048'
+            'profile_image' => 'required|image|max:2048',
         ];
     }
 }

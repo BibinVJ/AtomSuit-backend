@@ -26,6 +26,6 @@ class Customer extends Model
 
     public function totalSpent(): float
     {
-        return $this->sales->sum(fn($sale) => $sale->total);
+        return $this->sales->sum(fn ($sale) => $sale->total);
     }
 }

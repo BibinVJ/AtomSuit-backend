@@ -44,8 +44,6 @@ class Sale extends Model
      */
     public function getTotalAttribute(): float
     {
-        return $this->items->sum(fn($i) => $i->quantity * $i->unit_price);
+        return $this->items->sum(fn ($i) => $i->quantity * $i->unit_price);
     }
-
-
 }

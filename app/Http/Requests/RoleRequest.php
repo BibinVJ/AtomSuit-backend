@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\RolesEnum;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Enum;
 
 class RoleRequest extends FormRequest
 {
@@ -24,7 +22,7 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:roles,name,' . $this->route('role')?->id,
+            'name' => 'required|string|max:255|unique:roles,name,'.$this->route('role')?->id,
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['integer', 'exists:permissions,id'],
             'is_active' => 'boolean',

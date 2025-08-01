@@ -17,16 +17,16 @@ class UnitController extends Controller
         protected UnitRepository $unitRepository,
         protected UnitService $unitService
     ) {
-        $this->middleware("permission:" . PermissionsEnum::VIEW_UNIT->value)->only(['index']);
-        $this->middleware("permission:" . PermissionsEnum::CREATE_UNIT->value)->only(['store']);
-        $this->middleware("permission:" . PermissionsEnum::UPDATE_UNIT->value)->only(['update']);
-        $this->middleware("permission:" . PermissionsEnum::DELETE_UNIT->value)->only(['destroy']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_UNIT->value)->only(['index']);
+        $this->middleware('permission:'.PermissionsEnum::CREATE_UNIT->value)->only(['store']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_UNIT->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::DELETE_UNIT->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
         $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = !$request->boolean('unpaginated');
+        $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
         $units = $this->unitRepository->all($paginate, $perPage, $filters);
@@ -40,18 +40,21 @@ class UnitController extends Controller
     public function store(UnitRequest $request)
     {
         $unit = $this->unitRepository->create($request->validated());
+
         return ApiResponse::success('Unit created successfully.', UnitResource::make($unit));
     }
 
     public function update(UnitRequest $request, Unit $unit)
     {
         $updatedUnit = $this->unitRepository->update($unit, $request->validated());
+
         return ApiResponse::success('Unit updated successfully.', UnitResource::make($updatedUnit));
     }
 
     public function destroy(Unit $unit)
     {
         $this->unitService->delete($unit);
+
         return ApiResponse::success('Unit deleted successfully.');
     }
 }

@@ -13,15 +13,14 @@ use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable implements OAuthenticatable, MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
 
     const PROFILE_IMAGE_PATH = 'users/profile-images';
-
 
     /**
      * The attributes that are mass assignable.
@@ -71,7 +70,7 @@ class User extends Authenticatable implements OAuthenticatable, MustVerifyEmail
     {
         return $this->roles->pluck('name')->first();
     }
-    
+
     public function logindetails(): HasMany
     {
         return $this->hasMany(UserLoginDetail::class);

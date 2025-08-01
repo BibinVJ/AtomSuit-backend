@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Enums\OtpPurposeEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
@@ -10,7 +11,6 @@ use App\Http\Requests\Auth\VerifyOtpRequest;
 use App\Repositories\UserRepository;
 use App\Services\Auth\AuthService;
 use App\Services\OtpService;
-use App\Enums\OtpPurposeEnum;
 use Symfony\Component\HttpFoundation\Response;
 
 class PasswordResetController extends Controller
@@ -28,6 +28,7 @@ class PasswordResetController extends Controller
     {
         $user = $this->userRepository->findByEmail($request->validated()['email']);
         $this->otpService->sendPasswordResetOtp($user, OtpPurposeEnum::PASSWORD_RESET);
+
         return ApiResponse::success('OTP sent to your email and mobile.');
     }
 

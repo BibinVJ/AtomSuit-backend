@@ -2,22 +2,23 @@
 
 namespace Database\Seeders;
 
+use App\Enums\PaymentStatus;
+use App\Models\Customer;
+use App\Models\Item;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\StockMovement;
-use App\Models\Customer;
-use App\Models\Item;
-use App\Enums\PaymentStatus;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class SaleSeeder extends Seeder
 {
     public function run(): void
     {
         $customer = Customer::first();
-        if (!$customer) {
+        if (! $customer) {
             $this->command->info('No customers found. Please seed customers first.');
+
             return;
         }
 
@@ -25,6 +26,7 @@ class SaleSeeder extends Seeder
 
         if ($items->count() < 3) {
             $this->command->info('Not enough items to seed a sale. Please seed purchases first.');
+
             return;
         }
 
@@ -39,11 +41,12 @@ class SaleSeeder extends Seeder
 
         foreach ($items->take(3) as $item) {
             $batch = $item->batches
-                ->filter(fn($batch) => $batch->stockOnHand() > 0)
+                ->filter(fn ($batch) => $batch->stockOnHand() > 0)
                 ->first();
 
-            if (!$batch || $batch->stockOnHand() <= 0) {
+            if (! $batch || $batch->stockOnHand() <= 0) {
                 $this->command->info("No stock available for item: {$item->name}. Skipping.");
+
                 continue;
             }
 
