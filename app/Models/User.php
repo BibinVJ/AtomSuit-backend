@@ -75,4 +75,9 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
     {
         return $this->hasMany(UserLoginDetail::class);
     }
+
+    public function dashboardLayouts(): HasMany
+    {
+        return $this->hasMany(DashboardLayout::class);
+    }
 }

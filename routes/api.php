@@ -51,7 +51,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 
-    Route::get('dashboard', [DashboardController::class, 'home']);
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/', [DashboardController::class, 'home']);
+        Route::get('layout', [DashboardController::class, 'getLayout']);
+        Route::post('layout', [DashboardController::class, 'updateLayout']);
+    });
 
     Route::prefix('notifications')->group(function () {
         Route::get('/', [NotificationController::class, 'index']);

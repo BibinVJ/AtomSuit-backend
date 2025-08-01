@@ -45,8 +45,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // INVENTORY MANAGER
         $InventoryManagerRole = Role::firstOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value, 'guard_name' => $guard]);
         $InventoryManagerRole->syncPermissions([
-            PermissionsEnum::VIEW_DASHBOARD->value,
-
             // Category
             PermissionsEnum::VIEW_CATEGORY->value,
             PermissionsEnum::CREATE_CATEGORY->value,
@@ -84,8 +82,6 @@ class RolesAndPermissionsSeeder extends Seeder
         // SALES PERSON
         $salesPersonRole = Role::firstOrCreate(['name' => RolesEnum::SALES_PERSON->value, 'guard_name' => $guard]);
         $salesPersonRole->syncPermissions([
-            PermissionsEnum::VIEW_DASHBOARD->value,
-
             // Customer
             PermissionsEnum::VIEW_CUSTOMER->value,
             PermissionsEnum::CREATE_CUSTOMER->value,

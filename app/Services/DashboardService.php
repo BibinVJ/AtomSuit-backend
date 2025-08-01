@@ -3,9 +3,11 @@
 namespace App\Services;
 
 use App\DataTransferObjects\DashboardMetricsDTO;
+use App\Models\DashboardLayout;
 use App\Repositories\CustomerRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\ItemRepository;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardService
 {
@@ -32,5 +34,33 @@ class DashboardService
             sales_chart_data: $this->dashboardRepo->getSalesChartData(),
             purchase_chart_data: $this->dashboardRepo->getPurchaseChartData()
         );
+    }
+
+    public function getLayouts()
+    {
+        return Auth::user()->dashboardLayouts;
+    }
+
+    public function updateLayout(array $data)
+    {
+        foreach ($data['layouts'] as $layout) {
+            DashboardLayout::updateOrCreate(
+                ['user_id' => Auth::id(), 'card_id' => $layout['card_id']],
+                [
+                    'area' => $layout['area'] ?? null,
+                    'x' => $layout['x'] ?? null,
+                    'y' => $layout['y'] ?? null,
+                    'rotation' => $layout['rotation'] ?? 0,
+                    'width' => $layout['width'] ?? null,
+                    'height' => $layout['height'] ?? null,
+                    'col_span' => $layout['col_span'] ?? 0,
+                    'draggable' => $layout['draggable'] ?? true,
+                    'visible' => $layout['visible'],
+                    'config' => $layout['config'] ?? null,
+                ]
+            );
+        }
+
+        return $this->getLayouts();
     }
 }
