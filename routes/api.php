@@ -66,8 +66,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/', [UserProfileController::class, 'show']);
         Route::post('/', [UserProfileController::class, 'update']);
+        Route::post('/address', [UserProfileController::class, 'updateAddress']);
+        Route::post('/social-links', [UserProfileController::class, 'updateSocialLinks']);
         Route::post('profile-image', [UserProfileController::class, 'updateProfileImage']);
         Route::delete('profile-image', [UserProfileController::class, 'removeProfileImage']);
+
     });
 
     /*

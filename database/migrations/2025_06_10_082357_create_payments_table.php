@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('method')->nullable();
             $table->string('status')->default(PaymentStatus::PENDING);
             $table->double('amount')->default(0);
-            $table->json('details')->nullable();
+            $table->json('meta')->nullable();
             $table->timestamp('paid_at')->nullable();
             $table->timestamps();
         });

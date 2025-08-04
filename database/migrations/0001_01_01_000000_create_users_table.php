@@ -23,7 +23,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->string('status')->default(UserStatus::PENDING);
             $table->timestamp('status_updated_at')->nullable();
-            $table->string('profile_image')->nullable()->comment('URL to the profile image');
             $table->string('phone')->nullable();
             $table->string('phone_verified_at')->nullable();
             $table->softDeletes();

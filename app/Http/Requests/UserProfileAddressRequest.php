@@ -2,11 +2,11 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\GenderEnum;
+use App\Enums\AddressEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
-class UserProfileUpdateRequest extends FormRequest
+class UserProfileAddressRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,13 @@ class UserProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'nullable|string|max:255',
-            'alternate_email' => 'nullable|email|max:255',
-            'alternate_phone' => 'nullable|string|max:20',
-            'id_proof_type' => 'nullable|string|max:100',
-            'id_proof_number' => 'nullable|string|max:100',
-            'dob' => 'nullable|date',
-            'gender' => ['required', new Enum(GenderEnum::class)],
+            'type' => ['required', new Enum(AddressEnum::class)],
+            'address_line_1' => 'nullable|string|max:255',
+            'address_line_2' => 'nullable|string|max:255',
+            'city' => 'nullable|string|max:100',
+            'state' => 'nullable|string|max:100',
+            'country' => 'nullable|string|max:100',
+            'postal_code' => 'nullable|string|max:20',
         ];
     }
 }

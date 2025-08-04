@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\UserStatus;
 use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 
 class UserService
@@ -58,27 +57,5 @@ class UserService
         // add check for if user is deletable
 
         $this->userRepository->delete($user);
-    }
-
-    public function updateProfile(User $user, array $data)
-    {
-        return $this->userRepository->update($user, $data);
-    }
-
-    public function updateProfileImage(User $user, array $data)
-    {
-        if (isset($data['profile_image']) && $data['profile_image'] instanceof UploadedFile) {
-            $data['profile_image'] = $this->fileUploadService->uploadToS3($data['profile_image'], User::PROFILE_IMAGE_PATH);
-        }
-
-        return $this->userRepository->update($user, $data);
-    }
-
-    public function removeProfileImage(User $user): void
-    {
-        if (! empty($user->profile_image)) {
-            $this->fileUploadService->deleteFromS3($user->profile_image);
-            $this->userRepository->update($user, ['profile_image' => null]);
-        }
     }
 }

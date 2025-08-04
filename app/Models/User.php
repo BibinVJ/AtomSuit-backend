@@ -2,10 +2,14 @@
 
 namespace App\Models;
 
+use App\Enums\AddressEnum;
 use App\Enums\UserStatus;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,8 +23,6 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
-
-    const PROFILE_IMAGE_PATH = 'users/profile-images';
 
     /**
      * The attributes that are mass assignable.
@@ -36,7 +38,6 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
         'provider_id',
         'status',
         'status_updated_at',
-        'profile_image',
         'phone',
         'phone_verified_at',
     ];
@@ -66,7 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
         ];
     }
 
-    public function getUserRole()
+    public function getUserRole(): string
     {
         return $this->roles->pluck('name')->first();
     }
@@ -79,5 +80,20 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
     public function dashboardLayouts(): HasMany
     {
         return $this->hasMany(DashboardLayout::class);
+    }
+
+    public function detail(): HasOne
+    {
+        return $this->hasOne(UserDetail::class);
+    }
+
+    public function addresses(): MorphMany
+    {
+        return $this->morphMany(Address::class, 'addressable');
+    }
+
+    public function socialLinks(): MorphMany
+    {
+        return $this->morphMany(SocialLink::class, 'linkable');
     }
 }

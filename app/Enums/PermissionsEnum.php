@@ -29,6 +29,10 @@ enum PermissionsEnum: string
     // Settings
     case VIEW_SETTING = 'view-setting';
     case UPDATE_SETTING = 'update-setting';
+    case VIEW_COMPANY_INFO = 'view-company-info';
+    case UPDATE_COMPANY_INFO = 'update-company-info';
+
+
 
     // category management
     case VIEW_CATEGORY = 'view-category';
@@ -74,4 +78,6 @@ enum PermissionsEnum: string
     case CREATE_SALE = 'create-sale';
     case UPDATE_SALE = 'update-sale';
     case DELETE_SALE = 'delete-sale';
+
+
 }

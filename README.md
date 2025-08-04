@@ -44,14 +44,15 @@ To maintain code quality and consistency, please adhere to the following guideli
 - **Permissions over Roles:** Whenever checking for authorization, prefer using specific permissions (`$user->can('do_something')`) instead of checking for roles directly (`$user->hasRole('admin')`). This makes the system more flexible.
 
 ### Git Workflow
-1.  **Create a Feature/Bug Branch:** All new work should be done on a feature/bug branch as required.
+1.  **Create a Feature/Bug/Enhancement Branch:** All new work should be done on a feature/bug branch as required.
     ```bash
     # Example:
     git checkout -b feature/user-export-endpoint
     git checkout -b bug/invalid-status-code
+    git checkout -b enhancement/improve-export-performance
     ```
 2.  **Write Clear Commit Messages:** Write a concise, imperative-style subject line (e.g., "Add user export functionality"). Add more details in the body if necessary.
-3.  **Submit a Merge Request:** Once your feature is complete and tested, push your branch and create a Merge Request against the `main` or `staging` branch.
+3.  **Submit a Merge Request:** Once your feature is complete and tested, push your branch and create a Merge Request against the `staging` branch.
 
 ### Coding Standards
 - **Laravel Pint:** The project uses Laravel Pint to enforce PSR-12 coding standards. Run it before committing to ensure your code is formatted correctly.
