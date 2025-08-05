@@ -40,8 +40,9 @@ class SaleSeeder extends Seeder
         );
 
         foreach ($items->take(3) as $item) {
+            /** @var \App\Models\Batch $batch */
             $batch = $item->batches
-                ->filter(fn ($batch) => $batch->stockOnHand() > 0)
+                ->filter(fn (\App\Models\Batch $batch) => $batch->stockOnHand() > 0)
                 ->first();
 
             if (! $batch || $batch->stockOnHand() <= 0) {

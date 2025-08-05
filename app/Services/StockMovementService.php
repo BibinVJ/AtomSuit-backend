@@ -30,6 +30,7 @@ class StockMovementService
 
     public function reverseStockMovements(Model $model): void
     {
+        /** @var \App\Models\Purchase|\App\Models\Sale $model */
         foreach ($model->stockMovements as $movement) {
             $this->stockMovementRepository->create([
                 ...$movement->only([
@@ -50,6 +51,7 @@ class StockMovementService
 
     public function hasStockBeenConsumed(Purchase $purchase): bool
     {
+        /** @var \App\Models\PurchaseItem $item */
         foreach ($purchase->items as $item) {
             $batchId = $item->batch_id;
 
@@ -69,6 +71,7 @@ class StockMovementService
 
     public function deleteStockMovements(Model $model): void
     {
+        /** @var \App\Models\Purchase|\App\Models\Sale $model */
         $model->stockMovements()->delete();
     }
 }

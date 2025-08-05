@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \Spatie\Permission\Models\Role
+ */
 class RoleResource extends BaseResource
 {
     /**
@@ -18,7 +21,6 @@ class RoleResource extends BaseResource
             'name' => $this->name,
             'guard_name' => $this->guard_name,
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-            'is_active' => $this->is_active,
             'created_at' => $this->created_at,
         ];
     }

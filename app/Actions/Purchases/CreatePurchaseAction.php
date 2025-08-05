@@ -20,6 +20,7 @@ class CreatePurchaseAction
     public function execute(array $data): Purchase
     {
         return DB::transaction(function () use ($data) {
+            /** @var Purchase $purchase */
             $purchase = $this->purchaseRepo->create([
                 'vendor_id' => $data['vendor_id'],
                 'invoice_number' => $data['invoice_number'],

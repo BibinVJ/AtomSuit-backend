@@ -13,6 +13,7 @@ class RoleService
 
     public function create(array $data): Role
     {
+        /** @var Role $role */
         $role = $this->roleRepository->create([
             'name' => $data['name'],
             'is_active' => $data['is_active'] ?? true,

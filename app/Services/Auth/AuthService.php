@@ -20,6 +20,7 @@ class AuthService
 
     public function register(array $data): AuthenticatedUserDTO
     {
+        /** @var User $user */
         $user = $this->userRepository->create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -44,7 +45,7 @@ class AuthService
             throw new UnauthorizedHttpException('', 'Invalid credentials');
         }
 
-        if ($user->status !== UserStatus::ACTIVE) {
+        if ($user->status->value !== UserStatus::ACTIVE->value) {
             throw new UnauthorizedHttpException('', 'User account is not active');
         }
 

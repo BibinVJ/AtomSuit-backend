@@ -38,7 +38,7 @@ class SaleService
 
         $nextNumber = $lastNumber + 1;
 
-        return "{$prefix}-".str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+        return "{$prefix}-".str_pad((string) $nextNumber, 6, '0', STR_PAD_LEFT);
     }
 
     public function create(array $data): Sale

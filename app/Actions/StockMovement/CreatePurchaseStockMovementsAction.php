@@ -4,14 +4,14 @@ namespace App\Actions\StockMovement;
 
 use App\Models\Purchase;
 use App\Repositories\StockMovementRepository;
-use Illuminate\Database\Eloquent\Model;
 
 class CreatePurchaseStockMovementsAction
 {
     public function __construct(protected StockMovementRepository $stockRepo) {}
 
-    public function execute(Model $purchase): void
+    public function execute(Purchase $purchase): void
     {
+        /** @var \App\Models\PurchaseItem $item */
         foreach ($purchase->items as $item) {
             $this->stockRepo->create([
                 'item_id' => $item->item_id,

@@ -18,7 +18,6 @@ enum RolesEnum: string
             self::ADMIN => 'Admin',
             self::INVENTORY_MANAGER => 'Inventory Manager',
             self::SALES_PERSON => 'Sales Person',
-            default => 'Unknown Role',
         };
     }
 }

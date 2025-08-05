@@ -23,7 +23,7 @@ class OtpService
             throw new \Exception('Please wait before requesting another OTP.');
         }
 
-        $otp = rand(100000, 999999);
+        $otp = (string) rand(100000, 999999);
         $expiresAt = now()->addMinutes($validForMinutes);
 
         // Delete old OTPs for this user & purpose

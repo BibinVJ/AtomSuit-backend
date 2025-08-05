@@ -5,23 +5,24 @@ namespace App\Actions\StockMovement;
 use App\Models\Sale;
 use App\Repositories\StockMovementRepository;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use Symfony\Component\HttpFoundation\Response;
 
 class CreateSaleStockMovementsAction
 {
     public function __construct(protected StockMovementRepository $stockMovementRepo) {}
 
-    public function execute(Model $sale): void
+    public function execute(Sale $sale): void
     {
-        $allowExpired = false; // todo: change this later to getch from the settings
+        $allowExpired = config('app.allow_expired_stock'); // todo: change this later to getch from the settings
 
+        /** @var \App\Models\SaleItem $saleItem */
         foreach ($sale->items as $saleItem) {
             $remainingQty = $saleItem->quantity;
 
             // Fetch stock movements (FIFO) from earliest unsold purchases
             $batches = $this->stockMovementRepo->getFifoAvailableStock(['item_id' => $saleItem->item_id]);
 
+            /** @var \App\Models\Batch $batch */
             foreach ($batches as $batch) {
                 if ($remainingQty <= 0) {
                     break;
@@ -32,11 +33,13 @@ class CreateSaleStockMovementsAction
                     continue; // Skip this batch
                 }
 
+                // @phpstan-ignore-next-line
                 $available = $batch->available_qty;
                 $toDeduct = min($available, $remainingQty);
 
                 $this->stockMovementRepo->create([
                     'item_id' => $saleItem->item_id,
+                    // @phpstan-ignore-next-line
                     'batch_id' => $batch->batch_id,
                     'transaction_date' => $sale->sale_date,
                     'quantity' => -($toDeduct),

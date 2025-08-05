@@ -2,6 +2,8 @@
 
 This repository contains the API-only backend for the **PharmacyManager** platform. It is built using the Laravel framework (v12).
 
+![GitHub release (latest by SemVer)](https://img.shields.io/github/v/release/BibinVJ/inventory-backend?sort=semver&color=blue)
+
 ## System Requirements
 
 - PHP 8.2+
@@ -55,6 +57,10 @@ To maintain code quality and consistency, please adhere to the following guideli
 3.  **Submit a Merge Request:** Once your feature is complete and tested, push your branch and create a Merge Request against the `staging` branch.
 
 ### Coding Standards
+- **Static Analysis Before Push:** Run PHPStan to ensure type safety and code quality:
+  ```bash
+  ./vendor/bin/phpstan analyse
+  ```
 - **Laravel Pint:** The project uses Laravel Pint to enforce PSR-12 coding standards. Run it before committing to ensure your code is formatted correctly.
   ```bash
   ./vendor/bin/pint

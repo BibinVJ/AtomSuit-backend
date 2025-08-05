@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('social_links', function (Blueprint $table) {
             $table->id();
             $table->morphs('linkable'); // user_id + linkable_type
-            $table->string('platform')->comment(" e.g., 'linkedin', 'github', etc..."); 
+            $table->string('platform')->comment(" e.g., 'linkedin', 'github', etc...");
             $table->string('url')->nullable();
             $table->timestamps();
         });
