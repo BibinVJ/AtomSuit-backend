@@ -1,0 +1,67 @@
+name: Version Bump & PR
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+      - beta
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump-version:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest tag
+        id: get_tag
+        run: |
+          git fetch --tags
+          latest_tag=$(git describe --tags --abbrev=0 || echo "v0.0.0")
+          echo "latest_tag=$latest_tag" >> $GITHUB_ENV
+
+      - name: Calculate next version
+        id: next_version
+        run: |
+          branch_name=${GITHUB_BASE_REF:-${GITHUB_REF##*/}}
+          version=${latest_tag#v}
+          IFS='.' read -r major minor patch <<< "$version"
+
+          if [ "$branch_name" = "main" ]; then
+            minor=$((minor + 1))
+            patch=0
+            new_tag="v$major.$minor.$patch"
+          elif [ "$branch_name" = "beta" ]; then
+            patch=$((patch + 1))
+            new_tag="v$major.$minor.$patch-beta"
+          fi
+
+          echo "new_tag=$new_tag" >> $GITHUB_ENV
+
+      - name: Create Version Bump Branch
+        run: |
+          git checkout -b version-bump/${{ env.new_tag }}
+          echo "${{ env.new_tag }}" > VERSION
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add VERSION
+          git commit -m "chore: bump version to ${{ env.new_tag }}"
+          git push origin version-bump/${{ env.new_tag }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: bump version to ${{ env.new_tag }}"
+          title: "Version Bump: ${{ env.new_tag }}"
+          body: "Automated version bump PR for ${{ env.new_tag }}"
+          branch: version-bump/${{ env.new_tag }}
+          base: ${{ github.event.pull_request.base.ref }}
