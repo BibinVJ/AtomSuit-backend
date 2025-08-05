@@ -31,5 +31,4 @@ parameters:
         - '#Variable .* in PHPDoc tag .* does not match any variable in the foreach loop.*#'
         - '#Ternary operator condition is always true.#'
         - '#Negated boolean expression is always false.#'
-        - '#Call to method .* with true will always evaluate to true.#'
         - '#Generic type .* in PHPDoc tag .* does not specify all template types of class .*#'
