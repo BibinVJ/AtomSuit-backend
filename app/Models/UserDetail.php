@@ -17,7 +17,7 @@ class UserDetail extends Model
         'id_proof_number',
         'dob',
         'gender',
-        'profile_image'
+        'profile_image',
     ];
 
     protected $casts = [

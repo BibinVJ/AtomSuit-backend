@@ -44,6 +44,6 @@ class Purchase extends Model
      */
     public function getTotalAttribute(): float
     {
-        return $this->items->sum(fn ($i) => $i->quantity * $i->unit_cost);
+        return $this->items->sum(fn (PurchaseItem $i) => $i->quantity * $i->unit_cost);
     }
 }

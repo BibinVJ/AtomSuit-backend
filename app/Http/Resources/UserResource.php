@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \App\Models\User
+ */
 class UserResource extends BaseResource
 {
     /**
@@ -20,7 +23,7 @@ class UserResource extends BaseResource
             'email_verified_at' => $this->email_verified_at,
             'phone' => $this->phone,
             'phone_verified_at' => $this->phone_verified_at,
-            'status' => $this->status->value,
+            'status' => $this->status,
             'status_updated_at' => $this->status_updated_at,
 
             'is_admin' => $this->hasRole('admin'),

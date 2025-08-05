@@ -32,8 +32,6 @@ enum PermissionsEnum: string
     case VIEW_COMPANY_INFO = 'view-company-info';
     case UPDATE_COMPANY_INFO = 'update-company-info';
 
-
-
     // category management
     case VIEW_CATEGORY = 'view-category';
     case CREATE_CATEGORY = 'create-category';
@@ -78,6 +76,5 @@ enum PermissionsEnum: string
     case CREATE_SALE = 'create-sale';
     case UPDATE_SALE = 'update-sale';
     case DELETE_SALE = 'delete-sale';
-
 
 }

@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \App\Models\Address
+ */
 class AddressResource extends BaseResource
 {
     /**
@@ -21,7 +24,6 @@ class AddressResource extends BaseResource
             'state' => $this->state,
             'country' => $this->country,
             'postal_code' => $this->postal_code,
-            'meta' => $this->meta,
         ];
     }
 }

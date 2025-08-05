@@ -68,14 +68,19 @@ class DashboardRepository
             ->where('expiry_date', '<', now()->addDays(30))
             // ->whereBetween('expiry_date', [now(), now()->addDays(30)])
             ->get()
-            ->map(fn ($batch) => new DashboardExpiringItemDTO(
-                id: $batch->item->id,
-                sku: $batch->item->sku ?? '',
-                name: $batch->item->name,
-                batch_number: $batch->batch_number,
-                expiry_date: $batch->expiry_date,
-                stock_remaining: $batch->stockOnHand()
-            ));
+            ->map(function ($batch) {
+                /** @var \App\Models\Item $item */
+                $item = $batch->item;
+
+                return new DashboardExpiringItemDTO(
+                    id: $item->id,
+                    sku: $item->sku ?? '',
+                    name: $item->name,
+                    batch_number: $batch->batch_number,
+                    expiry_date: $batch->expiry_date,
+                    stock_remaining: $batch->stockOnHand()
+                );
+            });
     }
 
     public function getOutOfStockItems(): Collection
@@ -86,7 +91,7 @@ class DashboardRepository
             ->with('item:id,sku,name')
             ->get()
             ->map(fn ($row) => new DashboardStockItemDTO(
-                id: $row->item_id,
+                id: $row->item->id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
                 stock_remaining: $row->total_quantity
@@ -101,7 +106,7 @@ class DashboardRepository
             ->with('item:id,sku,name')
             ->get()
             ->map(fn ($row) => new DashboardStockItemDTO(
-                id: $row->item_id,
+                id: $row->item->id,
                 sku: $row->item->sku ?? '',
                 name: $row->item->name ?? '',
                 stock_remaining: $row->total_quantity

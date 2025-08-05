@@ -51,9 +51,9 @@ trait HasCrudRepository
         return $this->model->create($data)->refresh();
     }
 
-    public function firstOrCreate(array $data): Model
+    public function firstOrCreate(array $attributes, array $values = []): Model
     {
-        return $this->model->firstOrCreate($data);
+        return $this->model->firstOrCreate($attributes, $values);
     }
 
     public function update(Model $model, array $data): Model

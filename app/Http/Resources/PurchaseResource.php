@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \App\Models\Purchase
+ */
 class PurchaseResource extends BaseResource
 {
     /**

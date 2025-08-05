@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \Illuminate\Notifications\DatabaseNotification
+ */
 class NotificationResource extends BaseResource
 {
     /**

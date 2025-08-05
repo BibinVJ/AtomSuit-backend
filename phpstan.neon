@@ -1,0 +1,35 @@
+includes:
+    - ./vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    level: 5
+
+    paths:
+        - app
+        - bootstrap/app.php
+        - config
+        - database
+        - routes
+        - tests
+
+
+    excludePaths:
+        - vendor
+        - storage
+        - bootstrap/cache
+
+    checkMissingCallableSignature: false
+
+    ignoreErrors:
+        - '#Access to protected property .*#'
+        - '#Parameter .* of method .* expects .*, .* given.#'
+        - '#Method .* should return .* but returns .*#'
+        - '#Access to an undefined property .*#'
+        - '#Call to function method_exists.* will always evaluate to true.#'
+        - '#Cannot access property .* on string.#'
+        - '#Call to an undefined method .*#'
+        - '#Variable .* in PHPDoc tag .* does not match any variable in the foreach loop.*#'
+        - '#Ternary operator condition is always true.#'
+        - '#Negated boolean expression is always false.#'
+        - '#Call to method .* with true will always evaluate to true.#'
+        - '#Generic type .* in PHPDoc tag .* does not specify all template types of class .*#'
