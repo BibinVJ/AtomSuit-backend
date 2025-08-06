@@ -20,7 +20,7 @@ This repository contains the API-only backend for the **Inventory Manager** plat
 - API-First Clean Architecture
 
 
-## Developer Setup (Local)
+## Installation
 ```bash
 - cp .env.example .env
 - composer install
@@ -34,7 +34,7 @@ This repository contains the API-only backend for the **Inventory Manager** plat
 - php artisan passport:keys --force  # Generates Passport keys
 - php artisan passport:client --personal  # Generates a personal access client
 
-- php artisan queue:listen
+- php artisan queue:listen # For local env
 ```
 
 ## Contribution Guidelines
@@ -128,3 +128,15 @@ Same principles apply for Sales as well.
 - This may evolve based on user feedback for streamlining bulk operations.
 
 ---
+
+## 📄 License
+[MIT](LICENSE)
+
+---
+
+## 🤝 Contributing
+Feel free to fork, submit PRs, and raise issues. For major changes, please open an issue first to discuss what you'd like to change.
+
+---
+
+## ✨ Made with ❤️ by the Inventory Manager Team ✨
