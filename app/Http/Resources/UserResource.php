@@ -36,7 +36,7 @@ class UserResource extends BaseResource
             'alternate_phone' => $this->detail?->alternate_phone,
             'id_proof_type' => $this->detail?->id_proof_type,
             'id_proof_number' => $this->detail?->id_proof_number,
-            'dob' => optional($this->detail->dob)->format('Y-m-d'),
+            'dob' => optional($this->detail?->dob)->format('Y-m-d'),
             'gender' => $this->detail?->gender,
             'profile_image' => $this->detail?->profile_image,
 
