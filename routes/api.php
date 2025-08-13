@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', fn () => response()->json(['message' => 'Ping successful!']));
+Route::get('/', fn () => response()->json(['message' => 'Ping successful!!!']));
 Route::post('enquiry', [EnquiryController::class, 'store']);
 
 /*
