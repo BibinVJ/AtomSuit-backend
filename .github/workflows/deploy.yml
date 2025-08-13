@@ -17,33 +17,49 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: BRANCH
           script: |
-            # Pick deployment path based on branch
-            if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
+            echo "Deploying branch $BRANCH"
+            
+            if [ "$BRANCH" = "main" ]; then
               APP_DIR="/var/www/inventory/production/backend"
             else
               APP_DIR="/var/www/inventory/beta/backend"
             fi
 
-            cd "$APP_DIR" || exit 1
+            echo "Deploying branch $BRANCH to $APP_DIR"
+            cd "$APP_DIR" || { echo "Directory $APP_DIR does not exist"; exit 1; }
 
-            # First-time setup check
             if [ ! -d ".git" ]; then
               echo "No git repo found in $APP_DIR. Please clone manually first."
               exit 1
             fi
 
+            # Fetch all branches and update remote references
+            git fetch origin
+            
+            # Check if branch exists remotely
+            if ! git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
+              echo "Branch $BRANCH does not exist on remote"
+              exit 1
+            fi
+            
+            # Switch to the branch if not already on it
+            git checkout "$BRANCH" || git checkout -b "$BRANCH" "origin/$BRANCH"
+            
             # Pull latest changes
-            git fetch --all
-            git reset --hard origin/${GITHUB_REF##*/}
-            git pull origin ${GITHUB_REF##*/}
+            git pull origin "$BRANCH"
 
-            # Install PHP dependencies
-            composer install --no-interaction --prefer-dist --optimize-autoloader
+            # Install/update composer dependencies
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
-            # Laravel optimizations
+            # Clear all caches
             php artisan optimize:clear
+
+            # Run migrations
             php artisan migrate --force
+
+            # Cache configurations for better performance
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
@@ -51,4 +67,6 @@ jobs:
             # Restart queue workers
             php artisan queue:restart
 
-            echo "Laravel backend deployed for branch ${GITHUB_REF##*/}"
+            echo "Laravel backend deployed successfully for branch $BRANCH"
+        env:
+          BRANCH: ${{ github.ref_name }}
