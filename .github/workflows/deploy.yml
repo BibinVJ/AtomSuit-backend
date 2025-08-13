@@ -18,25 +18,26 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Pick deployment path based on branch
+            # Determine deployment path based on branch
             if [ "${GITHUB_REF}" = "refs/heads/main" ]; then
               APP_DIR="/var/www/inventory/production/backend"
             else
               APP_DIR="/var/www/inventory/beta/backend"
             fi
 
-            cd "$APP_DIR" || exit 1
+            echo "Deploying branch ${GITHUB_REF##*/} to $APP_DIR"
+            cd "$APP_DIR" || { echo "Directory $APP_DIR does not exist"; exit 1; }
 
-            # First-time setup check
+            # Ensure git repo exists
             if [ ! -d ".git" ]; then
               echo "No git repo found in $APP_DIR. Please clone manually first."
               exit 1
             fi
 
-            # Pull latest changes
-            git fetch --all
-            git reset --hard origin/${GITHUB_REF##*/}
-            git pull origin ${GITHUB_REF##*/}
+            # Fetch and reset branch safely
+            BRANCH=${GITHUB_REF##*/}
+            git fetch origin "$BRANCH"
+            git reset --hard "origin/$BRANCH"
 
             # Install PHP dependencies
             composer install --no-interaction --prefer-dist --optimize-autoloader
@@ -51,4 +52,4 @@ jobs:
             # Restart queue workers
             php artisan queue:restart
 
-            echo "Laravel backend deployed for branch ${GITHUB_REF##*/}"
+            echo "Laravel backend deployed successfully for branch $BRANCH"
