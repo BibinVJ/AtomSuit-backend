@@ -10,6 +10,7 @@ use App\Models\Purchase;
 use App\Repositories\PurchaseRepository;
 use App\Services\PurchaseService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseController extends Controller
 {
@@ -35,9 +36,23 @@ class PurchaseController extends Controller
             'vendor',
         ]);
 
+        if ($paginate) {
+            $paginated = PurchaseResource::paginated($purchases);
+
+            return ApiResponse::success(
+                'Purchases fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Purchases fetched successfully.',
-            $paginate ? PurchaseResource::paginated($purchases) : PurchaseResource::collection($purchases)
+            PurchaseResource::collection($purchases),
+            Response::HTTP_OK,
+            ['total' => count($purchases)]
         );
     }
 

@@ -20,7 +20,7 @@ class ApiResponseTest extends TestCase
         $this->assertEquals('Test success message', $data['message']);
         $this->assertFalse($data['error']);
         $this->assertEquals(Response::HTTP_OK, $data['code']);
-        $this->assertEquals(['foo' => 'bar'], $data['results']);
+        $this->assertEquals(['foo' => 'bar'], $data['data']);
     }
 
     public function test_error_response()

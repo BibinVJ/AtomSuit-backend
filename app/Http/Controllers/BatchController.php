@@ -7,6 +7,7 @@ use App\Helpers\ApiResponse;
 use App\Http\Resources\BatchResource;
 use App\Repositories\BatchRepository;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class BatchController extends Controller
 {
@@ -24,9 +25,23 @@ class BatchController extends Controller
 
         $batches = $this->batchRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = BatchResource::paginated($batches);
+
+            return ApiResponse::success(
+                'Batches fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
-            'Batches fetched successfully',
-            $paginate ? BatchResource::paginated($batches) : BatchResource::collection($batches)
+            'Batches fetched successfully.',
+            BatchResource::collection($batches),
+            Response::HTTP_OK,
+            ['total' => count($batches)]
         );
     }
 }

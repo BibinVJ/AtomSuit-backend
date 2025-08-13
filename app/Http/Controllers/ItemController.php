@@ -10,6 +10,7 @@ use App\Models\Item;
 use App\Repositories\ItemRepository;
 use App\Services\ItemService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends Controller
 {
@@ -31,9 +32,23 @@ class ItemController extends Controller
 
         $items = $this->itemRepository->all($paginate, $perPage, $filters, ['category', 'unit', 'stockMovements']);
 
+        if ($paginate) {
+            $paginated = ItemResource::paginated($items);
+
+            return ApiResponse::success(
+                'Items fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Items fetched successfully.',
-            $paginate ? ItemResource::paginated($items) : ItemResource::collection($items)
+            ItemResource::collection($items),
+            Response::HTTP_OK,
+            ['total' => count($items)]
         );
     }
 
