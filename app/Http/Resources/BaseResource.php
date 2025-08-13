@@ -10,19 +10,21 @@ abstract class BaseResource extends JsonResource
     public static function paginated(LengthAwarePaginator $paginator): array
     {
         return [
-            'data' => static::collection($paginator),
-            'current_page' => $paginator->currentPage(),
-            'first_page_url' => $paginator->url(1),
-            'from' => $paginator->firstItem(),
-            'last_page' => $paginator->lastPage(),
-            'last_page_url' => $paginator->url($paginator->lastPage()),
-            'links' => self::formatPaginationLinks($paginator),
-            'next_page_url' => $paginator->nextPageUrl(),
-            'path' => $paginator->path(),
-            'per_page' => $paginator->perPage(),
-            'prev_page_url' => $paginator->previousPageUrl(),
-            'to' => $paginator->lastItem(),
-            'total' => $paginator->total(),
+            'data' => static::collection($paginator), // The actual records
+            'meta' => [
+                'current_page' => $paginator->currentPage(),
+                'from' => $paginator->firstItem(),
+                'last_page' => $paginator->lastPage(),
+                'per_page' => $paginator->perPage(),
+                'to' => $paginator->lastItem(),
+                'total' => $paginator->total(),
+            ],
+            'links' => [
+                'first' => $paginator->url(1),
+                'last' => $paginator->url($paginator->lastPage()),
+                'prev' => $paginator->previousPageUrl(),
+                'next' => $paginator->nextPageUrl(),
+            ],
         ];
     }
 

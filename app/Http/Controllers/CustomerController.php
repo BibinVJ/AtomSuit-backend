@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Repositories\CustomerRepository;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
@@ -31,9 +32,23 @@ class CustomerController extends Controller
 
         $customers = $this->customerRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = CustomerResource::paginated($customers);
+
+            return ApiResponse::success(
+                'Customers fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Customers fetched successfully.',
-            $paginate ? CustomerResource::paginated($customers) : CustomerResource::collection($customers)
+            CustomerResource::collection($customers),
+            Response::HTTP_OK,
+            ['total' => count($customers)]
         );
     }
 

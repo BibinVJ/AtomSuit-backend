@@ -37,9 +37,23 @@ class RoleController extends Controller
 
         $roles = $this->roleRepository->all($paginate, $perPage, $filters, ['permissions']);
 
+        if ($paginate) {
+            $paginated = RoleResource::paginated($roles);
+
+            return ApiResponse::success(
+                'Roles fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Roles fetched successfully.',
-            $paginate ? RoleResource::paginated($roles) : RoleResource::collection($roles)
+            RoleResource::collection($roles),
+            Response::HTTP_OK,
+            ['total' => count($roles)]
         );
     }
 

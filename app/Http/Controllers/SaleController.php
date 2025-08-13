@@ -10,6 +10,7 @@ use App\Models\Sale;
 use App\Repositories\SaleRepository;
 use App\Services\SaleService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
 {
@@ -32,9 +33,23 @@ class SaleController extends Controller
 
         $sales = $this->saleRepo->all($paginate, $perPage, $filters, ['items.item', 'customer']);
 
+        if ($paginate) {
+            $paginated = SaleResource::paginated($sales);
+
+            return ApiResponse::success(
+                'Sales fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Sales fetched successfully.',
-            $paginate ? SaleResource::paginated($sales) : SaleResource::collection($sales)
+            SaleResource::collection($sales),
+            Response::HTTP_OK,
+            ['total' => count($sales)]
         );
     }
 
