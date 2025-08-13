@@ -11,19 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Code (for reference, not deployment)
         uses: actions/checkout@v4
 
-      - name: Deploy Laravel Code to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          source: './'
-          target: ${{ github.ref == 'refs/heads/main' && '/var/www/inventory/production/backend' || '/var/www/inventory/beta/backend' }}
-          rm: true  # Remove files on EC2 not in repo (optional, be cautious)
-
+      # SSH into EC2 and run deployment commands
       - name: SSH into EC2 & Deploy Laravel
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -31,11 +22,27 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ${{ github.ref == 'refs/heads/main' && '/var/www/inventory/production/backend' || '/var/www/inventory/beta/backend' }}
+            # Choose the right path based on branch
+            if [ "${GITHUB_REF}" == "refs/heads/main" ]; then
+              APP_PATH="/var/www/inventory/production/backend"
+              BRANCH="main"
+            else
+              APP_PATH="/var/www/inventory/beta/backend"
+              BRANCH="beta"
+            fi
 
-            echo "${{ github.ref == 'refs/heads/main' && secrets.BACKEND_ENV_MAIN || secrets.BACKEND_ENV_BETA }}" > .env
+            echo "Deploying branch: $BRANCH to $APP_PATH"
 
+            cd $APP_PATH
+
+            # Ensure the repo is clean and up to date
+            git fetch origin $BRANCH
+            git reset --hard origin/$BRANCH
+
+            # Install dependencies without touching .env
             composer install --no-interaction --prefer-dist --optimize-autoloader
+
+            # Laravel optimizations
             php artisan optimize:clear
             php artisan migrate --force
             php artisan config:cache
@@ -43,4 +50,4 @@ jobs:
             php artisan view:cache
             php artisan queue:restart
 
-            echo "Backend deployed and services restarted for ${{ github.ref_name }}"
+            echo "Backend deployed successfully for branch: $BRANCH"
