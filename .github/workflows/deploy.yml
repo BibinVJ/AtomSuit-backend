@@ -17,14 +17,10 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
+          envs: BRANCH
           script: |
-            BRANCH="$1"
-
-            if [ -z "$BRANCH" ]; then
-              echo "Branch name is empty! Exiting."
-              exit 1
-            fi
-
+            echo "Deploying branch $BRANCH"
+            
             if [ "$BRANCH" = "main" ]; then
               APP_DIR="/var/www/inventory/production/backend"
             else
@@ -39,18 +35,38 @@ jobs:
               exit 1
             fi
 
-            git fetch origin "$BRANCH"
-            git reset --hard "origin/$BRANCH"
-            git clean -fd
+            # Fetch all branches and update remote references
+            git fetch origin
+            
+            # Check if branch exists remotely
+            if ! git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
+              echo "Branch $BRANCH does not exist on remote"
+              exit 1
+            fi
+            
+            # Switch to the branch if not already on it
+            git checkout "$BRANCH" || git checkout -b "$BRANCH" "origin/$BRANCH"
+            
+            # Pull latest changes
+            git pull origin "$BRANCH"
 
-            composer install --no-interaction --prefer-dist --optimize-autoloader
+            # Install/update composer dependencies
+            composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
+
+            # Clear all caches
             php artisan optimize:clear
+
+            # Run migrations
             php artisan migrate --force
+
+            # Cache configurations for better performance
             php artisan config:cache
             php artisan route:cache
             php artisan view:cache
+
+            # Restart queue workers
             php artisan queue:restart
 
             echo "Laravel backend deployed successfully for branch $BRANCH"
-
-        args: ${{ github.ref_name }}
+        env:
+          BRANCH: ${{ github.ref_name }}
