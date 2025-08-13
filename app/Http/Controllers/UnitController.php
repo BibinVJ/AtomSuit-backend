@@ -10,6 +10,7 @@ use App\Models\Unit;
 use App\Repositories\UnitRepository;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UnitController extends Controller
 {
@@ -31,9 +32,23 @@ class UnitController extends Controller
 
         $units = $this->unitRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = UnitResource::paginated($units);
+
+            return ApiResponse::success(
+                'Units fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Units fetched successfully.',
-            $paginate ? UnitResource::paginated($units) : UnitResource::collection($units)
+            UnitResource::collection($units),
+            Response::HTTP_OK,
+            ['total' => count($units)]
         );
     }
 

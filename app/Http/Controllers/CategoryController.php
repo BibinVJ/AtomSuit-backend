@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
@@ -31,9 +32,23 @@ class CategoryController extends Controller
 
         $categories = $this->categoryRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = CategoryResource::paginated($categories);
+
+            return ApiResponse::success(
+                'Categories fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Categories fetched successfully.',
-            $paginate ? CategoryResource::paginated($categories) : CategoryResource::collection($categories)
+            CategoryResource::collection($categories),
+            Response::HTTP_OK,
+            ['total' => count($categories)]
         );
     }
 

@@ -10,6 +10,7 @@ use App\Models\Vendor;
 use App\Repositories\VendorRepository;
 use App\Services\VendorService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class VendorController extends Controller
 {
@@ -31,9 +32,23 @@ class VendorController extends Controller
 
         $vendors = $this->vendorRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = VendorResource::paginated($vendors);
+
+            return ApiResponse::success(
+                'Vendors fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Vendors fetched successfully.',
-            $paginate ? VendorResource::paginated($vendors) : VendorResource::collection($vendors)
+            VendorResource::collection($vendors),
+            Response::HTTP_OK,
+            ['total' => count($vendors)]
         );
     }
 

@@ -12,6 +12,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
@@ -35,9 +36,23 @@ class UserController extends Controller
 
         $users = $this->userRepository->all($paginate, $perPage, $filters);
 
+        if ($paginate) {
+            $paginated = UserResource::paginated($users);
+
+            return ApiResponse::success(
+                'Users fetched successfully.',
+                $paginated['data'],
+                Response::HTTP_OK,
+                $paginated['meta'],
+                $paginated['links']
+            );
+        }
+
         return ApiResponse::success(
             'Users fetched successfully.',
-            $paginate ? UserResource::paginated($users) : UserResource::collection($users)
+            UserResource::collection($users),
+            Response::HTTP_OK,
+            ['total' => count($users)]
         );
     }
 
