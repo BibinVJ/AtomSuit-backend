@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\UserDetail;
 use App\Repositories\UserRepository;
 
-
 class UserProfileService
 {
     public function __construct(
@@ -50,12 +49,14 @@ class UserProfileService
     public function updateProfileImage(User $user, array $data): User
     {
         $imagePath = $this->fileUploadService->uploadToS3($data['profile_image'], UserDetail::PROFILE_IMAGE_PATH);
-        return $user->detail()->updateOrCreate([], ['profile_image' => $imagePath]);
+        $user->detail()->updateOrCreate([], ['profile_image' => $imagePath]);
+
+        return $user->refresh();
     }
 
     public function removeProfileImage(User $user): void
     {
-        if (!empty($user->profile_image)) {
+        if (! empty($user->profile_image)) {
             $this->fileUploadService->deleteFromS3($user->profile_image);
             $user->detail()->updateOrCreate([], ['profile_image' => null]);
         }

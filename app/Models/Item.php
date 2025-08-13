@@ -38,6 +38,9 @@ class Item extends Model
         return $this->belongsTo(Unit::class);
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Batch, \App\Models\Item>
+     */
     public function batches(): HasMany
     {
         return $this->hasMany(Batch::class);
@@ -84,15 +87,15 @@ class Item extends Model
     public function nonExpiredStock(): int
     {
         return $this->batches
-            ->filter(fn ($batch) => $batch->expiry_date?->isFuture())
-            ->sum(fn ($batch) => $batch->stockOnHand());
+            ->filter(fn (Batch $batch) => $batch->expiry_date?->isFuture())
+            ->sum(fn (Batch $batch) => $batch->stockOnHand());
     }
 
     public function expiredStock(): int
     {
         return $this->batches
-            ->filter(fn ($batch) => $batch->expiry_date?->isPast())
-            ->sum(fn ($batch) => $batch->stockOnHand());
+            ->filter(fn (Batch $batch) => $batch->expiry_date?->isPast())
+            ->sum(fn (Batch $batch) => $batch->stockOnHand());
     }
 
     /**

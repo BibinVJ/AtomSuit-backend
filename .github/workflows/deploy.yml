@@ -1,0 +1,46 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+      - beta
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy Laravel Code to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: './'
+          target: ${{ github.ref == 'refs/heads/main' && '/var/www/inventory/production/backend' || '/var/www/inventory/beta/backend' }}
+          rm: true  # Remove files on EC2 not in repo (optional, be cautious)
+
+      - name: SSH into EC2 & Deploy Laravel
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd ${{ github.ref == 'refs/heads/main' && '/var/www/inventory/production/backend' || '/var/www/inventory/beta/backend' }}
+
+            echo "${{ github.ref == 'refs/heads/main' && secrets.BACKEND_ENV_MAIN || secrets.BACKEND_ENV_BETA }}" > .env
+
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan optimize:clear
+            php artisan migrate --force
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
+            php artisan queue:restart
+
+            echo "Backend deployed and services restarted for ${{ github.ref_name }}"

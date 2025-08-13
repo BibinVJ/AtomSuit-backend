@@ -25,9 +25,9 @@ class SendOtpJob implements ShouldQueue
         Mail::to($this->user->email)->send(new OtpMail($this->otp, $this->purpose));
 
         // SMS (dummy example)
-        if ($this->user->mobile) {
+        if ($this->user->phone) {
             // Integrate your real SMS provider here
-            \Log::info("Sending SMS to {$this->user->mobile}: OTP = {$this->otp}");
+            \Log::info("Sending SMS to {$this->user->phone}: OTP = {$this->otp}");
         }
     }
 }

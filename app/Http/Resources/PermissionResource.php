@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \Spatie\Permission\Models\Permission
+ */
 class PermissionResource extends BaseResource
 {
     /**

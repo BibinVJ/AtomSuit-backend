@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \App\Models\Sale
+ */
 class SaleResource extends BaseResource
 {
     /**

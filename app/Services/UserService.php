@@ -10,8 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class UserService
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
-        private readonly FileUploadService $fileUploadService,
+        private readonly UserRepository $userRepository
     ) {}
 
     public function create(array $data): User

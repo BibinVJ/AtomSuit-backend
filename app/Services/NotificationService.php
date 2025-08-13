@@ -8,7 +8,10 @@ class NotificationService
 {
     public function getAll(int $limit = 15)
     {
-        return Auth::user()
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        return $user
             ->notifications()
             ->latest()
             ->take($limit)
@@ -17,6 +20,7 @@ class NotificationService
 
     public function getUnread(): array
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         return [
@@ -27,6 +31,7 @@ class NotificationService
 
     public function markAsRead(?string $id = null): void
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
         if ($id) {

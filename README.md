@@ -1,9 +1,8 @@
-# PharmacyManager API Backend
+# Inventory Manager API Backend
+This repository contains the API-only backend for the **Inventory Manager** platform. It is built using the Laravel framework (v12).
 
-This repository contains the API-only backend for the **PharmacyManager** platform. It is built using the Laravel framework (v12).
 
 ## System Requirements
-
 - PHP 8.2+
 - Composer
 - Node.js & npm
@@ -12,10 +11,16 @@ This repository contains the API-only backend for the **PharmacyManager** platfo
     - **Supervisor:** To ensure the queue worker process remains active.
     - **Cron:** For running scheduled tasks.
 
+
 ## Key Features
+- Modular Transaction Workflow (Purchase/Sale)
+- FIFO Inventory Management
+- Role & Permission Management (Spatie)
+- OAuth2 Authentication (Laravel Passport)
+- API-First Clean Architecture
 
 
-## Developer Setup (Local)
+## Installation
 ```bash
 - cp .env.example .env
 - composer install
@@ -29,156 +34,110 @@ This repository contains the API-only backend for the **PharmacyManager** platfo
 - php artisan passport:keys --force  # Generates Passport keys
 - php artisan passport:client --personal  # Generates a personal access client
 
-- php artisan queue:listen
+- php artisan queue:listen # For local env
 ```
 
 ## Contribution Guidelines
-
 To maintain code quality and consistency, please adhere to the following guidelines when contributing to the project.
 
 ### General Principles
-- **Keep it DRY:** Don't repeat yourself. Utilize existing services, actions, and helpers where possible.
+- **Keep it DRY:** Avoid duplicating code. Utilize existing services, actions, and helpers where possible.
 - **Thin Controllers:** Controllers should only be responsible for receiving requests and returning responses.
 - **Use Request Classes:** All request validation and authorization logic must be handled within dedicated `Request` classes.
 - **Business Logic:** Complex business logic should be encapsulated within `Service` or `Action` classes.
-- **Permissions over Roles:** Whenever checking for authorization, prefer using specific permissions (`$user->can('do_something')`) instead of checking for roles directly (`$user->hasRole('admin')`). This makes the system more flexible.
+- **Permissions over Roles:** Whenever checking for authorization, prefer using specific permissions (`$user->can('do_something')`) instead of checking for roles directly (`$user->hasRole('role')`). This makes the system more flexible.
 
-### Git Workflow
-1.  **Create a Feature/Bug/Enhancement Branch:** All new work should be done on a feature/bug branch as required.
-    ```bash
-    # Example:
-    git checkout -b feature/user-export-endpoint
-    git checkout -b bug/invalid-status-code
-    git checkout -b enhancement/improve-export-performance
-    ```
-2.  **Write Clear Commit Messages:** Write a concise, imperative-style subject line (e.g., "Add user export functionality"). Add more details in the body if necessary.
-3.  **Submit a Merge Request:** Once your feature is complete and tested, push your branch and create a Merge Request against the `staging` branch.
+### Git Workflow & Commit Guidelines
+Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for clear commit history.
+
+
+#### Commit and PR Types Guide (Conventional Commits)
+| **Type**    | **Usage**                                          | **Example Commit Message**                                  |
+|-------------|----------------------------------------------------|-------------------------------------------------------------|
+| **feat**    | A new feature                                      | `feat(user): add user export API endpoint`                  |
+| **fix**     | A bug fix                                          | `fix(order): correct invalid status code on approval`       |
+| **docs**    | Documentation only changes                         | `docs(contributing): add guidelines for new contributors`   |
+| **style**   | Code style changes (formatting, spacing, etc.)     | `style: apply Pint fixes to inventory module`               |
+| **refactor**| Code refactoring (no bug fix or new feature)       | `refactor(batch): optimize FIFO stock retrieval logic`      |
+| **perf**    | Performance improvements                           | `perf(sale): improve sale item lookup performance`          |
+| **test**    | Adding or fixing tests                             | `test(item): add unit tests for stockOnHand calculation`    |
+| **build**   | Build system or dependency changes                 | `build: update npm dependencies`                            |
+| **ci**      | CI/CD pipeline or automation related changes       | `ci(github): add CI workflow for PR validation`             |
+| **chore**   | Routine tasks, maintenance (non-code affecting)    | `chore: clean up unused services`                           |
+| **revert**  | Reverting a previous commit                        | `revert: revert 'feat(user): add user export API endpoint'` |
+
+#### Branch Naming Conventions
+```bash
+git checkout -b feature/user-export-endpoint
+git checkout -b bug/fix-status-code
+git checkout -b enhancement/optimize-export-performance
+```
 
 ### Coding Standards
-- **Laravel Pint:** The project uses Laravel Pint to enforce PSR-12 coding standards. Run it before committing to ensure your code is formatted correctly.
+- **Static Analysis:** Run PHPStan before pushing code:
+  ```bash
+  ./vendor/bin/phpstan analyse
+  ```
+- **Code Formatting:** Run Laravel Pint to fix styling:
   ```bash
   ./vendor/bin/pint
   ```
-- **Naming Conventions:** Follow Laravel's standard naming conventions for models, controllers, migrations, etc.
-
-### Database
-- **Migrations:** Never modify a migration that has already been merged into a shared branch. If you need to alter a table, create a new migration file.
-- **Seeders:** If you add data required for the application to function correctly, update the relevant database seeders.
+- **Naming Conventions:** Follow Laravel’s standard conventions.
 
 
+### Database Migrations & Seeders
+- Never modify merged migrations. Create a new migration for schema changes.
+- Update relevant seeders if you add essential application data.
 
+---
 
+# Transaction Workflow
 
+## Purchasing Flow
+| Action Type        | Model               | Editable? | Voidable? | Notes                                              |
+|--------------------|--------------------|-----------|-----------|----------------------------------------------------|
+| Direct Purchase     | Purchase            | ❌ After payment | ✅ If unpaid | Immediate purchase (Invoice + GRN in one step)     |
+| Quoted Purchase     | PurchaseOrder       | ✅ Until converted | ✅ Before conversion | Proposal to vendor, converts to Invoice & GRN      |
+| Goods Received      | GoodsReceivedNote   | ❌ Immutable | ⚠️ If no invoice tied | Confirms actual goods received, triggers stock-in  |
+| Vendor Billing      | PurchaseInvoice     | ❌ Immutable | ✅ If unpaid/no journal | Vendor's bill for accounting purposes              |
 
+## Sales Flow
+| Action Type         | Model               | Editable? | Voidable? | Notes                                              |
+|---------------------|--------------------|-----------|-----------|----------------------------------------------------|
+| Direct Sale          | Sale                | ❌ After payment | ✅ If unpaid | POS sale, Invoice + Delivery Note auto-created     |
+| Sales Proposal       | SaleOrder           | ✅ Until converted | ✅ Before conversion | Customer proposal, converts to Invoice & Delivery  |
+| Goods Out            | DeliveryNote        | ❌ Immutable | ⚠️ If no invoice tied | Goods handed over, triggers stock-out              |
+| Customer Billing     | SaleInvoice         | ❌ Immutable | ✅ If unpaid/no journal | Customer's final bill                              |
 
+---
 
+# Transaction Flow Matrix
 
+| Flow                          | Allowed? | When to Use                                              |
+|-------------------------------|----------|----------------------------------------------------------|
+| PO → GRN → Invoice             | Yes      | Default, strict procurement                             |
+| PO → Invoice → GRN             | Yes      | Vendor invoices before delivery                          |
+| Direct Invoice → No GRN        | Yes      | Services/non-stock items                                 |
+| Direct Invoice → GRN           | Yes      | When user confirms delivery with warehouse               |
+| Direct GRN → Invoice           | Yes      | Order received first, invoice to follow                  |
+| POS Purchase → Invoice → GRN   | Yes      | For POS sales with automated flows                      |
 
+Same principles apply for Sales as well.
 
+# Manual Transaction Creation
+- **No auto-created records.** All transactions (Invoices, GRNs, Delivery Notes) must be explicitly created by the user through the frontend interface.
+- This may evolve based on user feedback for streamlining bulk operations.
 
-## transaction workflow
+---
 
-Action Type	Proposed Model	Role / Use Case	Editable?	Voidable?
-Direct Purchase	Purchase	Immediate purchase → GRN + Invoice generated in one go (e.g. pharmacy buys stock from vendor at counter)	❌ After payment	✅ If unpaid
-Quoted Purchase	PurchaseOrder	Proposal to vendor. Can be approved → GRN + Invoice generated	✅ Until converted	✅ Before conversion
-Received Goods	GoodsReceivedNote	Confirms goods actually received. Can differ from order. Triggers stock-in.	❌ Immutable	⚠️ Only if no invoice tied
-Vendor Billing	PurchaseInvoice	The vendor's bill. Needed for accounting. Final step in the purchase pipeline.	❌ Immutable	✅ If unpaid and no journal posted
+## 📄 License
+[MIT](LICENSE)
 
-Action Type	Proposed Model	Role / Use Case	Editable?	Voidable?
-Direct Sale	Sale	POS sale. Invoice + Delivery Note auto-created.	❌ After payment	✅ If unpaid
-Sales Proposal	SaleOrder	Customer proposal/quote. Can be approved and converted into invoice + delivery note.	✅ Until converted	✅ Before conversion
-Goods Out	DeliveryNote	Proof that the goods were physically handed over. Triggers stock-out.	❌ Immutable	⚠️ Only if no invoice tied
-Customer Billing	SaleInvoice	Final bill for the customer. May be auto-created for direct sales or from order.	❌ Immutable	✅ If unpaid and no journal posted
+---
 
+## 🤝 Contributing
+Feel free to fork, submit PRs, and raise issues. For major changes, please open an issue first to discuss what you'd like to change.
 
+---
 
-
-🛒 Purchasing Flow
-## PurchaseOrder
-
-🧠 Use case: Draft/proposal sent to vendor. Not financially binding.
-
-✍️ Editable: ✅ Yes
-
-🔁 Convert To: PurchaseInvoice + GoodsReceivedNote
-
-🧯 Can void: ✅ Yes (before converted)
-
-🔒 Locked After: Converted to invoice or GRN
-
-## Purchase (Direct Purchase)
-
-🧠 Use case: Immediate invoice + GRN (e.g., buying stock for a pharmacy).
-
-✍️ Editable: ⚠️ Only before payment or stock consumption
-
-🔁 Creates: PurchaseInvoice, GoodsReceivedNote
-
-🧯 Can void: ✅ Only if stock not yet consumed
-
-🔒 Locked After: Payment done or stock used
-
-## PurchaseInvoice
-
-🧠 Use case: Financial document used in accounting
-
-✍️ Editable: ❌ No
-
-🧯 Can void: ✅ Only before payment/approval
-
-🔒 Locked After: Payment or accounting approval
-
-## GoodsReceivedNote
-
-🧠 Use case: Acknowledges stock received; triggers inventory update
-
-✍️ Editable: ❌ No
-
-🧯 Can void: ⚠️ Yes, by reversing stock if not consumed
-
-🔒 Locked After: Stock used in sales/consumption
-
-💸 Sales Flow
-## SaleOrder
-
-🧠 Use case: Quote sent to customer, not binding
-
-✍️ Editable: ✅ Yes
-
-🔁 Convert To: SaleInvoice + DeliveryNote
-
-🧯 Can void: ✅ Yes
-
-🔒 Locked After: Converted
-
-## Sale (Direct Sale)
-
-🧠 Use case: Walk-in sale (pharmacy, POS)
-
-✍️ Editable: ⚠️ Only before payment or delivery
-
-🔁 Creates: SaleInvoice, DeliveryNote
-
-🧯 Can void: ✅ Only if stock not delivered/used
-
-🔒 Locked After: Payment or delivery confirmed
-
-## SaleInvoice
-
-🧠 Use case: Bill sent to customer, financial doc
-
-✍️ Editable: ❌ No
-
-🧯 Can void: ✅ With reversal of delivery/stock movement
-
-🔒 Locked After: Paid / accounted
-
-## DeliveryNote
-
-🧠 Use case: Goods given to customer, updates inventory
-
-✍️ Editable: ❌ No
-
-🧯 Can void: ✅ Only if goods not consumed
-
-🔒 Locked After: Goods confirmed delivered
+## ✨ Made with ❤️ by the Inventory Manager Team ✨

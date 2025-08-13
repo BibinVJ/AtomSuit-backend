@@ -30,10 +30,10 @@ class UserLoginDetail extends Model
     public function sessionDuration(): int
     {
         if ($this->logout_at) {
-            return $this->logout_at->diffInSeconds($this->login_at);
+            return (int) $this->logout_at->diffInSeconds($this->login_at);
         }
 
-        return now()->diffInSeconds($this->login_at);
+        return (int) now()->diffInSeconds($this->login_at);
     }
 
     // Scope for active sessions

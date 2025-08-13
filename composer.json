@@ -17,6 +17,7 @@
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.6",
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
@@ -63,7 +64,8 @@
         "reset-db": [
             "@php artisan migrate:fresh --seed --ansi",
             "@php artisan passport:client --personal --no-interaction --ansi"
-        ]
+        ],
+        "lint": "./vendor/bin/phpstan analyse"
     },
     "extra": {
         "laravel": {

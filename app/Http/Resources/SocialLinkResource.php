@@ -4,6 +4,9 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 
+/**
+ * @mixin \App\Models\SocialLink
+ */
 class SocialLinkResource extends BaseResource
 {
     /**

@@ -1,0 +1,28 @@
+name: PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+      - beta
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
+
+      - name: Run PHP Linter
+        run: composer lint
+
+      - name: Run Tests
+        run: php artisan test
+
+      - name: Validate Conventional Commits
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

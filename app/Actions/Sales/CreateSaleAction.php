@@ -20,6 +20,7 @@ class CreateSaleAction
     public function execute(array $data): Sale
     {
         return DB::transaction(function () use ($data) {
+            /** @var Sale $sale */
             $sale = $this->saleRepo->create([
                 'customer_id' => $data['customer_id'],
                 'invoice_number' => $data['invoice_number'],
