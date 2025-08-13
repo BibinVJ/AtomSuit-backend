@@ -18,8 +18,12 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            # Branch is passed via argument
             BRANCH="$1"
+
+            if [ -z "$BRANCH" ]; then
+              echo "Branch name is empty! Exiting."
+              exit 1
+            fi
 
             if [ "$BRANCH" = "main" ]; then
               APP_DIR="/var/www/inventory/production/backend"
@@ -48,5 +52,5 @@ jobs:
             php artisan queue:restart
 
             echo "Laravel backend deployed successfully for branch $BRANCH"
-          
-          args: ${{ github.ref_name }}
+
+        args: ${{ github.ref_name }}
