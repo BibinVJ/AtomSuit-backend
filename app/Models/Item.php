@@ -16,6 +16,7 @@ class Item extends Model
         'unit_id',
         'description',
         'type',
+        'selling_price',
         'sales_account_id',
         'cogs_account_id',
         'inventory_account_id',
