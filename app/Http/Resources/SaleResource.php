@@ -18,11 +18,13 @@ class SaleResource extends BaseResource
     {
         return [
             'id' => $this->id,
+            'user' => UserResource::make($this->user),
             'customer' => CustomerResource::make($this->customer),
             'invoice_number' => $this->invoice_number,
             'sale_date' => $this->sale_date->toDateString(),
             'total_amount' => $this->total,
             'payment_status' => $this->payment_status,
+            'payment_method' => $this->payment_method,
             'items' => SaleItemResource::collection($this->items),
         ];
     }

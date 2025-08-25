@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\StockMovement;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -33,6 +34,7 @@ class SaleSeeder extends Seeder
         $sale = Sale::updateOrCreate(
             ['invoice_number' => 'S-INV-000001'],
             [
+                'user_id' => User::first()->id,
                 'customer_id' => $customer->id,
                 'sale_date' => Carbon::now(),
                 'payment_status' => PaymentStatus::PENDING,

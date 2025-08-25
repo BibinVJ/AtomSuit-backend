@@ -23,16 +23,6 @@ class ApiResponse
         ], $code);
     }
 
-    // public static function success(string $message, mixed $data = [], int $code = Response::HTTP_OK): \Illuminate\Http\JsonResponse
-    // {
-    //     return response()->json([
-    //         'message' => $message,
-    //         'error' => false,
-    //         'code' => $code,
-    //         'results' => $data,
-    //     ], $code);
-    // }
-
     public static function error(
         string $message,
         mixed $errors = [],

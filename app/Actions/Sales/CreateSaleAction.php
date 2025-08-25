@@ -2,6 +2,7 @@
 
 namespace App\Actions\Sales;
 
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Models\Sale;
 use App\Repositories\SaleRepository;
@@ -26,6 +27,7 @@ class CreateSaleAction
                 'invoice_number' => $data['invoice_number'],
                 'sale_date' => $data['sale_date'],
                 'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,
+                'payment_method' => $data['payment_method'] ?? PaymentMethod::CASH,
             ]);
 
             $this->saleRepo->addItems($sale, $data['items']);

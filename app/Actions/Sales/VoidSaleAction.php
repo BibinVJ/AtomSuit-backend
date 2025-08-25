@@ -15,9 +15,9 @@ class VoidSaleAction
         protected StockMovementService $stockMovementService,
     ) {}
 
-    public function execute(Sale $sale): Sale
+    public function execute(Sale $sale): void
     {
-        return DB::transaction(function () use ($sale) {
+        DB::transaction(function () use ($sale) {
             if ($sale->status === TransactionStatus::VOIDED) {
                 return $sale; // Already voided
             }
@@ -27,8 +27,6 @@ class VoidSaleAction
 
             // Mark sale as voided
             $this->saleRepo->update($sale, ['status' => TransactionStatus::VOIDED]);
-
-            return $sale->fresh();
         });
     }
 }
