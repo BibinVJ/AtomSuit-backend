@@ -29,22 +29,32 @@ class UserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => [
-                'required',
+                'nullable',
                 'email',
                 'max:255',
                 Rule::unique('users')->ignore($user),
+                'required_without:phone',
             ],
-            'password' => $isUpdate
-                ? 'prohibited'
-                : 'required|string|min:6|max:255',
-            'role_id' => 'required|exists:roles,id',
             'phone' => [
                 'nullable',
                 'string',
                 'max:20',
                 Rule::unique('users')->ignore($user),
+                'required_without:email',
             ],
+            'password' => $isUpdate
+                ? 'prohibited'
+                : 'required|string|min:6|max:255',
+            'role_id' => 'required|exists:roles,id',
             'is_active' => 'boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.required_without' => 'Either an email or phone number is required.',
+            'phone.required_without' => 'Either a phone number or email is required.',
         ];
     }
 }

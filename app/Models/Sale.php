@@ -17,6 +17,7 @@ class Sale extends Model
         'customer_id',
         'invoice_number',
         'sale_date',
+        'status',
         'payment_status',
         'payment_method'
     ];

@@ -37,12 +37,23 @@ class AuthService
         return new AuthenticatedUserDTO($user, $token);
     }
 
-    public function login(string $email, string $password): AuthenticatedUserDTO
+    public function login(string $identifier, string $password): AuthenticatedUserDTO
     {
-        $user = $this->userRepository->findByEmail($email);
+        // Determine if identifier is an email or phone
+        $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL);
+
+        $user = User::where($isEmail ? 'email' : 'phone', $identifier)->first();
 
         if (! $user || ! Hash::check($password, $user->password)) {
             throw new UnauthorizedHttpException('', 'Invalid credentials');
+        }
+
+        if ($isEmail && is_null($user->email_verified_at)) {
+            throw new UnauthorizedHttpException('', 'Email not verified');
+        }
+
+        if (! $isEmail && is_null($user->phone_verified_at)) {
+            throw new UnauthorizedHttpException('', 'Phone not verified');
         }
 
         if ($user->status->value !== UserStatus::ACTIVE->value) {

@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Enums\RolesEnum;
+use App\Models\Sale;
 use App\Models\User;
 use App\Models\UserLoginDetail;
+use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
 use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\Event;
@@ -50,5 +52,6 @@ class AppServiceProvider extends ServiceProvider
         });
 
         User::observe(UserObserver::class);
+        Sale::observe(SaleObserver::class);
     }
 }

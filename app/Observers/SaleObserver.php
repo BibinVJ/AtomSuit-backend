@@ -9,11 +9,15 @@ class SaleObserver
 {
     public function creating(Sale $sale)
     {
-        $sale->user_id = Auth::id();
+        if (! $sale->user_id) {
+            $sale->user_id = Auth::id();
+        }
     }
 
     public function updating(Sale $sale)
     {
-        $sale->user_id = Auth::id();
+        if (! $sale->user_id) {
+            $sale->user_id = Auth::id();
+        }
     }
 }

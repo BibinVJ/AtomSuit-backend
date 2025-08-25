@@ -30,7 +30,7 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         $dto = $this->authService->login(
-            $request->validated()['email'],
+            $request->validated()['identifier'],
             $request->validated()['password']
         );
 
