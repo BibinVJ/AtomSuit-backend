@@ -27,7 +27,7 @@ class RoleController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search']);
+        $filters = $request->only(['search']);
         $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 

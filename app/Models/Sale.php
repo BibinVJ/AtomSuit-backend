@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\TransactionStatus;
 use Illuminate\Database\Eloquent\Model;
@@ -12,17 +13,25 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Sale extends Model
 {
     protected $fillable = [
+        'user_id',
         'customer_id',
         'invoice_number',
         'sale_date',
         'payment_status',
+        'payment_method'
     ];
 
     protected $casts = [
         'sale_date' => 'date',
         'status' => TransactionStatus::class,
         'payment_status' => PaymentStatus::class,
+        'payment_method' => PaymentMethod::class
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     public function customer(): BelongsTo
     {

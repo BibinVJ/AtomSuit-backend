@@ -61,12 +61,12 @@ class SaleService
         return $this->updateSale->execute($sale, $data);
     }
 
-    public function void(Sale $sale): Sale
+    public function void(Sale $sale): void
     {
         if ($sale->payment_status === PaymentStatus::PAID) {
             throw new ConflictHttpException("Sale can't be voided because it has been paid.");
         }
 
-        return $this->voidSale->execute($sale);
+        $this->voidSale->execute($sale);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatus;
 use App\Enums\TransactionStatus;
 use Illuminate\Foundation\Http\FormRequest;
@@ -30,6 +31,7 @@ class StoreSaleRequest extends FormRequest
             'sale_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatus::class)],
+            'payment_method' => ['nullable', new Enum(PaymentMethod::class)],
 
             'items' => 'required|array|min:1',
             'items.*.id' => 'nullable|exists:sale_items,id',

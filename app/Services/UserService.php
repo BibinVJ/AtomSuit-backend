@@ -15,14 +15,9 @@ class UserService
 
     public function create(array $data): User
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'status' => UserStatus::ACTIVE,
-            'phone' => $data['phone'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
+        $date['password'] = Hash::make($data['password']);
+        $data['status'] = UserStatus::ACTIVE->value;
+        $user = User::create($data);
 
         if (isset($data['role_id'])) {
             $user->assignRole($data['role_id']);
@@ -33,16 +28,14 @@ class UserService
 
     public function update(User $user, array $data): User
     {
-        $user->update([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'is_active' => $data['is_active'] ?? true,
-        ]);
-
-        if (isset($data['password'])) {
-            $user->update(['password' => Hash::make($data['password'])]);
+        // Handle password safely
+        if (! empty($data['password'])) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']); // prevent null from overriding existing
         }
+
+        $user->update($data);
 
         if (isset($data['role_id'])) {
             $user->syncRoles($data['role_id']);

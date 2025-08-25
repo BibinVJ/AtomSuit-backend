@@ -27,13 +27,14 @@ class UpdateSaleAction
                 'customer_id' => $data['customer_id'],
                 'sale_date' => $data['sale_date'],
                 'payment_status' => $data['payment_status'] ?? $sale->payment_status,
+                'payment_method' => $data['payment_method'] ?? $sale->payment_method,
             ]);
 
             // Update items
             $this->saleRepo->syncItems($sale, $data['items']);
 
             // Recreate stock movements
-            $this->stockMovementService->createStockMovements($sale);
+            $this->stockMovementService->createStockMovements($sale->refresh());
 
             return $sale->load('items.item');
         });
