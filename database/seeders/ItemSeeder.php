@@ -24,28 +24,28 @@ class ItemSeeder extends Seeder
         $pcs = Unit::where('code', 'pcs')->first();
 
         $items = [
-            ['name' => 'Paracetamol 500mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used for fever and pain'],
-            ['name' => 'Cetrizine 10mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used for allergies'],
-            ['name' => 'Vitamin C Chewable', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Immunity booster'],
-            ['name' => 'Amoxicillin 250mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Antibiotic'],
-            ['name' => 'Ibuprofen 400mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Anti-inflammatory painkiller'],
+            ['name' => 'Paracetamol 500mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used for fever and pain', 'selling_price' => 25.00],
+            ['name' => 'Cetrizine 10mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used for allergies', 'selling_price' => 15.00],
+            ['name' => 'Vitamin C Chewable', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Immunity booster', 'selling_price' => 45.00],
+            ['name' => 'Amoxicillin 250mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Antibiotic', 'selling_price' => 60.00],
+            ['name' => 'Ibuprofen 400mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Anti-inflammatory painkiller', 'selling_price' => 30.00],
 
-            ['name' => 'Benadryl Cough Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Cough relief'],
-            ['name' => 'Lacto Calamine Lotion', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'For oily skin'],
-            ['name' => 'Volini Gel', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'Pain relief gel'],
-            ['name' => 'ORS Powder', 'category_id' => $tablet->id, 'unit_id' => $pcs->id, 'description' => 'Oral rehydration salts'],
-            ['name' => 'Digene Antacid Liquid', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'For acidity and gas'],
+            ['name' => 'Benadryl Cough Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Cough relief', 'selling_price' => 95.00],
+            ['name' => 'Lacto Calamine Lotion', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'For oily skin', 'selling_price' => 120.00],
+            ['name' => 'Volini Gel', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'Pain relief gel', 'selling_price' => 90.00],
+            ['name' => 'ORS Powder', 'category_id' => $tablet->id, 'unit_id' => $pcs->id, 'description' => 'Oral rehydration salts', 'selling_price' => 12.00],
+            ['name' => 'Digene Antacid Liquid', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'For acidity and gas', 'selling_price' => 85.00],
 
-            ['name' => 'Azithromycin 500mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Antibiotic for bacterial infections'],
-            ['name' => 'Montelukast 10mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used to treat allergies and asthma'],
-            ['name' => 'Multivitamin Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Nutritional supplement for kids'],
-            ['name' => 'Calpol 250mg', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Pain and fever relief in children'],
-            ['name' => 'Burnol Cream', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'First aid for burns'],
-            ['name' => 'Neosporin Ointment', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'Antibiotic wound care ointment'],
-            ['name' => 'Zincovit Tablets', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Multivitamin and mineral supplement'],
-            ['name' => 'Electral Powder Sachet', 'category_id' => $tablet->id, 'unit_id' => $pcs->id, 'description' => 'Rehydration salt for dehydration'],
-            ['name' => 'Cetaphil Moisturizing Lotion', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'For dry and sensitive skin'],
-            ['name' => 'Ambroxol Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Mucolytic for cough with phlegm'],
+            ['name' => 'Azithromycin 500mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Antibiotic for bacterial infections', 'selling_price' => 150.00],
+            ['name' => 'Montelukast 10mg', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Used to treat allergies and asthma', 'selling_price' => 110.00],
+            ['name' => 'Multivitamin Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Nutritional supplement for kids', 'selling_price' => 140.00],
+            ['name' => 'Calpol 250mg', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Pain and fever relief in children', 'selling_price' => 55.00],
+            ['name' => 'Burnol Cream', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'First aid for burns', 'selling_price' => 45.00],
+            ['name' => 'Neosporin Ointment', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'Antibiotic wound care ointment', 'selling_price' => 70.00],
+            ['name' => 'Zincovit Tablets', 'category_id' => $tablet->id, 'unit_id' => $mg->id, 'description' => 'Multivitamin and mineral supplement', 'selling_price' => 120.00],
+            ['name' => 'Electral Powder Sachet', 'category_id' => $tablet->id, 'unit_id' => $pcs->id, 'description' => 'Rehydration salt for dehydration', 'selling_price' => 18.00],
+            ['name' => 'Cetaphil Moisturizing Lotion', 'category_id' => $ointment->id, 'unit_id' => $ml->id, 'description' => 'For dry and sensitive skin', 'selling_price' => 250.00],
+            ['name' => 'Ambroxol Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Mucolytic for cough with phlegm', 'selling_price' => 100.00],
         ];
 
         foreach ($items as $item) {
@@ -56,6 +56,7 @@ class ItemSeeder extends Seeder
                     'category_id' => $item['category_id'],
                     'unit_id' => $item['unit_id'],
                     'description' => $item['description'],
+                    'selling_price' => $item['selling_price'],
                     'is_active' => true,
                 ]
             );
