@@ -18,11 +18,13 @@ class PurchaseResource extends BaseResource
     {
         return [
             'id' => $this->id,
+            'user' => UserResource::make($this->user),
             'vendor' => VendorResource::make($this->vendor),
             'invoice_number' => $this->invoice_number,
             'purchase_date' => $this->purchase_date->toDateString(),
             'total_amount' => $this->total,
             'payment_status' => $this->payment_status,
+            'note' => $this->note,
             'items' => PurchaseItemResource::collection($this->items),
         ];
     }

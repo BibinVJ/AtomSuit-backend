@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->comment('the user who made the purchase entry');
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
             $table->string('invoice_number')->unique();
             $table->date('purchase_date');
             $table->string('status')->default(TransactionStatus::DRAFT);
             $table->string('payment_status')->default(PaymentStatus::PENDING);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

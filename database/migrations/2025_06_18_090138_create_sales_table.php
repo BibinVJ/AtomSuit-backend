@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('status')->default(TransactionStatus::DRAFT);
             $table->string('payment_status')->default(PaymentStatus::PENDING);
             $table->string('payment_method')->default(PaymentMethod::CASH);
+            $table->text('note')->nullable();
             $table->timestamps();
         });
     }

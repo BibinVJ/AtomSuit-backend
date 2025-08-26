@@ -23,12 +23,7 @@ class UpdateSaleAction
             $this->stockMovementService->deleteStockMovements($sale);
 
             // Update sale fields
-            $this->saleRepo->update($sale, [
-                'customer_id' => $data['customer_id'],
-                'sale_date' => $data['sale_date'],
-                'payment_status' => $data['payment_status'] ?? $sale->payment_status,
-                'payment_method' => $data['payment_method'] ?? $sale->payment_method,
-            ]);
+            $this->saleRepo->update($sale, $data);
 
             // Update items
             $this->saleRepo->syncItems($sale, $data['items']);

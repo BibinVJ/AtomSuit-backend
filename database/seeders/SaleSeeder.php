@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Enums\PaymentStatus;
+use App\Enums\RolesEnum;
 use App\Enums\TransactionStatus;
 use App\Models\Customer;
 use App\Models\Item;
@@ -18,7 +19,7 @@ class SaleSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::first();
+        $user = User::role(RolesEnum::ADMIN->value)->first();
         if (! $user) {
             $this->command->info('No users found. Please seed users first.');
             return;

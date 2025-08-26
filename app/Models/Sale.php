@@ -19,7 +19,8 @@ class Sale extends Model
         'sale_date',
         'status',
         'payment_status',
-        'payment_method'
+        'payment_method',
+        'note'
     ];
 
     protected $casts = [

@@ -26,6 +26,7 @@ class SaleResource extends BaseResource
             'status' => $this->status,
             'payment_status' => $this->payment_status,
             'payment_method' => $this->payment_method,
+            'note' => $this->note,
             'items' => SaleItemResource::collection($this->items),
         ];
     }
