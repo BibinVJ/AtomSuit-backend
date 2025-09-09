@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('otps', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
+            $table->string('identifier')->nullable()->comment('e.g. phone/email');
             $table->string('otp');
             $table->string('purpose');
             $table->timestamp('expires_at');
