@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Enums\OtpChannelEnum;
 use App\Enums\OtpPurposeEnum;
 use App\Mail\OtpMail;
 use App\Models\User;
@@ -14,33 +15,41 @@ class SendOtpJob implements ShouldQueue
 {
     use Dispatchable, Queueable;
 
+    /**
+     * @param User|string|null $recipient
+     * @param array<OtpChannelEnum> $channels
+     */
     public function __construct(
         protected User|string|null $recipient,
         protected string $otp,
-        protected OtpPurposeEnum $purpose
+        protected OtpPurposeEnum $purpose,
+        protected array $channels
     ) {}
 
     public function handle(): void
     {
-        if ($this->recipient instanceof User) {
-            // Email
-            if ($this->recipient->email) {
-                Mail::to($this->recipient->email)
-                    ->send(new OtpMail($this->otp, $this->purpose));
-            }
+        foreach ($this->channels as $channel) {
+            match ($channel) {
+                OtpChannelEnum::EMAIL => $this->sendEmail(),
+                OtpChannelEnum::SMS   => $this->sendSms(),
+            };
+        }
+    }
 
-            // SMS
-            if ($this->recipient->mobile) {
-                \Log::info("Sending SMS to {$this->recipient->mobile}: OTP = {$this->otp}");
-            }
-        } elseif (is_string($this->recipient)) {
-            // Treat string as identifier (like phone number or email)
-            if (filter_var($this->recipient, FILTER_VALIDATE_EMAIL)) {
-                Mail::to($this->recipient)
-                    ->send(new OtpMail($this->otp, $this->purpose));
-            } else {
-                \Log::info("Sending SMS to {$this->recipient}: OTP = {$this->otp}");
-            }
+    protected function sendEmail(): void
+    {
+        $email = $this->recipient instanceof User ? $this->recipient->email : $this->recipient;
+        if ($email) {
+            Mail::to($email)->send(new OtpMail($this->otp, $this->purpose));
+        }
+    }
+
+    protected function sendSms(): void
+    {
+        $phone = $this->recipient instanceof User ? $this->recipient->mobile : $this->recipient;
+        if ($phone) {
+            \Log::info("Sending SMS to {$phone}: OTP = {$this->otp}");
+            // TODO: Integrate SMS provider (Twilio, Msg91, AWS SNS, etc.)
         }
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\OtpChannelEnum;
 use App\Enums\OtpPurposeEnum;
 use App\Exceptions\OtpVerificationException;
 use App\Jobs\SendOtpJob;
@@ -14,8 +15,12 @@ use Illuminate\Support\Facades\Hash;
  */
 class OtpService
 {
-    public function generate(User|string|null $recipient, OtpPurposeEnum $purpose, int $validForMinutes = 10): string
-    {
+    public function generate(
+        User|string|null $recipient,
+        OtpPurposeEnum $purpose,
+        ?OtpChannelEnum $channel = null,
+        int $validForMinutes = 10
+    ): string {
         $isUser = $recipient instanceof User;
         $identifier = $isUser ? null : $recipient;
 
@@ -25,28 +30,28 @@ class OtpService
             ->where('purpose', $purpose->value);
 
         $latestOtp = $query->latest()->first();
-
         if ($latestOtp && $latestOtp->created_at->diffInSeconds(now()) < 60) {
             throw new OtpVerificationException('Please wait before requesting another OTP.');
         }
 
         $otp = (string) rand(100000, 999999);
-        $expiresAt = now()->addMinutes($validForMinutes);
 
-        // cleanup old
         $query->delete();
 
-        // store new
         Otp::create([
             'user_id'    => $isUser ? $recipient->id : null,
             'identifier' => $isUser ? null : $identifier,
             'otp'        => Hash::make($otp),
             'purpose'    => $purpose->value,
-            'expires_at' => $expiresAt,
+            'expires_at' => now()->addMinutes($validForMinutes),
         ]);
 
-        // Dispatch notification (Job handles SMS/email)
-        dispatch(new SendOtpJob($recipient, $otp, $purpose));
+        // Decide channels
+        $channels = $channel
+            ? [$channel]
+            : [OtpChannelEnum::EMAIL, OtpChannelEnum::SMS];
+
+        dispatch(new SendOtpJob($recipient, $otp, $purpose, $channels));
 
         return $otp;
     }
