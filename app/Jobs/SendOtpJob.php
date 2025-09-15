@@ -16,8 +16,7 @@ class SendOtpJob implements ShouldQueue
     use Dispatchable, Queueable;
 
     /**
-     * @param User|string|null $recipient
-     * @param array<OtpChannelEnum> $channels
+     * @param  array<OtpChannelEnum>  $channels
      */
     public function __construct(
         protected User|string|null $recipient,
@@ -31,7 +30,7 @@ class SendOtpJob implements ShouldQueue
         foreach ($this->channels as $channel) {
             match ($channel) {
                 OtpChannelEnum::EMAIL => $this->sendEmail(),
-                OtpChannelEnum::SMS   => $this->sendSms(),
+                OtpChannelEnum::SMS => $this->sendSms(),
             };
         }
     }

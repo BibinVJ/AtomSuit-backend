@@ -10,7 +10,6 @@ use App\Models\Item;
 use App\Models\Sale;
 use App\Models\SaleItem;
 use App\Models\StockMovement;
-use App\Models\Transaction;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -22,6 +21,7 @@ class SaleSeeder extends Seeder
         $user = User::role(RolesEnum::ADMIN->value)->first();
         if (! $user) {
             $this->command->info('No users found. Please seed users first.');
+
             return;
         }
 

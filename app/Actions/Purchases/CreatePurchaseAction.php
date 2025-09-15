@@ -2,7 +2,6 @@
 
 namespace App\Actions\Purchases;
 
-use App\Enums\PaymentStatus;
 use App\Models\Purchase;
 use App\Repositories\PurchaseRepository;
 use App\Services\BatchService;

@@ -20,14 +20,14 @@ class Sale extends Model
         'status',
         'payment_status',
         'payment_method',
-        'note'
+        'note',
     ];
 
     protected $casts = [
         'sale_date' => 'date',
         'status' => TransactionStatus::class,
         'payment_status' => PaymentStatus::class,
-        'payment_method' => PaymentMethod::class
+        'payment_method' => PaymentMethod::class,
     ];
 
     public function user(): BelongsTo

@@ -21,6 +21,7 @@ class PurchaseSeeder extends Seeder
         $user = User::role(RolesEnum::ADMIN->value)->first();
         if (! $user) {
             $this->command->info('No users found. Please seed users first.');
+
             return;
         }
 

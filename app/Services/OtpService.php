@@ -25,8 +25,8 @@ class OtpService
         $identifier = $isUser ? null : $recipient;
 
         $query = Otp::query()
-            ->when($isUser, fn($q) => $q->where('user_id', $recipient->id))
-            ->when(!$isUser, fn($q) => $q->where('identifier', $identifier))
+            ->when($isUser, fn ($q) => $q->where('user_id', $recipient->id))
+            ->when(! $isUser, fn ($q) => $q->where('identifier', $identifier))
             ->where('purpose', $purpose->value);
 
         $latestOtp = $query->latest()->first();
@@ -39,10 +39,10 @@ class OtpService
         $query->delete();
 
         Otp::create([
-            'user_id'    => $isUser ? $recipient->id : null,
+            'user_id' => $isUser ? $recipient->id : null,
             'identifier' => $isUser ? null : $identifier,
-            'otp'        => Hash::make($otp),
-            'purpose'    => $purpose->value,
+            'otp' => Hash::make($otp),
+            'purpose' => $purpose->value,
             'expires_at' => now()->addMinutes($validForMinutes),
         ]);
 
@@ -62,8 +62,8 @@ class OtpService
         $identifier = $isUser ? null : $recipient;
 
         $record = Otp::query()
-            ->when($isUser, fn($q) => $q->where('user_id', $recipient->id))
-            ->when(!$isUser, fn($q) => $q->where('identifier', $identifier))
+            ->when($isUser, fn ($q) => $q->where('user_id', $recipient->id))
+            ->when(! $isUser, fn ($q) => $q->where('identifier', $identifier))
             ->where('purpose', $purpose->value)
             ->latest()
             ->first();

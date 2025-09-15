@@ -2,9 +2,6 @@
 
 namespace App\Actions\Sales;
 
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
-use App\Enums\TransactionStatus;
 use App\Models\Sale;
 use App\Repositories\SaleRepository;
 use App\Services\BatchService;
@@ -23,7 +20,6 @@ class CreateSaleAction
     {
         return DB::transaction(function () use ($data) {
             /** @var Sale $sale */
-            \Log::info($data);
             $sale = $this->saleRepo->create($data);
 
             $this->saleRepo->addItems($sale, $data['items']);
