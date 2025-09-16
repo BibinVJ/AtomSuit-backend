@@ -23,8 +23,10 @@ class SaleResource extends BaseResource
             'invoice_number' => $this->invoice_number,
             'sale_date' => $this->sale_date->toDateString(),
             'total_amount' => $this->total,
+            'status' => $this->status,
             'payment_status' => $this->payment_status,
             'payment_method' => $this->payment_method,
+            'note' => $this->note,
             'items' => SaleItemResource::collection($this->items),
         ];
     }

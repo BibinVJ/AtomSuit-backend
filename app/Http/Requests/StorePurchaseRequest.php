@@ -30,6 +30,7 @@ class StorePurchaseRequest extends FormRequest
             'purchase_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatus::class)],
+            'note' => 'nullable',
 
             'items' => 'required|array|min:1',
             'items.*.id' => 'nullable|exists:purchase_items,id',

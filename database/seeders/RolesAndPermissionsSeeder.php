@@ -88,12 +88,12 @@ class RolesAndPermissionsSeeder extends Seeder
             PermissionsEnum::UPDATE_CUSTOMER->value,
             PermissionsEnum::DELETE_CUSTOMER->value,
 
+            // Item
             PermissionsEnum::VIEW_ITEM->value,
 
             // Sale
             PermissionsEnum::VIEW_SALE->value,
             PermissionsEnum::CREATE_SALE->value,
-            PermissionsEnum::UPDATE_SALE->value,
             PermissionsEnum::DELETE_SALE->value,
         ]);
     }

@@ -12,10 +12,12 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Purchase extends Model
 {
     protected $fillable = [
+        'user_id',
         'vendor_id',
         'invoice_number',
         'purchase_date',
         'payment_status',
+        'note',
     ];
 
     protected $casts = [
@@ -24,14 +26,19 @@ class Purchase extends Model
         'payment_status' => PaymentStatus::class,
     ];
 
-    public function items(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(PurchaseItem::class);
+        return $this->belongsTo(User::class);
     }
 
     public function vendor(): BelongsTo
     {
         return $this->belongsTo(Vendor::class);
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(PurchaseItem::class);
     }
 
     public function stockMovements(): MorphMany

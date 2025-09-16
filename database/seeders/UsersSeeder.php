@@ -27,11 +27,11 @@ class UsersSeeder extends Seeder
         $inventoryManager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
 
         $salesPerson = User::firstOrCreate(
-            ['email' => 'salesperson@example.com'],
+            ['phone' => '1234567890'],
             [
                 'name' => 'Sales Person User',
                 'password' => Hash::make('Example@123'),
-                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
                 'status' => UserStatus::ACTIVE,
             ]
         );

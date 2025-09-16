@@ -17,15 +17,17 @@ class Sale extends Model
         'customer_id',
         'invoice_number',
         'sale_date',
+        'status',
         'payment_status',
-        'payment_method'
+        'payment_method',
+        'note',
     ];
 
     protected $casts = [
         'sale_date' => 'date',
         'status' => TransactionStatus::class,
         'payment_status' => PaymentStatus::class,
-        'payment_method' => PaymentMethod::class
+        'payment_method' => PaymentMethod::class,
     ];
 
     public function user(): BelongsTo

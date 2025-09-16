@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 
 /**
@@ -26,7 +27,7 @@ class UserResource extends BaseResource
             'status' => $this->status,
             'status_updated_at' => $this->status_updated_at,
 
-            'is_admin' => $this->hasRole('admin'),
+            'is_admin' => $this->hasRole(RolesEnum::ADMIN->value),
             'role' => $this->roles->isNotEmpty()
                 ? new RoleResource($this->roles->first()->withoutRelations())
                 : null,

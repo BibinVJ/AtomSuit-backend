@@ -23,10 +23,30 @@ class CustomerRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255|unique:customers,name,'.$this->route('customer')?->id,
-            'email' => 'nullable|email|max:255|unique:customers,email,'.$this->route('customer')?->id,
-            'phone' => 'nullable|string|max:20|unique:customers,phone,'.$this->route('customer')?->id,
+            'email' => [
+                'nullable',
+                'email',
+                'max:255',
+                'unique:customers,email,'.$this->route('customer')?->id,
+                'required_without:phone',
+            ],
+            'phone' => [
+                'nullable',
+                'string',
+                'max:20',
+                'unique:customers,phone,'.$this->route('customer')?->id,
+                'required_without:email',
+            ],
             'address' => 'nullable|string|max:500',
             'is_active' => 'boolean',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.required_without' => 'Either an email or phone number is required.',
+            'phone.required_without' => 'Either a phone number or email is required.',
         ];
     }
 }

@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\PaymentStatus;
+use App\Enums\RolesEnum;
+use App\Enums\TransactionStatus;
 use App\Models\Customer;
 use App\Models\Item;
 use App\Models\Sale;
@@ -16,6 +18,13 @@ class SaleSeeder extends Seeder
 {
     public function run(): void
     {
+        $user = User::role(RolesEnum::ADMIN->value)->first();
+        if (! $user) {
+            $this->command->info('No users found. Please seed users first.');
+
+            return;
+        }
+
         $customer = Customer::first();
         if (! $customer) {
             $this->command->info('No customers found. Please seed customers first.');
@@ -34,9 +43,10 @@ class SaleSeeder extends Seeder
         $sale = Sale::updateOrCreate(
             ['invoice_number' => 'S-INV-000001'],
             [
-                'user_id' => User::first()->id,
+                'user_id' => $user->id,
                 'customer_id' => $customer->id,
                 'sale_date' => Carbon::now(),
+                'status' => TransactionStatus::COMPLETED,
                 'payment_status' => PaymentStatus::PENDING,
             ]
         );

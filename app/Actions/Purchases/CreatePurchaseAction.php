@@ -2,7 +2,6 @@
 
 namespace App\Actions\Purchases;
 
-use App\Enums\PaymentStatus;
 use App\Models\Purchase;
 use App\Repositories\PurchaseRepository;
 use App\Services\BatchService;
@@ -21,12 +20,7 @@ class CreatePurchaseAction
     {
         return DB::transaction(function () use ($data) {
             /** @var Purchase $purchase */
-            $purchase = $this->purchaseRepo->create([
-                'vendor_id' => $data['vendor_id'],
-                'invoice_number' => $data['invoice_number'],
-                'purchase_date' => $data['purchase_date'],
-                'payment_status' => $data['payment_status'] ?? PaymentStatus::PENDING,
-            ]);
+            $purchase = $this->purchaseRepo->create($data);
 
             $preparedItems = collect($data['items'])->map(function ($item) {
                 $batch = $this->batchService->create($item);
