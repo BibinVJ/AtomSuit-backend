@@ -7,25 +7,14 @@ use Illuminate\Database\Seeder;
 class DatabaseSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Seed the tenant database.
+     * This seeder is used for tenant-specific data.
      */
     public function run(): void
     {
+        // This will be run in tenant context
         $this->call([
-            RolesAndPermissionsSeeder::class,
-            DefaultAdminUserSeeder::class,
-            UsersSeeder::class,
-
-            CategorySeeder::class,
-            UnitSeeder::class,
-            ItemSeeder::class,
-
-            VendorSeeder::class,
-            CustomerSeeder::class,
-
-            PurchaseSeeder::class,
-            SaleSeeder::class,
-
+            TenantDefaultDataSeeder::class,
         ]);
     }
 }
