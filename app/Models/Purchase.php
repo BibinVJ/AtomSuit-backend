@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,7 +23,7 @@ class Purchase extends Model
     protected $casts = [
         'purchase_date' => 'date',
         'status' => TransactionStatus::class,
-        'payment_status' => PaymentStatus::class,
+        'payment_status' => PaymentStatusEnum::class,
     ];
 
     public function user(): BelongsTo

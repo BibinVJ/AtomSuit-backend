@@ -19,7 +19,6 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-        env('CENTRAL_DOMAIN', 'localhost'),
         config('app.url'),
     ],
 
@@ -196,8 +195,7 @@ return [
      * Parameters used by the tenants:seed command.
      */
     'seeder_parameters' => [
-        '--class' => 'DatabaseSeeder', // root seeder class
-        // '--class' => 'Database\Seeders\TenantDefaultDataSeeder', // tenant seeder class
+        '--class' => 'Database\Seeders\TenantDefaultDataSeeder', // tenant seeder class
         '--force' => true, // This needs to be true to seed tenant databases in production
     ],
 ];

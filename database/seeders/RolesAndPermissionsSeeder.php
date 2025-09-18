@@ -34,10 +34,6 @@ class RolesAndPermissionsSeeder extends Seeder
         /**
          * Create and assign permissions to roles
          */
-        // SUPER ADMIN - Assign all permissions
-        $superAdminRole = Role::firstOrCreate(['name' => RolesEnum::SUPER_ADMIN->value, 'guard_name' => $guard]);
-        // $superAdminRole->syncPermissions(Permission::all());
-
         // ADMIN - Assign all permissions
         $adminRole = Role::firstOrCreate(['name' => RolesEnum::ADMIN->value, 'guard_name' => $guard]);
         $adminRole->syncPermissions(Permission::all());

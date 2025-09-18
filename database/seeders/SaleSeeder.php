@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\RolesEnum;
 use App\Enums\TransactionStatus;
 use App\Models\Customer;
@@ -46,8 +46,8 @@ class SaleSeeder extends Seeder
                 'user_id' => $user->id,
                 'customer_id' => $customer->id,
                 'sale_date' => Carbon::now(),
-                'status' => TransactionStatus::COMPLETED,
-                'payment_status' => PaymentStatus::PENDING,
+                'status' => TransactionStatus::COMPLETED->value,
+                'payment_status' => PaymentStatusEnum::PENDING->value,
             ]
         );
 

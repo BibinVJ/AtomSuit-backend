@@ -4,12 +4,15 @@ namespace App\Enums;
 
 enum PermissionsEnum: string
 {
-    // note: case NAME_IN_APP = 'name-in-database';
-
     // Dashboard
     case VIEW_DASHBOARD = 'view-dashboard';
-
     case MANAGE_NOTIFICATIONS = 'manage-notifications';
+
+    // Tenant Management
+    case VIEW_TENANT = 'view-tenant';
+    case CREATE_TENANT = 'create-tenant';
+    case UPDATE_TENANT = 'update-tenant';
+    case DELETE_TENANT = 'delete-tenant';
 
     // User Management
     case VIEW_USER = 'view-user';
@@ -17,13 +20,11 @@ enum PermissionsEnum: string
     case UPDATE_USER = 'update-user';
     case DELETE_USER = 'delete-user';
 
-    // Role Management
+    // Role & Permission Management
     case VIEW_ROLE = 'view-role';
     case CREATE_ROLE = 'create-role';
     case UPDATE_ROLE = 'update-role';
     case DELETE_ROLE = 'delete-role';
-
-    // Permission Management
     case VIEW_PERMISSION = 'view-permission';
 
     // Settings
@@ -76,5 +77,35 @@ enum PermissionsEnum: string
     case CREATE_SALE = 'create-sale';
     case UPDATE_SALE = 'update-sale';
     case DELETE_SALE = 'delete-sale';
+
+
+    public static function centralPermissions(): array
+    {
+        return [
+            // Dashboard
+            self::VIEW_DASHBOARD->value,
+            self::MANAGE_NOTIFICATIONS->value,
+
+            // Tenant Management
+            self::VIEW_TENANT->value,
+            self::CREATE_TENANT->value,
+            self::UPDATE_TENANT->value,
+            self::DELETE_TENANT->value,
+
+            // Role & Permission Management
+            self::VIEW_ROLE->value,
+            self::CREATE_ROLE->value,
+            self::UPDATE_ROLE->value,
+            self::DELETE_ROLE->value,
+            self::VIEW_PERMISSION->value,
+
+            // System / Settings
+            self::VIEW_SETTING->value,
+            self::UPDATE_SETTING->value,
+            self::VIEW_COMPANY_INFO->value,
+            self::UPDATE_COMPANY_INFO->value,
+        ];
+    }
+
 
 }

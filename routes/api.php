@@ -36,18 +36,16 @@ foreach (config('tenancy.central_domains') as $domain) {
         | Central Authentication Routes
         |--------------------------------------------------------------------------
         */
-        Route::prefix('admin/auth')->group(function () {
-            Route::post('login', [CentralAuthController::class, 'login']);
-            Route::post('register', [CentralAuthController::class, 'register']);
-        });
+        Route::post('login', [CentralAuthController::class, 'login']);
+        Route::post('register', [CentralAuthController::class, 'register']);
 
         /*
         |--------------------------------------------------------------------------
         | Central Protected Routes
         |--------------------------------------------------------------------------
         */
-        Route::middleware(['auth:central'])->prefix('admin')->group(function () {
-            Route::post('auth/logout', [CentralAuthController::class, 'logout']);
+        Route::middleware(['auth:central'])->group(function () {
+            Route::post('logout', [CentralAuthController::class, 'logout']);
             Route::get('profile', [CentralAuthController::class, 'profile']);
 
             // Tenant Management Routes
@@ -65,7 +63,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         | Webhook Callback Routes
         |--------------------------------------------------------------------------
         */
-        Route::prefix('callback')->middleware('log.webhook')->group(function () {
+        Route::prefix('webhook')->middleware('log.webhook')->group(function () {
             Route::get('/', fn() => response()->json(['message' => 'Central webhook ping successful!']));
         });
     });

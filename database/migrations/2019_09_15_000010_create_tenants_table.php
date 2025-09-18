@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\TenantStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,8 +18,18 @@ class CreateTenantsTable extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->string('id')->primary();
+            $table->string('name');
 
-            // your custom columns may go here
+            $table->string('email')->unique()->nullable();
+            $table->string('phone')->unique()->nullable();
+
+            $table->string('status')->default(TenantStatusEnum::ACTIVE->value);
+
+            // Optional for fast access
+            $table->foreignId('current_subscription_id')->nullable()->constrained('subscriptions')->nullOnDelete();
+
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('grace_period_ends_at')->nullable();
 
             $table->timestamps();
             $table->json('data')->nullable();
