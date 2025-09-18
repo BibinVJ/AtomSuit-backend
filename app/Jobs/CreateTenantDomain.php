@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Tenant;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,26 +13,18 @@ class CreateTenantDomain implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $tenant;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct($tenant)
+    public Tenant $tenant;
+
+    public function __construct(Tenant $tenant)
     {
         $this->tenant = $tenant;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle()
+    public function handle(): void
     {
-        $centralDomain = config('app.url');
-        $domain = strtolower(str_replace(' ', '-', $this->tenant->domain_name)).'.'.$centralDomain;
+        $domainName = $this->tenant->data['domain_name'] ?? $this->tenant->name;
+        $domain = strtolower(str_replace(' ', '-', $domainName)) . '.' . config('app.url');
+        
         $this->tenant->domains()->create(['domain' => $domain]);
     }
 }

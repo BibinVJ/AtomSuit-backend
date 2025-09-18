@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->decimal('price', 10, 2)->default(0);
-            $table->string('interval')->default(PlanIntervalEnum::MONTHLY->value);
+            $table->string('interval')->default(PlanIntervalEnum::MONTH->value);
             $table->integer('interval_count')->default(1)->comment("e.g. 1 month, 3 months, 12 months");
             $table->boolean('is_trial_plan')->default(false);
             $table->integer('trial_duration')->nullable();

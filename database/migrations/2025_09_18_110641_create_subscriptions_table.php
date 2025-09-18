@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
+            $table->string('tenant_id');
             $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
 
             $table->timestamp('start_date')->nullable();
@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('renewal_type')->default('auto'); // auto/manual
             
             $table->timestamps();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

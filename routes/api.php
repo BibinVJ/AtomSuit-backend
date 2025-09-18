@@ -44,7 +44,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         | Central Protected Routes
         |--------------------------------------------------------------------------
         */
-        Route::middleware(['auth:central'])->group(function () {
+        Route::middleware(['auth:api'])->group(function () {
             Route::post('logout', [CentralAuthController::class, 'logout']);
             Route::get('profile', [CentralAuthController::class, 'profile']);
 

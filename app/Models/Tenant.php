@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Enums\TenantStatusEnum;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -20,7 +22,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'status',
         'trial_ends_at',
         'grace_period_ends_at',
-        'current_subscription_id',
         'data',
     ];
 
@@ -34,15 +35,28 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'data' => 'array',
     ];
 
-    public function subscriptions()
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id',
+            'name',
+            'email',
+            'phone',
+            'status',
+            'trial_ends_at',
+            'grace_period_ends_at',
+            'data',
+        ];
+    }
+
+    public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
     }
 
-    // Current active subscription (optional)
-    public function currentSubscription()
+    public function currentSubscription():HasOne
     {
-        return $this->belongsTo(Subscription::class, 'current_subscription_id');
+        return $this->hasOne(Subscription::class)->where('is_active', true)->latestOfMany();
     }
 
     // Shortcut to current plan via current subscription
@@ -63,9 +77,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     /**
      * Check if tenant is in trial period
      */
-    public function isTrial(): bool
-    {
-        return $this->trial_ends_at && $this->trial_ends_at->isFuture();
-    }
+    // public function isTrial(): bool
+    // {
+    //     return $this->trial_ends_at && $this->trial_ends_at->isFuture();
+    // }
 
 }

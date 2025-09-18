@@ -18,7 +18,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 class User extends Authenticatable implements OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use BelongsToTenant, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
 
@@ -80,9 +80,6 @@ class User extends Authenticatable implements OAuthenticatable
         return $this->hasMany(DashboardLayout::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\UserDetail>
-     */
     public function detail(): HasOne
     {
         return $this->hasOne(UserDetail::class);

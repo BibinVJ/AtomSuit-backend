@@ -25,9 +25,6 @@ class CreateTenantsTable extends Migration
 
             $table->string('status')->default(TenantStatusEnum::ACTIVE->value);
 
-            // Optional for fast access
-            $table->foreignId('current_subscription_id')->nullable()->constrained('subscriptions')->nullOnDelete();
-
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('grace_period_ends_at')->nullable();
 
