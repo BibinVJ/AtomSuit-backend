@@ -5,25 +5,24 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class SeedTenants extends Command
+class RollbackTenantCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'seed:tenants
+    protected $signature = 'rollback:tenant
                             {--allTenants : Run the seeder for all tenants}
                             {--tenantIds=* : The IDs of the tenants to seed (comma-separated)}
-                            {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)} 
-                            {--class= : The class name of the seeder to run}';
+                            {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run seeder for tenants';
+    protected $description = 'Rollback migrations for tenants';
 
     /**
      * Execute the console command.
@@ -61,15 +60,13 @@ class SeedTenants extends Command
             return Command::FAILURE;
         }
 
-        $seederClass = $this->option('class');
+        foreach ($tenantIds as $tenantId) {
+            $this->call('tenants:rollback', [
+                '--tenants' => $tenantId,
+            ]);
+        }
 
-        $this->call('tenants:seed', [
-            '--tenants' => $tenantIds,
-            '--class' => $seederClass,
-        ]);
-
-        $this->info('Seeding completed for all tenants.');
-
+        $this->info('Rollback completed for all tenants.');
         return Command::SUCCESS;
     }
 }

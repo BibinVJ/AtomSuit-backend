@@ -5,14 +5,14 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class RollbackTenants extends Command
+class MigrateTenantCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'rollback:tenants
+    protected $signature = 'migrate:tenant
                             {--allTenants : Run the seeder for all tenants}
                             {--tenantIds=* : The IDs of the tenants to seed (comma-separated)}
                             {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)}';
@@ -22,7 +22,7 @@ class RollbackTenants extends Command
      *
      * @var string
      */
-    protected $description = 'Rollback migrations for tenants';
+    protected $description = 'Run migrations for tenants';
 
     /**
      * Execute the console command.
@@ -60,13 +60,12 @@ class RollbackTenants extends Command
             return Command::FAILURE;
         }
 
-        foreach ($tenantIds as $tenantId) {
-            $this->call('tenants:rollback', [
-                '--tenants' => $tenantId,
+        $this->call('tenants:migrate', [
+                '--tenants' => $tenantIds,
             ]);
-        }
 
-        $this->info('Rollback completed for all tenants.');
+        $this->info('Migrations completed for all tenants.');
+
         return Command::SUCCESS;
     }
 }

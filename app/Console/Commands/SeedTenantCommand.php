@@ -5,24 +5,25 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
-class MigrateTenants extends Command
+class SeedTenantCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'migrate:tenants
+    protected $signature = 'seed:tenant
                             {--allTenants : Run the seeder for all tenants}
                             {--tenantIds=* : The IDs of the tenants to seed (comma-separated)}
-                            {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)}';
+                            {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)} 
+                            {--class= : The class name of the seeder to run}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Run migrations for tenants';
+    protected $description = 'Run seeder for tenants';
 
     /**
      * Execute the console command.
@@ -60,11 +61,14 @@ class MigrateTenants extends Command
             return Command::FAILURE;
         }
 
-        $this->call('tenants:migrate', [
-                '--tenants' => $tenantIds,
-            ]);
+        $seederClass = $this->option('class');
 
-        $this->info('Migrations completed for all tenants.');
+        $this->call('tenants:seed', [
+            '--tenants' => $tenantIds,
+            '--class' => $seederClass,
+        ]);
+
+        $this->info('Seeding completed for all tenants.');
 
         return Command::SUCCESS;
     }

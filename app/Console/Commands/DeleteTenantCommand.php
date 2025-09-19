@@ -6,14 +6,14 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
-class DeleteTenants extends Command
+class DeleteTenantCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'delete:tenants
+    protected $signature = 'delete:tenant
                             {--allTenants : Delete the database for all tenants}
                             {--tenantIds=* : The IDs of the tenants to delete (comma-separated)}
                             {--tenantEmails=* : The Emails of the tenants to delete (comma-separated)}';
@@ -107,8 +107,6 @@ class DeleteTenants extends Command
     private function removeTenantDataInCentralDatabase(object $tenant): void
     {
         DB::table('domains')->where('tenant_id', $tenant->id)->delete();
-        DB::table('users')->where('email', $tenant->email)->delete();
-        DB::table('user_license__purchase_log')->where('email', $tenant->email)->delete();
         DB::table('tenants')->where('id', $tenant->id)->delete();
 
         $this->info("Tenant data for ID {$tenant->id} has been removed from the central database.");

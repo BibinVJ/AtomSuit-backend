@@ -17,7 +17,7 @@ class TruncateTenants extends Command
                             {--allTenants : Run the seeder for all tenants}
                             {--tenantIds=* : The IDs of the tenants to seed (comma-separated)}
                             {--tenantEmails=* : The Emails of the tenants to seed (comma-separated)} 
-                            {--tables=* : Specify one or more table names} 
+                            {--tables=* : Specify one or more table names (comma-separated)} 
                             {--allTransactions : Truncate pre-defined transactions tables}';
 
     /**

@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Enums\RolesEnum;
-use App\Models\Subscription;
 use App\Models\Tenant;
 use App\Models\User;
 use Database\Seeders\TenantSampleDataSeeder;
@@ -32,7 +31,7 @@ class CreateTenantAdmin implements ShouldQueue
                 'name' => $this->tenant->name,
                 'email' => $this->tenant->email,
                 'password' => Hash::make($this->tenant->password ?? 'Example@123'),
-                'email_verified_at' => now(),
+                'email_verified_at' => $this->tenant->email_verified_at ?? null,
             ]);
             $adminUser->assignRole(RolesEnum::ADMIN->value);
 
@@ -40,15 +39,5 @@ class CreateTenantAdmin implements ShouldQueue
                 (new TenantSampleDataSeeder())->run();
             }
         });
-
-        if (isset($this->tenant->plan_id)) {
-            $subscription = Subscription::create([
-                'tenant_id' => $this->tenant->id,
-                'plan_id' => $this->tenant->plan_id,
-                'start_date' => now(),
-                'end_date' => null,
-                'is_active' => true,
-            ]);
-        }
     }
 }
