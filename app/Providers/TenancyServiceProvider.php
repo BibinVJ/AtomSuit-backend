@@ -9,6 +9,7 @@ use App\Jobs\CreateTenantDomain;
 use App\Jobs\CreateTenantSubscription;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
@@ -44,7 +45,17 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantSaved::class => [],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],
-            Events\DeletingTenant::class => [],
+            Events\DeletingTenant::class => [
+                // todo: you might want to clean up this:
+                // JobPipeline::make([
+                //     fn(Events\TenantDeleted $event) => $event->tenant->domains()->delete(),
+                //     fn(Events\TenantDeleted $event) => Storage::deleteDirectory(
+                //         config('tenancy.filesystem.suffix_base') . $event->tenant->id
+                //     ),
+                // ])->send(function (Events\TenantDeleted $event) {
+                //     return $event->tenant;
+                // })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
+            ],
             Events\TenantDeleted::class => [
                 JobPipeline::make([
                     Jobs\DeleteDatabase::class,

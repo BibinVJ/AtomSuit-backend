@@ -27,12 +27,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        // Configure Passport
-        Passport::tokensCan([
-            'tenant-access' => 'Access tenant data',
-            'central-access' => 'Access central application',
-        ]);
-
         Passport::setDefaultScope(['tenant-access']);
 
         // Token lifetime configuration

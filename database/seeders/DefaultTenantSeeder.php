@@ -6,6 +6,7 @@ use App\Enums\TenantStatusEnum;
 use App\Models\Plan;
 use App\Models\Tenant;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DefaultTenantSeeder extends Seeder
 {
@@ -22,16 +23,15 @@ class DefaultTenantSeeder extends Seeder
         }
 
         if (!Tenant::where('email', 'company@example.com')->exists()) {
+            \Log::info('Creating tenant via seeder');
             Tenant::create([
                 'name' => 'company',
                 'email' => 'company@example.com',
                 'status' => TenantStatusEnum::ACTIVE->value,
                 'trial_ends_at' => null,
                 'grace_period_ends_at' => null,
-                
                 'email_verified_at' => now(),
-
-                'password' => 'Example@123',
+                'password' => Hash::make('Example@123'),
                 'load_sample_data' => true,
                 'domain_name' => 'company_domain',
                 'plan_id' => $plan->id,

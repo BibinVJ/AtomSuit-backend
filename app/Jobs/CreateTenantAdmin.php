@@ -27,10 +27,14 @@ class CreateTenantAdmin implements ShouldQueue
     public function handle(): void
     {
         $this->tenant->run(function () {
+
+            \Log::info('Creating admin user for tenant: ' . $this->tenant->id);
+            \Log::info(json_encode($this->tenant));
+
             $adminUser = User::create([
                 'name' => $this->tenant->name,
                 'email' => $this->tenant->email,
-                'password' => Hash::make($this->tenant->password ?? 'Example@123'),
+                'password' => $this->tenant->password ?? Hash::make('Example@123'),
                 'email_verified_at' => $this->tenant->email_verified_at ?? null,
             ]);
             $adminUser->assignRole(RolesEnum::ADMIN->value);
