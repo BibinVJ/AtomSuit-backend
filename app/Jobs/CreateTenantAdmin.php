@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\RolesEnum;
+use App\Enums\UserStatus;
 use App\Models\Tenant;
 use App\Models\User;
 use Database\Seeders\TenantSampleDataSeeder;
@@ -32,6 +33,7 @@ class CreateTenantAdmin implements ShouldQueue
                 'email' => $this->tenant->email,
                 'password' => $this->tenant->password ?? Hash::make('Example@123'),
                 'email_verified_at' => $this->tenant->email_verified_at ?? null,
+                'status' => UserStatus::ACTIVE->value,
             ]);
             $adminUser->assignRole(RolesEnum::ADMIN->value);
 

@@ -65,7 +65,8 @@
         "reset-db": [
             "@php artisan tenant:delete",
             "@php artisan migrate:fresh --seed --ansi",
-            "@php artisan passport:client --personal --no-interaction --ansi"
+            "@php artisan passport:client --personal --provider=central_users --no-interaction --ansi",
+            "@php artisan passport:client --personal --provider=users --no-interaction --ansi"
         ],
         "lint": "./vendor/bin/phpstan analyse"
     },

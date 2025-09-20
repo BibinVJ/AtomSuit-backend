@@ -9,12 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
 class CentralUser extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $table = 'users';
-    protected $guard_name = 'api';
+    protected $guard_name = 'central';
 
     /**
      * The attributes that are mass assignable.

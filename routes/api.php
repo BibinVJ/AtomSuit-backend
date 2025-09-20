@@ -1,7 +1,7 @@
 <?php
 
 use App\Helpers\ApiResponse;
-use App\Http\Controllers\Auth\CentralAuthController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,17 +33,17 @@ foreach (config('tenancy.central_domains') as $domain) {
         | Central Authentication Routes
         |--------------------------------------------------------------------------
         */
-        Route::post('login', [CentralAuthController::class, 'login']);
-        Route::post('register', [CentralAuthController::class, 'register']);
+        Route::post('login', [AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register']);
 
         /*
         |--------------------------------------------------------------------------
         | Central Protected Routes
         |--------------------------------------------------------------------------
         */
-        Route::middleware(['auth:api'])->group(function () {
-            Route::post('logout', [CentralAuthController::class, 'logout']);
-            Route::get('profile', [CentralAuthController::class, 'profile']);
+        Route::middleware(['auth:central'])->group(function () {
+            Route::post('logout', [AuthController::class, 'logout']);
+            Route::get('profile', [AuthController::class, 'profile']);
 
             // Tenant Management Routes
             Route::prefix('tenants')->group(function () {

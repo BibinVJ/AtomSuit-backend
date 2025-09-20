@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'central'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -36,15 +36,21 @@ return [
     */
 
     'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
+        'central' => [
+            'driver' => 'passport',
+            'provider' => 'central_users',
         ],
 
-        'api' => [
+        'tenant' => [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+    ],
+
+
+    'guard_names' => [
+        'central' => 'central',
+        'tenant' => 'tenant',
     ],
 
     /*
@@ -70,15 +76,10 @@ return [
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
 
-        'users' => [
+        'central_users' => [
             'driver' => 'eloquent',
             'model' => App\Models\CentralUser::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*
@@ -103,6 +104,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'reset_tokens'),
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'central_users' => [
+            'provider' => 'central_users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

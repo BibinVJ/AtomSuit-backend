@@ -20,7 +20,7 @@ class User extends Authenticatable implements OAuthenticatable
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
-    protected $guard_name = 'api';
+    protected $guard_name = 'tenant';
 
     /**
      * The attributes that are mass assignable.
