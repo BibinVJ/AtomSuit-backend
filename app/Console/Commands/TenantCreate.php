@@ -27,8 +27,6 @@ class TenantCreate extends Command
             return Command::FAILURE;
         }
 
-        \Log::info('Creating tenant via tenent:create command');
-
         $tenant = Tenant::create([
             'name'             => $this->argument('name'),
             'email'            => $this->argument('email'),

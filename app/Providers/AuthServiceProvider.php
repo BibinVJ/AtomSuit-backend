@@ -27,7 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Passport::setDefaultScope(['tenant-access']);
+        // Passport::setDefaultScope(['tenant-access']);
 
         // Token lifetime configuration
         Passport::tokensExpireIn(now()->addDays(15));

@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\CentralAuthController;
 use App\Http\Controllers\TenantController;
 use Illuminate\Support\Facades\Route;
@@ -24,11 +25,7 @@ foreach (config('tenancy.central_domains') as $domain) {
         */
 
         Route::get('/', function () {
-            return response()->json([
-                'message' => 'Central App - Multi-tenant Backend API',
-                'version' => '1.0.0',
-                'tenancy' => true,
-            ]);
+            return ApiResponse::success('API ping successful - ' . config('app.name'));
         });
 
         /*

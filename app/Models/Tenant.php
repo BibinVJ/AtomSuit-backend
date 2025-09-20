@@ -23,6 +23,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'trial_ends_at',
         'grace_period_ends_at',
         'data',
+        'email_verified_at',
+        'password',
+        'load_sample_data',
+        'domain_name',
+        'plan_id',
     ];
 
     /**

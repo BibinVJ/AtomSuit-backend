@@ -63,6 +63,7 @@
             "@php artisan test"
         ],
         "reset-db": [
+            "@php artisan tenant:delete",
             "@php artisan migrate:fresh --seed --ansi",
             "@php artisan passport:client --personal --no-interaction --ansi"
         ],

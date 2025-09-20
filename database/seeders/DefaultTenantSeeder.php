@@ -23,7 +23,6 @@ class DefaultTenantSeeder extends Seeder
         }
 
         if (!Tenant::where('email', 'company@example.com')->exists()) {
-            \Log::info('Creating tenant via seeder');
             Tenant::create([
                 'name' => 'company',
                 'email' => 'company@example.com',
@@ -33,7 +32,7 @@ class DefaultTenantSeeder extends Seeder
                 'email_verified_at' => now(),
                 'password' => Hash::make('Example@123'),
                 'load_sample_data' => true,
-                'domain_name' => 'company_domain',
+                'domain_name' => 'company',
                 'plan_id' => $plan->id,
             ]);
         }

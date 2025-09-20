@@ -13,14 +13,16 @@ class ApiResponse
         array $meta = [],
         array $links = []
     ): \Illuminate\Http\JsonResponse {
-        return response()->json([
+        $response = array_filter([
             'message' => $message,
-            'error' => false,
-            'code' => $code,
-            'data' => $data,
-            'meta' => ! empty($meta) ? $meta : (object) [],
-            'links' => ! empty($links) ? $links : (object) [],
-        ], $code);
+            'error'   => false,
+            'code'    => $code,
+            'data'    => $data,
+            'meta'    => $meta,
+            'links'   => $links,
+        ], fn($value) => ! (is_null($value) || $value === [] || $value === ''));
+
+        return response()->json($response, $code);
     }
 
     public static function error(

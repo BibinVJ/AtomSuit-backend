@@ -16,6 +16,8 @@ use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -124,7 +126,8 @@ class TenancyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bootEvents();
-        $this->mapRoutes();
+        $this->mapWebRoutes();
+        $this->mapApiRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
     }
@@ -142,12 +145,32 @@ class TenancyServiceProvider extends ServiceProvider
         }
     }
 
-    protected function mapRoutes()
+    protected function mapWebRoutes()
     {
         $this->app->booted(function () {
-            if (file_exists(base_path('routes/tenant.php'))) {
+            if (file_exists(base_path('routes/tenant/web.php'))) {
                 Route::namespace(static::$controllerNamespace)
-                    ->group(base_path('routes/tenant.php'));
+                    ->middleware([
+                        InitializeTenancyByDomain::class,
+                        PreventAccessFromCentralDomains::class,
+                    ])
+                    ->group(base_path('routes/tenant/web.php'));
+            }
+        });
+    }
+
+    protected function mapApiRoutes()
+    {
+        $this->app->booted(function () {
+            if (file_exists(base_path('routes/tenant/api.php'))) {
+                Route::namespace(static::$controllerNamespace)
+                    ->middleware([
+                        'api',
+                        InitializeTenancyByDomain::class,
+                        PreventAccessFromCentralDomains::class,
+                    ])
+                    ->prefix('api')
+                    ->group(base_path('routes/tenant/api.php'));
             }
         });
     }
