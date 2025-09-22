@@ -10,10 +10,11 @@ use App\Models\User;
 use App\Models\CentralUser;
 use App\Models\Tenant;
 use App\Repositories\UserRepository;
+use App\Services\ContextAwareService;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-class AuthService
+class AuthService extends ContextAwareService
 {
     public function __construct(
         protected UserRepository $userRepository,
@@ -22,18 +23,10 @@ class AuthService
     ) {}
 
     /**
-     * Get the appropriate user model class
-     */
-    protected function getUserModel(): string
-    {
-        return tenant() ? User::class : CentralUser::class;
-    }
-
-    /**
      * Register a new tenant
      * 
      * Registration is allowed only in the central domain.
-     * And user is not created in the users table, but a tenant is created.
+     * And user is not created in the central users table, a tenant is created.
      */
     public function register(array $data): AuthenticatedUserDTO
     {
@@ -63,12 +56,10 @@ class AuthService
     {
         $userModel = $this->getUserModel();
 
-        \Log::info($userModel);
-
         // Determine if identifier is an email or phone
         $isEmail = filter_var($identifier, FILTER_VALIDATE_EMAIL);
 
-        if (! tenant()) {
+        if ($this->isCentralContext()) {
             // Central user login - only email is supported
             if (!$isEmail) {
                 throw new UnauthorizedHttpException('', 'Only email login is supported for central users');

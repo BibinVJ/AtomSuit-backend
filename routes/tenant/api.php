@@ -65,7 +65,7 @@ Route::prefix('auth')->group(function () {
 | Authenticated Tenant Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:api'])->group(function () {
+Route::middleware(['auth:tenant'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 

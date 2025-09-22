@@ -3,6 +3,7 @@
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,7 +44,10 @@ foreach (config('tenancy.central_domains') as $domain) {
         */
         Route::middleware(['auth:central'])->group(function () {
             Route::post('logout', [AuthController::class, 'logout']);
-            Route::get('profile', [AuthController::class, 'profile']);
+
+            Route::prefix('profile')->group(function () {
+                Route::get('/', [UserProfileController::class, 'show']);
+            });
 
             // Tenant Management Routes
             Route::prefix('tenants')->group(function () {
