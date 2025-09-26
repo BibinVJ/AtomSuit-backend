@@ -49,14 +49,10 @@ foreach (config('tenancy.central_domains') as $domain) {
                 Route::get('/', [UserProfileController::class, 'show']);
             });
 
-            // Tenant Management Routes
-            Route::prefix('tenants')->group(function () {
-                Route::get('/', [TenantController::class, 'index']);
-                Route::post('/', [TenantController::class, 'store']);
-                Route::get('{tenant}', [TenantController::class, 'show']);
-                Route::put('{tenant}', [TenantController::class, 'update']);
-                Route::delete('{tenant}', [TenantController::class, 'destroy']);
-            });
+            // Tenant Management
+            Route::get('tenant-stats', [TenantController::class, 'stats']);
+            Route::post('user/{user}/send-mail', [TenantController::class, 'sendMail']);
+            Route::apiResource('tenant', TenantController::class);
         });
 
         /*

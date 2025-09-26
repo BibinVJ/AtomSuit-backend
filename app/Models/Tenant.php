@@ -9,6 +9,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Domain;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
@@ -23,6 +24,8 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'trial_ends_at',
         'grace_period_ends_at',
         'data',
+
+        // for creating purpose alone
         'email_verified_at',
         'password',
         'load_sample_data',
@@ -54,6 +57,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         ];
     }
 
+    public function domain(): HasOne
+    {
+        return $this->hasOne(Domain::class);
+    }
+
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
@@ -65,7 +73,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     }
 
     // Shortcut to current plan via current subscription
-    public function currentPlan()
+    public function currentPlan(): HasOne
     {
         return $this->currentSubscription()?->plan();
     }

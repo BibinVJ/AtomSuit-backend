@@ -14,7 +14,7 @@ class Plan extends Model
         'interval',
         'interval_count',
         'is_trial_plan',
-        'trial_duration',
+        'trial_duration_in_days',
         'is_expired_user_plan',
     ];
 

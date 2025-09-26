@@ -21,13 +21,12 @@ class CreateTenantDomain implements ShouldQueue
         $this->tenant = $tenant;
     }
 
-    public function handle(): void
+    public function handle(DomainService $domainService): void
     {
         $domainName = $this->tenant->domain_name ?? $this->tenant->name;
-        $baseUrl = DomainService::normalize(config('app.url'));
 
-        $domain = strtolower(str_replace(' ', '-', $domainName)) . '.' . $baseUrl;
-        
-        $this->tenant->domains()->create(['domain' => $domain]);
+        $fullDomain = $domainService->buildFullDomain($domainName);
+
+        $this->tenant->domains()->create(['domain' => $fullDomain]);
     }
 }

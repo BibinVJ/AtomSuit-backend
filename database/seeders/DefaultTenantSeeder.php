@@ -26,14 +26,14 @@ class DefaultTenantSeeder extends Seeder
             Tenant::create([
                 'name' => 'company',
                 'email' => 'company@example.com',
+                'password' => Hash::make('Example@123'),
                 'status' => TenantStatusEnum::ACTIVE->value,
                 'trial_ends_at' => null,
                 'grace_period_ends_at' => null,
                 'email_verified_at' => now(),
-                'password' => Hash::make('Example@123'),
-                'load_sample_data' => true,
-                'domain_name' => 'company',
                 'plan_id' => $plan->id,
+                'domain_name' => 'company',
+                'load_sample_data' => true,
             ]);
         }
     }

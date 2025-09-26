@@ -20,7 +20,7 @@ class PlanSeeder extends Seeder
                 'interval' => 'lifetime',
                 'interval_count' => 1,
                 'is_trial_plan' => false,
-                'trial_duration' => null,
+                'trial_duration_in_days' => null,
                 'is_expired_user_plan' => true,
             ],
             [
@@ -29,7 +29,7 @@ class PlanSeeder extends Seeder
                 'interval' => 'day',
                 'interval_count' => 14, // trial lasts 14 days
                 'is_trial_plan' => true,
-                'trial_duration' => 14,
+                'trial_duration_in_days' => 14,
                 'is_expired_user_plan' => false,
             ],
             [
@@ -38,7 +38,7 @@ class PlanSeeder extends Seeder
                 'interval' => 'month',
                 'interval_count' => 1,
                 'is_trial_plan' => false,
-                'trial_duration' => null,
+                'trial_duration_in_days' => null,
                 'is_expired_user_plan' => false,
             ],
             [
@@ -47,7 +47,7 @@ class PlanSeeder extends Seeder
                 'interval' => 'year',
                 'interval_count' => 1,
                 'is_trial_plan' => false,
-                'trial_duration' => null,
+                'trial_duration_in_days' => null,
                 'is_expired_user_plan' => false,
             ],
             [
@@ -56,7 +56,7 @@ class PlanSeeder extends Seeder
                 'interval' => 'lifetime',
                 'interval_count' => 1,
                 'is_trial_plan' => false,
-                'trial_duration' => null,
+                'trial_duration_in_days' => null,
                 'is_expired_user_plan' => false,
             ],
             

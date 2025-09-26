@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('interval')->default(PlanIntervalEnum::MONTH->value);
             $table->integer('interval_count')->default(1)->comment("e.g. 1 month, 3 months, 12 months");
             $table->boolean('is_trial_plan')->default(false);
-            $table->integer('trial_duration')->nullable();
+            $table->integer('trial_duration_in_days')->nullable();
             $table->boolean('is_expired_user_plan')->default(false);
             $table->timestamps();
         });
