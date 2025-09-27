@@ -25,6 +25,8 @@ class CreateTenantDomain implements ShouldQueue
     {
         $domainName = $this->tenant->domain_name ?? $this->tenant->name;
 
+        $domainService->checkDomainAvailability($domainName);
+
         $fullDomain = $domainService->buildFullDomain($domainName);
 
         $this->tenant->domains()->create(['domain' => $fullDomain]);
