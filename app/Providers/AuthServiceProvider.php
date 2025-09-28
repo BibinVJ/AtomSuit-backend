@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\Request;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Laravel\Passport\Passport;
 use App\Models\Passport\ContextAwareToken;
-use App\Auth\ContextAwareTokenGuard;
-use Laravel\Passport\TokenRepository;
-use League\OAuth2\Server\ResourceServer;
-use Illuminate\Container\Container;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -36,25 +32,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         // Register dynamic user provider
-        \Log::info('Registering dynamic user provider');
         Auth::provider('dynamic', function ($app, array $config) {
-            \Log::info('Dynamic user provider called');
             return new DynamicUserProvider($app['hash'], User::class);
         });
 
         // Use context-aware token model
         Passport::useTokenModel(ContextAwareToken::class);
-
-        // Register context-aware passport guard
-        Auth::extend('context-passport', function ($app, $name, array $config) {
-            return new ContextAwareTokenGuard(
-                $app->make(ResourceServer::class),
-                Auth::createUserProvider($config['provider']),
-                $app->make(TokenRepository::class),
-                $app->make(Container::class),
-                $app->make('request')
-            );
-        });
 
         // Token lifetime configuration
         Passport::tokensExpireIn(now()->addDays(15));

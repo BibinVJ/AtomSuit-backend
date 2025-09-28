@@ -20,7 +20,6 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,25 +63,10 @@ Route::prefix('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Debug Routes
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:api'])->get('/debug-auth-tenant', function () {
-    return ApiResponse::success('Tenant Auth Debug', [
-        'tenant' => tenant() ? tenant()->id : null,
-        'auth_guard' => config('auth.defaults.guard'),
-        'auth_user' => Auth::user() ? Auth::user()->toArray() : null,
-        'auth_user_type' => Auth::user() ? get_class(Auth::user()) : null,
-        'db_connection' => config('database.default'),
-    ]);
-});
-
-/*
-|--------------------------------------------------------------------------
 | Authenticated Tenant Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:api', 'validate.token.context'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 

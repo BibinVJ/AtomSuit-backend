@@ -40,23 +40,7 @@ return [
             'driver' => 'passport',
             'provider' => 'dynamic_users',
         ],
-
-        // 'central' => [
-        //     'driver' => 'passport',
-        //     'provider' => 'central_users',
-        // ],
-
-        // 'tenant' => [
-        //     'driver' => 'passport',
-        //     'provider' => 'users',
-        // ],
     ],
-
-
-    // 'guard_names' => [
-    //     'central' => 'central',
-    //     'tenant' => 'tenant',
-    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -80,16 +64,6 @@ return [
             'driver' => 'dynamic',
             'model' => App\Models\User::class, // Default model, will be overridden by provider
         ],
-
-        // 'users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => env('AUTH_MODEL', App\Models\User::class),
-        // ],
-
-        // 'central_users' => [
-        //     'driver' => 'eloquent',
-        //     'model' => App\Models\CentralUser::class,
-        // ],
     ],
 
     /*
@@ -114,13 +88,6 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-
-        'central_users' => [
-            'provider' => 'central_users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'reset_tokens'),
             'expire' => 60,
             'throttle' => 60,

@@ -4,7 +4,6 @@ use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserProfileController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,40 +36,22 @@ Route::get('/', function () {
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-/*
-|--------------------------------------------------------------------------
-| Debug Routes
-|--------------------------------------------------------------------------
-*/
-Route::middleware(['auth:api', 'validate.token.context'])->get('/debug-auth', function () {
-    return ApiResponse::success('Auth Debug', [
-        'context' => tenant() ? 'tenant' : 'central',
-        'tenant' => tenant() ? tenant()->id : null,
-        'auth_guard' => config('auth.defaults.guard'),
-        'auth_user' => Auth::user() ? Auth::user()->toArray() : null,
-        'auth_user_type' => Auth::user() ? get_class(Auth::user()) : null,
-        'db_connection' => config('database.default'),
-    ]);
-});
 
 /*
 |--------------------------------------------------------------------------
 | Protected Routes (Universal)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:api', 'validate.token.context'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
     // Universal profile route - works for both central and tenant
     Route::get('profile', [UserProfileController::class, 'show']);
     Route::post('profile', [UserProfileController::class, 'update']);
 
-    // Central-only routes (will only work when no X-Tenant header is present)
-    // Route::middleware('central.only')->group(function () {
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
     Route::apiResource('tenant', TenantController::class);
-    // });
 });
 
 /*
