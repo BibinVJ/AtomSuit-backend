@@ -14,6 +14,7 @@ class CentralUser extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
+    // protected $connection = 'central';
     protected $table = 'users';
     protected $guard_name = 'central';
 

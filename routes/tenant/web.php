@@ -19,5 +19,5 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', function () {
-    return ApiResponse::success('Ping successful - ' . (tenant()->name ?? 'your tenant'));
+    return ApiResponse::success('Ping successful - ' . (tenant()->name ?? config('app.name')));
 });

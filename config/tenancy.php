@@ -19,8 +19,10 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-        config('app.url'),
+        // config('app.url'),
     ],
+
+    'base_domain' => env('TENANCY_BASE_DOMAIN', 'atomsuit.test'),
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.

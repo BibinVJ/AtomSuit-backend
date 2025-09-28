@@ -20,6 +20,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -41,8 +42,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return ApiResponse::success('API ping successful - ' . (tenant()->name ?? 'your tenant'));
+    return ApiResponse::success('API ping successful - ' . (tenant()->name ?? config('app.name')));
 });
+
 
 Route::post('enquiry', [EnquiryController::class, 'store']);
 
@@ -58,6 +60,21 @@ Route::prefix('auth')->group(function () {
     Route::post('send-reset-otp', [PasswordResetController::class, 'sendPasswordResetOtp']);
     Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp']);
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
+});
+
+/*
+|--------------------------------------------------------------------------
+| Debug Routes
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth:tenant'])->get('/debug-tenant-auth', function () {
+    return ApiResponse::success('Tenant Auth Debug', [
+        'tenant' => tenant() ? tenant()->id : null,
+        'auth_guard' => config('auth.defaults.guard'),
+        'auth_user' => Auth::user() ? Auth::user()->toArray() : null,
+        'auth_user_type' => Auth::user() ? get_class(Auth::user()) : null,
+        'db_connection' => config('database.default'),
+    ]);
 });
 
 /*

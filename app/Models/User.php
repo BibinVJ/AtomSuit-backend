@@ -23,6 +23,14 @@ class User extends Authenticatable implements OAuthenticatable
     protected $guard_name = 'tenant';
 
     /**
+     * Get the database connection for the model.
+     */
+    // public function getConnectionName()
+    // {
+    //     return 'tenant';
+    // }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>

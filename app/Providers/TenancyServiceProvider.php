@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Http\Middleware\InitializeTenancyBySubdomainHeader;
 use App\Jobs\CreateTenantAdmin;
 use App\Jobs\CreateTenantDomain;
 use App\Jobs\CreateTenantSubscription;
@@ -151,7 +152,9 @@ class TenancyServiceProvider extends ServiceProvider
             if (file_exists(base_path('routes/tenant/web.php'))) {
                 Route::namespace(static::$controllerNamespace)
                     ->middleware([
-                        InitializeTenancyByDomain::class,
+                    // InitializeTenancyByRequestData::class,
+                    // InitializeTenancyByDomain::class,
+                    InitializeTenancyBySubdomainHeader::class,
                         PreventAccessFromCentralDomains::class,
                     ])
                     ->group(base_path('routes/tenant/web.php'));
@@ -166,7 +169,9 @@ class TenancyServiceProvider extends ServiceProvider
                 Route::namespace(static::$controllerNamespace)
                     ->middleware([
                         'api',
-                        InitializeTenancyByDomain::class,
+                    // InitializeTenancyByRequestData::class,
+                    // InitializeTenancyByDomain::class,
+                    InitializeTenancyBySubdomainHeader::class,
                         PreventAccessFromCentralDomains::class,
                     ])
                     ->prefix('api')
@@ -186,6 +191,7 @@ class TenancyServiceProvider extends ServiceProvider
             Middleware\InitializeTenancyByDomainOrSubdomain::class,
             Middleware\InitializeTenancyByPath::class,
             Middleware\InitializeTenancyByRequestData::class,
+            InitializeTenancyBySubdomainHeader::class, // Add our custom middleware to high priority
         ];
 
         foreach (array_reverse($tenancyMiddleware) as $middleware) {
