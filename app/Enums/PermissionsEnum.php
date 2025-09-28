@@ -107,5 +107,19 @@ enum PermissionsEnum: string
         ];
     }
 
+    public static function tenantPermissions(): array
+    {
+        $excluded = [
+            self::VIEW_TENANT->value,
+            self::CREATE_TENANT->value,
+            self::UPDATE_TENANT->value,
+            self::DELETE_TENANT->value,
+        ];
 
+        return collect(self::cases())
+            ->map(fn($case) => $case->value)
+            ->reject(fn($permission) => in_array($permission, $excluded, true))
+            ->values()
+            ->toArray();
+    }
 }

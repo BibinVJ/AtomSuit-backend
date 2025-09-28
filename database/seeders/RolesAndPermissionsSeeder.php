@@ -16,7 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
         // Clear cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $guard = config('auth.guard_names.tenant');
+        $guard = config('auth.defaults.guard', 'api');
 
         /**
          * Create all permissions
@@ -24,9 +24,9 @@ class RolesAndPermissionsSeeder extends Seeder
          * Permissions are gathered from the permission enum,
          * to add/create a new permission add it to the enum list.
          */
-        foreach (PermissionsEnum::cases() as $permissionEnum) {
+        foreach (PermissionsEnum::tenantPermissions() as $permissionEnum) {
             Permission::firstOrCreate([
-                'name' => $permissionEnum->value,
+                'name' => $permissionEnum,
                 'guard_name' => $guard,
             ]);
         }

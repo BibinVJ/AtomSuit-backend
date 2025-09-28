@@ -67,7 +67,7 @@ Route::prefix('auth')->group(function () {
 | Debug Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:tenant'])->get('/debug-tenant-auth', function () {
+Route::middleware(['auth:api'])->get('/debug-auth-tenant', function () {
     return ApiResponse::success('Tenant Auth Debug', [
         'tenant' => tenant() ? tenant()->id : null,
         'auth_guard' => config('auth.defaults.guard'),
@@ -82,7 +82,7 @@ Route::middleware(['auth:tenant'])->get('/debug-tenant-auth', function () {
 | Authenticated Tenant Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:tenant'])->group(function () {
+Route::middleware(['auth:api', 'validate.token.context'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('logout-all-devices', [AuthController::class, 'logoutFromAllDevices']);
 

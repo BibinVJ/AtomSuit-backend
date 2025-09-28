@@ -14,9 +14,8 @@ class CentralUser extends Authenticatable
 {
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
-    // protected $connection = 'central';
     protected $table = 'users';
-    protected $guard_name = 'central';
+    protected $guard_name = 'api';
 
     /**
      * The attributes that are mass assignable.
@@ -62,5 +61,15 @@ class CentralUser extends Authenticatable
     public function logindetails(): HasMany
     {
         return $this->hasMany(UserLoginDetail::class);
+    }
+
+    /**
+     * Get the name of the provider for the model.
+     *
+     * @return string
+     */
+    public function getProviderName(): string
+    {
+        return 'dynamic_users';
     }
 }

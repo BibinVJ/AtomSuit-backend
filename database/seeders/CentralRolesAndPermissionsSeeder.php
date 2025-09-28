@@ -16,7 +16,7 @@ class CentralRolesAndPermissionsSeeder extends Seeder
         // Clear cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        $guard = config('auth.guard_names.central');
+        $guard = config('auth.defaults.guard', 'api');
 
         /**
          * Create all permissions

@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'log.webhook' => \App\Http\Middleware\LogWebhookRequests::class,
+            'validate.token.context' => \App\Http\Middleware\ValidateTokenContext::class,
+            'central.only' => \App\Http\Middleware\CentralOnly::class,
         ]);
 
         // Force all API responses to be JSON

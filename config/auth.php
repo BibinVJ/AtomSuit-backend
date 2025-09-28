@@ -14,8 +14,8 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'central'),
-        'passwords' => env('AUTH_PASSWORD_BROKER', 'central_users'),
+        'guard' => env('AUTH_GUARD', 'api'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'dynamic_users'),
     ],
 
     /*
@@ -36,22 +36,27 @@ return [
     */
 
     'guards' => [
-        'central' => [
+        'api' => [
             'driver' => 'passport',
-            'provider' => 'central_users',
+            'provider' => 'dynamic_users',
         ],
 
-        'tenant' => [
-            'driver' => 'passport',
-            'provider' => 'users',
-        ],
+        // 'central' => [
+        //     'driver' => 'passport',
+        //     'provider' => 'central_users',
+        // ],
+
+        // 'tenant' => [
+        //     'driver' => 'passport',
+        //     'provider' => 'users',
+        // ],
     ],
 
 
-    'guard_names' => [
-        'central' => 'central',
-        'tenant' => 'tenant',
-    ],
+    // 'guard_names' => [
+    //     'central' => 'central',
+    //     'tenant' => 'tenant',
+    // ],
 
     /*
     |--------------------------------------------------------------------------
@@ -71,15 +76,20 @@ return [
     */
 
     'providers' => [
-        'users' => [
-            'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+        'dynamic_users' => [
+            'driver' => 'dynamic',
+            'model' => App\Models\User::class, // Default model, will be overridden by provider
         ],
 
-        'central_users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\CentralUser::class,
-        ],
+        // 'users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => env('AUTH_MODEL', App\Models\User::class),
+        // ],
+
+        // 'central_users' => [
+        //     'driver' => 'eloquent',
+        //     'model' => App\Models\CentralUser::class,
+        // ],
     ],
 
     /*

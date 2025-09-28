@@ -9,29 +9,29 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Central Domain API Routes
+| Universal API Routes
 |--------------------------------------------------------------------------
 |
-| These routes are for the central application and tenant management.
-| They are only accessible from central domains specified in config.
+| These routes work for both central and tenant contexts automatically.
+| The tenancy middleware runs globally, and the dynamic auth provider
+| handles switching between central and tenant user models.
 |
 */
 
-
 /*
 |--------------------------------------------------------------------------
-| Public Central Routes
+| Public Routes
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
-    return ApiResponse::success('API ping successful - ' . config('app.name'));
+    $context = tenant() ? 'Tenant: ' . tenant()->name : 'Central';
+    return ApiResponse::success('API ping successful - ' . config('app.name') . ' (' . $context . ')');
 });
-
 
 /*
 |--------------------------------------------------------------------------
-| Central Authentication Routes
+| Authentication Routes
 |--------------------------------------------------------------------------
 */
 Route::post('login', [AuthController::class, 'login']);
@@ -42,8 +42,9 @@ Route::post('register', [AuthController::class, 'register']);
 | Debug Routes
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:central'])->get('/debug-central-auth', function () {
-    return ApiResponse::success('Tenant Auth Debug', [
+Route::middleware(['auth:api', 'validate.token.context'])->get('/debug-auth', function () {
+    return ApiResponse::success('Auth Debug', [
+        'context' => tenant() ? 'tenant' : 'central',
         'tenant' => tenant() ? tenant()->id : null,
         'auth_guard' => config('auth.defaults.guard'),
         'auth_user' => Auth::user() ? Auth::user()->toArray() : null,
@@ -54,23 +55,22 @@ Route::middleware(['auth:central'])->get('/debug-central-auth', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Central Protected Routes
+| Protected Routes (Universal)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth:central'])->group(function () {
+Route::middleware(['auth:api', 'validate.token.context'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
-    Route::get('central-profile', [UserProfileController::class, 'show']);
+    // Universal profile route - works for both central and tenant
+    Route::get('profile', [UserProfileController::class, 'show']);
+    Route::post('profile', [UserProfileController::class, 'update']);
 
-    Route::prefix('profile')->group(function () {
-        Route::get('/', [UserProfileController::class, 'show']);
-        Route::post('/', [UserProfileController::class, 'update']);
-    });
-
-    // Tenant Management
+    // Central-only routes (will only work when no X-Tenant header is present)
+    // Route::middleware('central.only')->group(function () {
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
     Route::apiResource('tenant', TenantController::class);
+    // });
 });
 
 /*
