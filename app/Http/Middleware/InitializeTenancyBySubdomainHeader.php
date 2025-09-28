@@ -20,10 +20,10 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
     public static $onFail;
 
     /** @var Tenancy */
-    protected $tenancy;   // 🚀 removed type hints
+    protected $tenancy;
 
     /** @var DomainTenantResolver */
-    protected $resolver;  // 🚀 removed type hints
+    protected $resolver;
 
     public function __construct(Tenancy $tenancy, DomainTenantResolver $resolver)
     {
@@ -55,7 +55,7 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
         try {
             return $this->initializeTenancy($request, $next, $fullDomain);
         } catch (TenantCouldNotBeIdentifiedException $e) {
-            // 🔹 Case 3: Wrong tenant value
+            // Case 3: Wrong tenant value
             $onFail = static::$onFail ?? function ($e) {
                 throw $e;
             };

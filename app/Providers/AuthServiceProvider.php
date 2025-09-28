@@ -36,7 +36,7 @@ class AuthServiceProvider extends ServiceProvider
             return new DynamicUserProvider($app['hash'], User::class);
         });
 
-        // Use context-aware token model
+        // // Use context-aware token model
         Passport::useTokenModel(ContextAwareToken::class);
 
         // Token lifetime configuration

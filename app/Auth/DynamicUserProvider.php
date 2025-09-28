@@ -38,20 +38,9 @@ class DynamicUserProvider extends EloquentUserProvider
         if ($tokenContext) {
             // Use the token's original context to determine the model
             $model = $this->createModelFromTokenContext($tokenContext);
-            \Log::info('Using token context for user retrieval', [
-                'identifier' => $identifier,
-                'token_context' => $tokenContext,
-                'model_class' => get_class($model),
-                'current_tenant' => tenant() ? tenant()->id : 'central'
-            ]);
         } else {
             // Fallback to current context (for regular authentication)
             $model = $this->createModel();
-            \Log::info('Using current context for user retrieval', [
-                'identifier' => $identifier,
-                'model_class' => get_class($model),
-                'current_tenant' => tenant() ? tenant()->id : 'central'
-            ]);
         }
         
         $user = $this->newModelQuery($model)
@@ -62,32 +51,17 @@ class DynamicUserProvider extends EloquentUserProvider
         if ($user && $tokenContext) {
             $expectedModelClass = $tokenContext === 'central' ? CentralUser::class : User::class;
             if (!is_a($user, $expectedModelClass)) {
-                \Log::warning('User model mismatch - potential security issue', [
-                    'identifier' => $identifier,
-                    'token_context' => $tokenContext,
-                    'expected_class' => $expectedModelClass,
-                    'actual_class' => get_class($user)
-                ]);
                 return null; // Block authentication
             }
             
             // Additional check: validate the user actually belongs to the right context
             if ($tokenContext !== 'central' && !str_starts_with($tokenContext, 'tenant:')) {
-                \Log::warning('Invalid token context detected', [
-                    'token_context' => $tokenContext,
-                    'user_id' => $identifier
-                ]);
                 return null;
             }
             
             // Extra security: If current context doesn't match token context, block access
             $currentContext = tenant() ? 'tenant:' . tenant()->id : 'central';
             if ($currentContext !== $tokenContext) {
-                \Log::warning('Context mismatch in provider - blocking authentication', [
-                    'current_context' => $currentContext,
-                    'token_context' => $tokenContext,
-                    'user_id' => $identifier
-                ]);
                 return null; // Block authentication at provider level
             }
         }
@@ -191,8 +165,8 @@ class DynamicUserProvider extends EloquentUserProvider
             }
 
             return $this->extractContextFromTokenName($token->name);
-        } catch (\Exception $e) {
-            \Log::warning('Error getting token context in provider', ['error' => $e->getMessage()]);
+        } catch (\Exception $e) {        
+                
             return null;
         }
     }
