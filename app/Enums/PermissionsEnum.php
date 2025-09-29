@@ -8,6 +8,11 @@ enum PermissionsEnum: string
     case VIEW_DASHBOARD = 'view-dashboard';
     case MANAGE_NOTIFICATIONS = 'manage-notifications';
 
+    // Plan Management
+    case CREATE_PLAN = 'create-plan';
+    case UPDATE_PLAN = 'update-plan';
+    case DELETE_PLAN = 'delete-plan';
+
     // Tenant Management
     case VIEW_TENANT = 'view-tenant';
     case CREATE_TENANT = 'create-tenant';
@@ -86,13 +91,18 @@ enum PermissionsEnum: string
             self::VIEW_DASHBOARD->value,
             self::MANAGE_NOTIFICATIONS->value,
 
-            // Tenant Management
+            // Plan
+            self::CREATE_PLAN->value,
+            self::UPDATE_PLAN->value,
+            self::DELETE_PLAN->value,
+
+            // Tenant
             self::VIEW_TENANT->value,
             self::CREATE_TENANT->value,
             self::UPDATE_TENANT->value,
             self::DELETE_TENANT->value,
 
-            // Role & Permission Management
+            // Role & Permission
             self::VIEW_ROLE->value,
             self::CREATE_ROLE->value,
             self::UPDATE_ROLE->value,
@@ -110,6 +120,10 @@ enum PermissionsEnum: string
     public static function tenantPermissions(): array
     {
         $excluded = [
+            self::CREATE_PLAN->value,
+            self::UPDATE_PLAN->value,
+            self::DELETE_PLAN->value,
+
             self::VIEW_TENANT->value,
             self::CREATE_TENANT->value,
             self::UPDATE_TENANT->value,

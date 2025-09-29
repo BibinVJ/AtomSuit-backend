@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 
 /**
@@ -26,6 +25,8 @@ class PlanResource extends BaseResource
             'is_trial_plan' => $this->is_trial_plan,
             'trial_duration_in_days' => $this->trial_duration_in_days,
             'is_expired_user_plan' => $this->is_expired_user_plan,
+            'is_active' => $this->is_active,
+            'subscribed_tenants' => TenantResource::collection($this->whenLoaded('subscribedTenants')),
         ];
     }
 }

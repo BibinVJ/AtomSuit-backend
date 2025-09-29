@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\PlanIntervalEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Plan extends Model
 {
@@ -16,6 +17,7 @@ class Plan extends Model
         'is_trial_plan',
         'trial_duration_in_days',
         'is_expired_user_plan',
+        'is_active',
     ];
 
     protected $casts = [
@@ -23,15 +25,23 @@ class Plan extends Model
         'interval' => PlanIntervalEnum::class,
         'is_trial_plan' => 'boolean',
         'is_expired_user_plan' => 'boolean',
+        'is_active' => 'boolean',
     ];
-
-    public function tenant(): HasMany
-    {
-        return $this->hasMany(Tenant::class);
-    }
 
     public function subscriptions(): HasMany
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function subscribedTenants(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Tenant::class,
+            Subscription::class,
+            'plan_id',
+            'id',
+            'id',
+            'tenant_id'
+        );
     }
 }

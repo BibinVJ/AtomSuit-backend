@@ -2,6 +2,7 @@
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +23,12 @@ use Illuminate\Support\Facades\Route;
 | Public Routes
 |--------------------------------------------------------------------------
 */
-
 Route::get('/', function () {
     $context = tenant() ? 'Tenant: ' . tenant()->name : 'Central';
     return ApiResponse::success('API ping successful - ' . config('app.name') . ' (' . $context . ')');
 });
+
+Route::get('plan', [PlanController::class, 'index']);
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +50,13 @@ Route::middleware(['auth:api'])->group(function () {
     // Universal profile route - works for both central and tenant
     Route::get('profile', [UserProfileController::class, 'show']);
     Route::post('profile', [UserProfileController::class, 'update']);
+
+    Route::prefix('plan')->group(function () {
+        Route::get('/{plan}', [PlanController::class, 'show']);
+        Route::post('/', [PlanController::class, 'store']);
+        Route::post('/{plan}', [PlanController::class, 'update']);
+        Route::delete('/{plan}', [PlanController::class, 'destroy']);
+    });
 
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
