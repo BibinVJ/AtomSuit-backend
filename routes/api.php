@@ -3,6 +3,7 @@
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UserProfileController;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
     Route::apiResource('tenant', TenantController::class);
+
+    Route::apiResource('subscription', SubscriptionController::class);
 });
 
 /*
