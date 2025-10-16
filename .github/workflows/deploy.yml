@@ -1,4 +1,4 @@
-name: Deploy Laravel to EC2
+name: Deploy Backend to EC2
 
 on:
   push:
@@ -22,9 +22,9 @@ jobs:
             echo "Deploying branch $BRANCH"
             
             if [ "$BRANCH" = "main" ]; then
-              APP_DIR="/var/www/inventory/production/backend"
+              APP_DIR="/var/www/atomsuit/production/backend"
             else
-              APP_DIR="/var/www/inventory/staging/backend"
+              APP_DIR="/var/www/atomsuit/staging/backend"
             fi
 
             echo "Deploying branch $BRANCH to $APP_DIR"

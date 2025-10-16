@@ -1,5 +1,5 @@
-# Inventory Manager API Backend
-This repository contains the API-only backend for the **Inventory Manager** platform. It is built using the Laravel framework (v12).
+# Atom Suit API Backend
+This repository contains the API-only backend for the **Atom Suit** platform. It is built using the Laravel framework (v12).
 
 
 ## System Requirements
@@ -140,4 +140,4 @@ Feel free to fork, submit PRs, and raise issues. For major changes, please open 
 
 ---
 
-## ✨ Made with ❤️ by the Inventory Manager Team ✨
+## ✨ Made with ❤️ by the Atom Suit Team ✨

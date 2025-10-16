@@ -21,18 +21,18 @@ class UsersSeeder extends Seeder
                 'name' => 'Inventory Manager User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
-                'status' => UserStatus::ACTIVE,
+                'status' => UserStatus::ACTIVE->value,
             ]
         );
         $inventoryManager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
 
         $salesPerson = User::firstOrCreate(
-            ['email' => 'salesperson@example.com'],
+            ['phone' => '1234567890'],
             [
                 'name' => 'Sales Person User',
                 'password' => Hash::make('Example@123'),
-                'email_verified_at' => now(),
-                'status' => UserStatus::ACTIVE,
+                'phone_verified_at' => now(),
+                'status' => UserStatus::ACTIVE->value,
             ]
         );
         $salesPerson->assignRole(RolesEnum::SALES_PERSON->value);

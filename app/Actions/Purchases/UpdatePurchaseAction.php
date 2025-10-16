@@ -23,12 +23,7 @@ class UpdatePurchaseAction
             $this->stockMovementService->deleteStockMovements($purchase);
 
             // Update purchase fields
-            $this->purchaseRepo->update($purchase, [
-                'vendor_id' => $data['vendor_id'],
-                'invoice_number' => $data['invoice_number'],
-                'purchase_date' => $data['purchase_date'],
-                'payment_status' => $data['payment_status'] ?? $purchase->payment_status,
-            ]);
+            $this->purchaseRepo->update($purchase, $data);
 
             // add batch
             $preparedItems = collect($data['items'])->map(function ($item) {

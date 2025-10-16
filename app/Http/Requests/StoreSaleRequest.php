@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
@@ -30,8 +30,9 @@ class StoreSaleRequest extends FormRequest
             'invoice_number' => 'required|unique:sales,invoice_number,'.$this->route('sale')?->id,
             'sale_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
-            'payment_status' => ['nullable', new Enum(PaymentStatus::class)],
+            'payment_status' => ['nullable', new Enum(PaymentStatusEnum::class)],
             'payment_method' => ['nullable', new Enum(PaymentMethod::class)],
+            'note' => 'nullable',
 
             'items' => 'required|array|min:1',
             'items.*.id' => 'nullable|exists:sale_items,id',

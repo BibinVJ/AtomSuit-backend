@@ -26,7 +26,10 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Force all API responses to be JSON
-        $middleware->append(\App\Http\Middleware\ForceJsonResponse::class);
+        $middleware->append([
+            \App\Http\Middleware\ForceJsonResponse::class,
+            \App\Http\Middleware\InitializeTenancyBySubdomainHeader::class,
+        ]);
     })
 
     ->withExceptions(function (Exceptions $exceptions) {

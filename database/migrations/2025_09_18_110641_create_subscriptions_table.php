@@ -1,0 +1,42 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('subscriptions', function (Blueprint $table) {
+            $table->id();
+            $table->string('tenant_id');
+            $table->foreignId('plan_id')->constrained()->cascadeOnDelete();
+
+            $table->timestamp('start_date')->nullable();
+            $table->timestamp('end_date')->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
+            $table->timestamp('cancelled_at')->nullable();
+
+            $table->boolean('is_active')->default(true);
+
+            $table->string('payment_gateway')->nullable(); // stripe, razorpay, paypal
+            $table->string('gateway_subscription_id')->nullable();
+            $table->string('renewal_type')->default('auto'); // auto/manual
+            
+            $table->timestamps();
+            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('subscriptions');
+    }
+};

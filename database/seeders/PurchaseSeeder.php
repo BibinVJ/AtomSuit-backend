@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
+use App\Enums\RolesEnum;
 use App\Models\Batch;
 use App\Models\Item;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use App\Models\StockMovement;
+use App\Models\User;
 use App\Models\Vendor;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -16,6 +18,13 @@ class PurchaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $user = User::role(RolesEnum::ADMIN->value)->first();
+        if (! $user) {
+            $this->command->info('No users found. Please seed users first.');
+
+            return;
+        }
+
         $vendor = Vendor::first();
         if (! $vendor) {
             $this->command->info('No vendors found. Please seed vendors first.');
@@ -34,9 +43,10 @@ class PurchaseSeeder extends Seeder
         $purchase1 = Purchase::updateOrCreate(
             ['invoice_number' => 'P-INV-000001'],
             [
+                'user_id' => $user->id,
                 'vendor_id' => $vendor->id,
                 'purchase_date' => Carbon::now()->subDays(10),
-                'payment_status' => PaymentStatus::PAID,
+                'payment_status' => PaymentStatusEnum::PAID,
             ]
         );
 
@@ -83,9 +93,10 @@ class PurchaseSeeder extends Seeder
         $purchase2 = Purchase::updateOrCreate(
             ['invoice_number' => 'P-INV-000002'],
             [
+                'user_id' => $user->id,
                 'vendor_id' => $vendor->id,
                 'purchase_date' => Carbon::now()->subDays(5),
-                'payment_status' => PaymentStatus::PENDING,
+                'payment_status' => PaymentStatusEnum::PENDING,
             ]
         );
 

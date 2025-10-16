@@ -1,5 +1,9 @@
 <?php
 
+use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Route;
 
-// Route::fallback(fn() => response()->json('Not Found!!!', 404));
+
+Route::get('/', function () {
+    return ApiResponse::success('Ping successful - ' . config('app.name'));
+});

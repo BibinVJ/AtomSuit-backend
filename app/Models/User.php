@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Enums\UserStatus;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -14,13 +13,22 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
+class User extends Authenticatable implements OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
+
+    /**
+     * Get the database connection for the model.
+     */
+    // public function getConnectionName()
+    // {
+    //     return 'tenant';
+    // }
 
     /**
      * The attributes that are mass assignable.
@@ -80,9 +88,6 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
         return $this->hasMany(DashboardLayout::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne<\App\Models\UserDetail>
-     */
     public function detail(): HasOne
     {
         return $this->hasOne(UserDetail::class);
@@ -96,5 +101,15 @@ class User extends Authenticatable implements MustVerifyEmail, OAuthenticatable
     public function socialLinks(): MorphMany
     {
         return $this->morphMany(SocialLink::class, 'linkable');
+    }
+
+    /**
+     * Get the name of the provider for the model.
+     *
+     * @return string
+     */
+    public function getProviderName(): string
+    {
+        return 'dynamic_users';
     }
 }

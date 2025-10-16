@@ -4,8 +4,6 @@ namespace App\Enums;
 
 enum RolesEnum: string
 {
-    // note: case NAME_IN_APP = 'name-in-database';
-
     case SUPER_ADMIN = 'super-admin';
     case ADMIN = 'admin';
     case INVENTORY_MANAGER = 'inventory-manager';
