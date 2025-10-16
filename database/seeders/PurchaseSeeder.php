@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\RolesEnum;
 use App\Models\Batch;
 use App\Models\Item;
@@ -46,7 +46,7 @@ class PurchaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'vendor_id' => $vendor->id,
                 'purchase_date' => Carbon::now()->subDays(10),
-                'payment_status' => PaymentStatus::PAID,
+                'payment_status' => PaymentStatusEnum::PAID,
             ]
         );
 
@@ -96,7 +96,7 @@ class PurchaseSeeder extends Seeder
                 'user_id' => $user->id,
                 'vendor_id' => $vendor->id,
                 'purchase_date' => Carbon::now()->subDays(5),
-                'payment_status' => PaymentStatus::PENDING,
+                'payment_status' => PaymentStatusEnum::PENDING,
             ]
         );
 

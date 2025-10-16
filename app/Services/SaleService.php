@@ -5,7 +5,7 @@ namespace App\Services;
 use App\Actions\Sales\CreateSaleAction;
 use App\Actions\Sales\UpdateSaleAction;
 use App\Actions\Sales\VoidSaleAction;
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use App\Models\Sale;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -54,7 +54,7 @@ class SaleService
             throw new ConflictHttpException("Sale can't be edited because it has been voided.");
         }
 
-        if ($sale->payment_status === PaymentStatus::PAID) {
+        if ($sale->payment_status === PaymentStatusEnum::PAID) {
             throw new ConflictHttpException("Sale can't be edited because it has been paid.");
         }
 
@@ -63,7 +63,7 @@ class SaleService
 
     public function void(Sale $sale): void
     {
-        // if ($sale->payment_status === PaymentStatus::PAID) {
+        // if ($sale->payment_status === PaymentStatusEnum::PAID) {
         //     throw new ConflictHttpException("Sale can't be voided because it has been paid.");
         // }
 

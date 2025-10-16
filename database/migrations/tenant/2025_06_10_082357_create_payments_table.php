@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -17,7 +17,7 @@ return new class extends Migration
             $table->morphs('payable');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('method')->nullable();
-            $table->string('status')->default(PaymentStatus::PENDING);
+            $table->string('status')->default(PaymentStatusEnum::PENDING->value);
             $table->double('amount')->default(0);
             $table->json('meta')->nullable();
             $table->timestamp('paid_at')->nullable();

@@ -1,7 +1,7 @@
 <?php
 
 use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatus;
+use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,9 +20,9 @@ return new class extends Migration
             $table->foreignId('customer_id')->nullable()->constrained()->nullOnDelete();
             $table->string('invoice_number');
             $table->date('sale_date');
-            $table->string('status')->default(TransactionStatus::DRAFT);
-            $table->string('payment_status')->default(PaymentStatus::PENDING);
-            $table->string('payment_method')->default(PaymentMethod::CASH);
+            $table->string('status')->default(TransactionStatus::DRAFT->value);
+            $table->string('payment_status')->default(PaymentStatusEnum::PENDING->value);
+            $table->string('payment_method')->default(PaymentMethod::CASH->value);
             $table->text('note')->nullable();
             $table->timestamps();
         });

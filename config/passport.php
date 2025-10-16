@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'guard' => 'api',
+    'guard' => env('AUTH_GUARD', 'api'),
 
     /*
     |--------------------------------------------------------------------------
@@ -26,9 +26,9 @@ return [
     |
     */
 
-    'private_key' => env('PASSPORT_PRIVATE_KEY'),
+    'private_key' => env('PASSPORT_PRIVATE_KEY', base_path('storage/oauth-private.key')),
 
-    'public_key' => env('PASSPORT_PUBLIC_KEY'),
+    'public_key' => env('PASSPORT_PUBLIC_KEY', base_path('storage/oauth-public.key')),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,6 +41,6 @@ return [
     |
     */
 
-    'connection' => env('PASSPORT_CONNECTION'),
+    'connection' => env('PASSPORT_CONNECTION', env('DB_CONNECTION')),
 
 ];

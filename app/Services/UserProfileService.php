@@ -2,20 +2,25 @@
 
 namespace App\Services;
 
+use App\Models\CentralUser;
 use App\Models\User;
 use App\Models\UserDetail;
 use App\Repositories\UserRepository;
 
-class UserProfileService
+class UserProfileService extends ContextAwareService
 {
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly FileUploadService $fileUploadService,
     ) {}
 
-    public function getProfile(User $user): User
+    public function getProfile(User|CentralUser $user): User|CentralUser
     {
-        return $user->load(['detail', 'addresses', 'socialLinks']);
+        if ($this->isCentralContext()) {
+            return $user;
+        } else {
+            return $user->load(['detail', 'addresses', 'socialLinks']);
+        }
     }
 
     public function updateProfile(User $user, array $data): User

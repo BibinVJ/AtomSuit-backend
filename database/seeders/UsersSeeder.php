@@ -21,7 +21,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Inventory Manager User',
                 'password' => Hash::make('Example@123'),
                 'email_verified_at' => now(),
-                'status' => UserStatus::ACTIVE,
+                'status' => UserStatus::ACTIVE->value,
             ]
         );
         $inventoryManager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
@@ -32,7 +32,7 @@ class UsersSeeder extends Seeder
                 'name' => 'Sales Person User',
                 'password' => Hash::make('Example@123'),
                 'phone_verified_at' => now(),
-                'status' => UserStatus::ACTIVE,
+                'status' => UserStatus::ACTIVE->value,
             ]
         );
         $salesPerson->assignRole(RolesEnum::SALES_PERSON->value);
