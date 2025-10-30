@@ -28,8 +28,13 @@ class CreateTenantsTable extends Migration
             $table->timestamp('trial_ends_at')->nullable();
             $table->timestamp('grace_period_ends_at')->nullable();
 
-            $table->timestamps();
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four', 4)->nullable();
+
             $table->json('data')->nullable();
+
+            $table->timestamps();
         });
     }
 

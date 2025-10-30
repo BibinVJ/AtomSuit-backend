@@ -47,4 +47,12 @@ return [
         'redirect' => env('LINKEDIN_REDIRECT_URI'),
     ],
 
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+        'public' => env('STRIPE_PUBLIC'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'success_url' => env('STRIPE_SUCCESS_URL', 'http://localhost:3000/dashboard'),
+        'cancel_url' => env('STRIPE_CANCEL_URL', 'http://localhost:3000/signup'),
+    ],
+
 ];

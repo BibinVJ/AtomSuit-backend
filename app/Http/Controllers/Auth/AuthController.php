@@ -19,9 +19,9 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        $dto = $this->authService->register($request->validated());
+        $registeredUser = $this->authService->register($request->validated());
 
-        return ApiResponse::success('User registered successfully.', AuthResponseFormatter::format($dto));
+        return ApiResponse::success('User registered successfully.', $registeredUser);
     }
 
     /**

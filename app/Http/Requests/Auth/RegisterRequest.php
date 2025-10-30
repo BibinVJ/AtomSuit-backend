@@ -25,9 +25,11 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:tenants,email',
             'password' => 'required|string|min:6',
-            'role' => ['required', new Enum(RolesEnum::class)],
+            'domain_name' => 'required|unique:domains,domain',
+            'load_sample_data' => 'required|boolean',
+            'selected_plan_id' => 'required|exists:plans,id',
         ];
     }
 }

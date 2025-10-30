@@ -39,6 +39,8 @@ Route::get('plan', [PlanController::class, 'index']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
+// Billing
+Route::post('billing/checkout', [\App\Http\Controllers\SubscriptionController::class, 'createCheckout']);
 
 /*
 |--------------------------------------------------------------------------
@@ -73,4 +75,5 @@ Route::middleware(['auth:api'])->group(function () {
 */
 Route::prefix('webhook')->middleware('log.webhook')->group(function () {
     Route::get('/', fn() => response()->json(['message' => 'Central webhook ping successful!']));
+    Route::post('stripe', [\Laravel\Cashier\Http\Controllers\WebhookController::class, 'handleWebhook']);
 });

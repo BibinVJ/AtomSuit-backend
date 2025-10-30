@@ -23,14 +23,8 @@ class CreateTenantSubscription implements ShouldQueue
 
     public function handle(): void
     {
-        if (isset($this->tenant->plan_id)) {
-            $subscription = Subscription::create([
-                'tenant_id' => $this->tenant->id,
-                'plan_id' => $this->tenant->plan_id,
-                'start_date' => now(),
-                'end_date' => null,
-                'is_active' => true,
-            ]);
-        }
+        // Cashier will create subscriptions upon successful Stripe checkout.
+        // Trials are managed via tenants.trial_ends_at.
+        return;
     }
 }

@@ -18,6 +18,8 @@ class Plan extends Model
         'trial_duration_in_days',
         'is_expired_user_plan',
         'is_active',
+        'stripe_product_id',
+        'stripe_price_id',
     ];
 
     protected $casts = [

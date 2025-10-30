@@ -5,13 +5,17 @@ namespace App\Services\Auth;
 use App\DataTransferObjects\AuthenticatedUserDTO;
 use App\Enums\TenantStatusEnum;
 use App\Enums\UserStatus;
+use App\Helpers\AuthResponseFormatter;
 use App\Jobs\SendWelcomeUserMailJob;
 use App\Models\User;
 use App\Models\CentralUser;
+use App\Models\Plan;
 use App\Models\Tenant;
 use App\Repositories\UserRepository;
 use App\Services\ContextAwareService;
+use App\Services\TenantService;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Cashier\Cashier;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class AuthService extends ContextAwareService
@@ -25,31 +29,101 @@ class AuthService extends ContextAwareService
     /**
      * Register a new tenant
      * 
-     * Registration is allowed only in the central domain.
-     * And user is not created in the central users table, a tenant is created.
+     * Central-only: Provision tenant, admin, token, and optionally prepare checkout.
      */
-    public function register(array $data): AuthenticatedUserDTO
+    public function register(array $data): array
     {
         if (tenant()) {
             throw new UnauthorizedHttpException('', 'Registration is only allowed in the central domain');
         }
 
-        Tenant::create([
+        // Resolve trial plan for initial access
+        $trialPlan = Plan::where('is_trial_plan', true)->where('is_active', true)->first();
+        if (! $trialPlan) {
+            throw new UnauthorizedHttpException('', 'Trial plan is not configured');
+        }
+
+        // Create tenant via service to set trial and validate domain
+        $tenant = app(TenantService::class)->create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'status' => TenantStatusEnum::ACTIVE->value,
-            'trial_ends_at' => null,
-            'grace_period_ends_at' => null,
-            'email_verified_at' => now(),
-            'password' => Hash::make('Example@123'),
-            'load_sample_data' => true,
-            'domain_name' => 'company',
-            'plan_id' => $plan->id,
+            'password' => $data['password'],
+            'plan_id' => $trialPlan->id,
+            'domain_name' => $data['domain_name'],
+            'load_sample_data' => (bool)($data['load_sample_data'] ?? false),
         ]);
 
-        // $token = $this->tokenService->create($user);
+        // Create admin token inside tenant context
+        $authPayload = null;
+        $tenant->run(function () use ($tenant, &$authPayload) {
+            /** @var User|null $found */
+            $found = User::where('email', $tenant->email)->first();
+            if (! $found) {
+                throw new UnauthorizedHttpException('', 'Admin user not created');
+            }
+            $token = $this->tokenService->create($found);
 
-        // return new AuthenticatedUserDTO($user, $token);
+            $dto = new AuthenticatedUserDTO($found, $token);
+            $authPayload = AuthResponseFormatter::format($dto);
+            // Resolve resource and all nested resources to plain array within tenant context
+            if (isset($authPayload['user']) && $authPayload['user'] instanceof \App\Http\Resources\UserResource) {
+                $authPayload['user'] = json_decode(
+                    $authPayload['user']->toResponse(app('request'))->getContent(),
+                    true
+                );
+            }
+        });
+
+        // If a paid plan is selected, prepare checkout
+        $checkoutUrl = null;
+        if (!empty($data['selected_plan_id'])) {
+            $selectedPlan = Plan::findOrFail((int)$data['selected_plan_id']);
+
+            $client = Cashier::stripe();
+            if (empty($selectedPlan->stripe_price_id)) {
+                throw new UnauthorizedHttpException('', 'Selected plan is not linked to Stripe');
+            }
+
+            if (! $tenant->stripe_id) {
+                $customer = $client->customers->create([
+                    'email' => $tenant->email,
+                    'name' => $tenant->name,
+                    'metadata' => ['tenant_id' => $tenant->id],
+                ]);
+
+                $tenant->stripe_id = $customer->id;
+                $tenant->save();
+            }
+
+            $session = $client->checkout->sessions->create([
+                'mode' => 'subscription',
+                'customer' => $tenant->stripe_id,
+                'line_items' => [[
+                    'price' => $selectedPlan->stripe_price_id,
+                    'quantity' => 1,
+                ]],
+                'success_url' => config('services.stripe.success_url') . '?session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => config('services.stripe.cancel_url'),
+                'client_reference_id' => $tenant->id,
+            ]);
+
+            $checkoutUrl = $session->url;
+        }
+
+        // Domain URL
+        $domain = $tenant->domains()->first();
+        $subdomainUrl = $domain ? ('http://' . $domain->domain) : null; // protocol configurable
+
+        return [
+            'auth' => $authPayload,
+            'tenant' => [
+                'id' => $tenant->id,
+                'name' => $tenant->name,
+                'email' => $tenant->email,
+                'subdomain_url' => $subdomainUrl,
+            ],
+            'checkout_url' => $checkoutUrl,
+        ];
     }
 
     public function login(string $identifier, string $password): AuthenticatedUserDTO
@@ -71,11 +145,9 @@ class AuthService extends ContextAwareService
                 throw new UnauthorizedHttpException('', 'Invalid credentials');
             }
 
-            // Central users don't require email verification check for now
-            // You can add it if needed: 
-            // if (is_null($user->email_verified_at)) {
-            //     throw new UnauthorizedHttpException('', 'Email not verified');
-            // }
+            if (is_null($user->email_verified_at)) {
+                throw new UnauthorizedHttpException('', 'Email not verified');
+            }
 
         } else {
             // Tenant user login - supports both email and phone

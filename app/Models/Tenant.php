@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\TenantStatusEnum;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Laravel\Cashier\Billable;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
@@ -13,7 +14,7 @@ use Stancl\Tenancy\Database\Models\Domain;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains;
+    use HasDatabase, HasDomains, Billable;
 
     protected $fillable = [
         'id',
@@ -23,6 +24,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'status',
         'trial_ends_at',
         'grace_period_ends_at',
+        'stripe_id',
+        'pm_type',
+        'pm_last_four',
         'data',
 
         // for creating purpose alone
@@ -53,6 +57,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'status',
             'trial_ends_at',
             'grace_period_ends_at',
+            'stripe_id',
+            'pm_type',
+            'pm_last_four',
             'data',
         ];
     }
@@ -64,18 +71,22 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     public function subscriptions(): HasMany
     {
-        return $this->hasMany(Subscription::class);
+        // Cashier's Subscription model, FK user_id references tenants.id
+        return $this->hasMany(\Laravel\Cashier\Subscription::class, 'user_id', 'id');
     }
 
-    public function currentSubscription():HasOne
+    public function currentSubscription(): HasOne
     {
-        return $this->hasOne(Subscription::class)->where('is_active', true)->latestOfMany();
+        return $this->hasOne(\Laravel\Cashier\Subscription::class, 'user_id', 'id')
+            ->whereIn('stripe_status', ['active', 'trialing'])
+            ->where('name', 'default')
+            ->latestOfMany();
     }
 
-    // Shortcut to current plan via current subscription
-    public function currentPlan(): HasOne
+    public function currentPlanPriceId(): ?string
     {
-        return $this->currentSubscription()?->plan();
+        $sub = $this->currentSubscription()->first();
+        return $sub?->items()->first()?->stripe_price;
     }
 
     /**
