@@ -39,13 +39,9 @@ use Illuminate\Support\Facades\Route;
 | Public Tenant Routes
 |--------------------------------------------------------------------------
 */
-
 Route::get('/', function () {
     return ApiResponse::success('API ping successful - ' . (tenant()->name ?? config('app.name')));
 });
-
-
-Route::post('enquiry', [EnquiryController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------

@@ -6,6 +6,7 @@ use App\DataTransferObjects\AuthenticatedUserDTO;
 use App\Enums\TenantStatusEnum;
 use App\Enums\UserStatus;
 use App\Helpers\AuthResponseFormatter;
+use App\Http\Resources\UserResource;
 use App\Jobs\SendWelcomeUserMailJob;
 use App\Models\User;
 use App\Models\CentralUser;
@@ -66,13 +67,17 @@ class AuthService extends ContextAwareService
             $dto = new AuthenticatedUserDTO($found, $token);
             $authPayload = AuthResponseFormatter::format($dto);
             // Resolve resource and all nested resources to plain array within tenant context
-            if (isset($authPayload['user']) && $authPayload['user'] instanceof \App\Http\Resources\UserResource) {
+            if (isset($authPayload['user']) && $authPayload['user'] instanceof UserResource) {
                 $authPayload['user'] = json_decode(
                     $authPayload['user']->toResponse(app('request'))->getContent(),
                     true
                 );
             }
         });
+
+        // Domain URL
+        $domain = $tenant->domains()->first();
+        $subdomainUrl = $domain ? ('http://' . $domain->domain) : null; // protocol configurable
 
         // If a paid plan is selected, prepare checkout
         $checkoutUrl = null;
@@ -102,17 +107,13 @@ class AuthService extends ContextAwareService
                     'price' => $selectedPlan->stripe_price_id,
                     'quantity' => 1,
                 ]],
-                'success_url' => config('services.stripe.success_url') . '?session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => config('services.stripe.cancel_url'),
+                'success_url' => $subdomainUrl . '/dashboard?payment_status=success&session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => $subdomainUrl . '/dashboard?payment_status=fail',
                 'client_reference_id' => $tenant->id,
             ]);
 
             $checkoutUrl = $session->url;
         }
-
-        // Domain URL
-        $domain = $tenant->domains()->first();
-        $subdomainUrl = $domain ? ('http://' . $domain->domain) : null; // protocol configurable
 
         return [
             'auth' => $authPayload,

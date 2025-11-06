@@ -2,6 +2,7 @@
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
@@ -30,27 +31,24 @@ Route::get('/', function () {
 });
 
 Route::get('plan', [PlanController::class, 'index']);
+Route::post('enquiry', [EnquiryController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------
-| Authentication Routes
+| Auth Routes
 |--------------------------------------------------------------------------
 */
 Route::post('login', [AuthController::class, 'login']);
 Route::post('register', [AuthController::class, 'register']);
 
-// Billing
-Route::post('billing/checkout', [\App\Http\Controllers\SubscriptionController::class, 'createCheckout']);
-
 /*
 |--------------------------------------------------------------------------
-| Protected Routes (Universal)
+| Authenticated Routes (Universal)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
 
-    // Universal profile route - works for both central and tenant
     Route::get('profile', [UserProfileController::class, 'show']);
     Route::post('profile', [UserProfileController::class, 'update']);
 
@@ -66,6 +64,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('tenant', TenantController::class);
 
     Route::apiResource('subscription', SubscriptionController::class);
+
+    // domains
+
+    /* User Management */
+    // Route::post('user/{user}/send-mail', [UserController::class, 'sendMail']);
+    // Route::apiResource('user', UserController::class);
+
+    /* Role Management */
+    // Route::apiResource('role', RoleController::class);
+    // Route::get('permissions', [PermissionController::class, 'index']);
 });
 
 /*

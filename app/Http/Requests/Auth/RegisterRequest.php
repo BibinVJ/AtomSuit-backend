@@ -29,7 +29,7 @@ class RegisterRequest extends FormRequest
             'password' => 'required|string|min:6',
             'domain_name' => 'required|unique:domains,domain',
             'load_sample_data' => 'required|boolean',
-            'selected_plan_id' => 'required|exists:plans,id',
+            'selected_plan_id' => 'nullable|exists:plans,id',
         ];
     }
 }
