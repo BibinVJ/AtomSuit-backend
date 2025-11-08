@@ -33,7 +33,7 @@ class TenantController extends Controller
         $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'subscriptions.plan']);
+        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'subscriptions']);
 
         if ($paginate) {
             $paginated = TenantResource::paginated($tenants);

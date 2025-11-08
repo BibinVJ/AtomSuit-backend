@@ -9,16 +9,12 @@ use App\Jobs\CreateTenantAdmin;
 use App\Jobs\CreateTenantDomain;
 use App\Jobs\CreateTenantSubscription;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
-use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -48,17 +44,7 @@ class TenancyServiceProvider extends ServiceProvider
             Events\TenantSaved::class => [],
             Events\UpdatingTenant::class => [],
             Events\TenantUpdated::class => [],
-            Events\DeletingTenant::class => [
-                // todo: you might want to clean up this:
-                // JobPipeline::make([
-                //     fn(Events\TenantDeleted $event) => $event->tenant->domains()->delete(),
-                //     fn(Events\TenantDeleted $event) => Storage::deleteDirectory(
-                //         config('tenancy.filesystem.suffix_base') . $event->tenant->id
-                //     ),
-                // ])->send(function (Events\TenantDeleted $event) {
-                //     return $event->tenant;
-                // })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
-            ],
+            Events\DeletingTenant::class => [],
             Events\TenantDeleted::class => [
                 JobPipeline::make([
                     Jobs\DeleteDatabase::class,
@@ -127,8 +113,6 @@ class TenancyServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bootEvents();
-        $this->mapWebRoutes();
-        $this->mapApiRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
     }
@@ -144,40 +128,6 @@ class TenancyServiceProvider extends ServiceProvider
                 Event::listen($event, $listener);
             }
         }
-    }
-
-    protected function mapWebRoutes()
-    {
-        $this->app->booted(function () {
-            if (file_exists(base_path('routes/tenant/web.php'))) {
-                Route::namespace(static::$controllerNamespace)
-                    ->middleware([
-                    // InitializeTenancyByRequestData::class,
-                    // InitializeTenancyByDomain::class,
-                    InitializeTenancyBySubdomainHeader::class,
-                        PreventAccessFromCentralDomains::class,
-                    ])
-                    ->group(base_path('routes/tenant/web.php'));
-            }
-        });
-    }
-
-    protected function mapApiRoutes()
-    {
-        $this->app->booted(function () {
-            if (file_exists(base_path('routes/tenant/api.php'))) {
-                Route::namespace(static::$controllerNamespace)
-                    ->middleware([
-                        'api',
-                    // InitializeTenancyByRequestData::class,
-                    // InitializeTenancyByDomain::class,
-                    InitializeTenancyBySubdomainHeader::class,
-                        PreventAccessFromCentralDomains::class,
-                    ])
-                    ->prefix('api')
-                    ->group(base_path('routes/tenant/api.php'));
-            }
-        });
     }
 
     protected function makeTenancyMiddlewareHighestPriority()
