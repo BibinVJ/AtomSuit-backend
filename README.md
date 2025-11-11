@@ -2,6 +2,14 @@
 This repository contains the API-only backend for the **Atom Suit** platform. It is built using the Laravel framework (v12).
 
 
+this is a erp system, and the backend in backend folder in laravel, frontend in frontend folder in nextjs, desktop in desktop folder in electron.
+
+it uses tenancy for laravel package and is a multi tenant based, subdomain and seperate db setup.
+
+registration and payment are captured using stripe webhook,
+before setting in local or in server set the stripw webhook correctly.
+
+
 ## System Requirements
 - PHP 8.2+
 - Composer

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TenantStatusEnum;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Cashier\Billable;
@@ -61,6 +62,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'pm_type',
             'pm_last_four',
             'data',
+            'plan_id',
         ];
     }
 
@@ -69,15 +71,22 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->hasOne(Domain::class);
     }
 
+    public function plan(): BelongsTo
+    {
+        // Direct plan relationship (used for trial/lifetime plans)
+        return $this->currentSubscription?->plan ?? $this->belongsTo(Plan::class);
+    }
+
     public function subscriptions(): HasMany
     {
-        // Cashier's Subscription model, FK user_id references tenants.id
-        return $this->hasMany(\Laravel\Cashier\Subscription::class, 'user_id', 'id');
+        // Use our extended Subscription model
+        return $this->hasMany(Subscription::class, 'user_id', 'id');
     }
 
     public function currentSubscription(): HasOne
     {
-        return $this->hasOne(\Laravel\Cashier\Subscription::class, 'user_id', 'id')
+        // Use our extended Subscription model which has the plan relationship
+        return $this->hasOne(Subscription::class, 'user_id', 'id')
             ->whereIn('stripe_status', ['active', 'trialing'])
             ->where('name', 'default')
             ->latestOfMany();
@@ -106,4 +115,52 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     //     return $this->trial_ends_at && $this->trial_ends_at->isFuture();
     // }
 
+    /**
+     * Get the current active plan (from subscription or direct plan_id).
+     */
+    public function getCurrentPlan(): ?Plan
+    {
+        // First check active subscription's plan
+        $subscription = $this->currentSubscription;
+        if ($subscription && $subscription->plan) {
+            return $subscription->plan;
+        }
+        
+        // Fallback to direct plan relationship (for trial/lifetime)
+        return $this->plan;
+    }
+
+    /**
+     * Check if tenant has access to a specific feature.
+     */
+    public function hasFeature(string $featureKey): bool
+    {
+        $plan = $this->getCurrentPlan();
+        return $plan ? $plan->hasFeature($featureKey) : false;
+    }
+
+    /**
+     * Get feature value for tenant's current plan.
+     */
+    public function getFeature(string $featureKey, $default = null)
+    {
+        $plan = $this->getCurrentPlan();
+        return $plan ? $plan->getFeature($featureKey, $default) : $default;
+    }
+
+    /**
+     * Check if a module is enabled for this tenant.
+     */
+    public function hasModule(string $moduleName): bool
+    {
+        return (bool) $this->getFeature("module_{$moduleName}", false);
+    }
+
+    /**
+     * Get quota/limit for a feature (e.g., device_limit, storage_gb).
+     */
+    public function getQuota(string $quotaKey, $default = 0)
+    {
+        return $this->getFeature($quotaKey, $default);
+    }
 }

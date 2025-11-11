@@ -40,10 +40,40 @@ class Plan extends Model
         return $this->hasManyThrough(
             Tenant::class,
             Subscription::class,
-            'plan_id',
-            'id',
-            'id',
-            'tenant_id'
+            'plan_id',      // Foreign key on subscriptions table
+            'id',            // Foreign key on tenants table
+            'id',            // Local key on plans table
+            'user_id'        // Local key on subscriptions table (NOT tenant_id)
         );
+    }
+
+    public function features(): HasMany
+    {
+        return $this->hasMany(PlanFeature::class)->orderBy('display_order');
+    }
+
+    /**
+     * Check if plan has a specific feature.
+     */
+    public function hasFeature(string $featureKey): bool
+    {
+        return $this->features()->where('feature_key', $featureKey)->exists();
+    }
+
+    /**
+     * Get feature value by key.
+     */
+    public function getFeature(string $featureKey, $default = null)
+    {
+        $feature = $this->features()->where('feature_key', $featureKey)->first();
+        return $feature ? $feature->value : $default;
+    }
+
+    /**
+     * Get all features as key-value array.
+     */
+    public function getFeaturesArray(): array
+    {
+        return $this->features->pluck('value', 'feature_key')->toArray();
     }
 }

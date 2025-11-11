@@ -26,7 +26,10 @@ class TenantResource extends BaseResource
             'trial_ends_at' => $this->trial_ends_at,
             'grace_period_ends_at' => $this->grace_period_ends_at,
             'domain_name' => new DomainResource($this->whenLoaded('domain')),
-            'current_plan' => new PlanResource(optional($this->currentSubscription?->plan)),
+            // Use currentSubscription plan if available, otherwise fall back to direct plan relationship
+            'current_plan' => new PlanResource(
+                $this->currentSubscription?->plan ?? $this->whenLoaded('plan')
+            ),
         ];
     }
 }

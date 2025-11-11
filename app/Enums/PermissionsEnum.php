@@ -19,6 +19,9 @@ enum PermissionsEnum: string
     case UPDATE_TENANT = 'update-tenant';
     case DELETE_TENANT = 'delete-tenant';
 
+    // Domain Management
+    case VIEW_DOMAIN = 'view-domain';
+
     // User Management
     case VIEW_USER = 'view-user';
     case CREATE_USER = 'create-user';
@@ -101,6 +104,15 @@ enum PermissionsEnum: string
             self::CREATE_TENANT->value,
             self::UPDATE_TENANT->value,
             self::DELETE_TENANT->value,
+
+            // Domain
+            self::VIEW_DOMAIN->value,
+
+            // User
+            self::VIEW_USER->value,
+            self::CREATE_USER->value,
+            self::UPDATE_USER->value,
+            self::DELETE_USER->value,
 
             // Role & Permission
             self::VIEW_ROLE->value,

@@ -33,7 +33,7 @@ class TenantController extends Controller
         $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'subscriptions']);
+        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'currentSubscription.plan', 'plan']);
 
         if ($paginate) {
             $paginated = TenantResource::paginated($tenants);
@@ -71,9 +71,13 @@ class TenantController extends Controller
 
     public function stats()
     {
-        $data = $this->tenantService->getStats();
+        $stats = $this->tenantService->getStats();
 
-        return ApiResponse::success('Tenant stats fetched.', meta: $data);
+        return ApiResponse::success(
+            'Tenant statistics fetched successfully.',
+            $stats,
+            Response::HTTP_OK
+        );
     }
 
     public function sendMail(UserSendMailRequest $request, Tenant $tenant)

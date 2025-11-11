@@ -2,55 +2,47 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Laravel\Cashier\Subscription as CashierSubscription;
 
-class Subscription extends Model
+class Subscription extends CashierSubscription
 {
-    protected $fillable = [
-        'tenant_id',
-        'plan_id',
-        'start_date',
-        'end_date',
-        'trial_ends_at',
-        'cancelled_at',
-        'is_active',
-        'payment_gateway',
-        'gateway_subscription_id',
-        'renewal_type',
-    ];
-
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
     protected $casts = [
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
+        'plan_id' => 'integer',
         'trial_ends_at' => 'datetime',
-        'cancelled_at' => 'datetime',
+        'ends_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
-    public function tenant(): BelongsTo
-    {
-        return $this->belongsTo(Tenant::class);
-    }
-
+    /**
+     * Get the plan associated with this subscription.
+     */
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);
     }
 
-    public function invoices(): HasMany
+    /**
+     * Get the subscription invoices for this subscription.
+     * Note: Cashier already has an invoices() method, so we use a different name.
+     */
+    public function subscriptionInvoices(): HasMany
     {
         return $this->hasMany(SubscriptionInvoice::class);
     }
 
-    public function isExpired(): bool
+    /**
+     * Get the tenant (user) that owns the subscription.
+     */
+    public function tenant(): BelongsTo
     {
-        return $this->end_date && $this->end_date->isPast();
-    }
-
-    public function isTrial(): bool
-    {
-        return $this->trial_ends_at && Carbon::now()->lt($this->trial_ends_at);
+        return $this->belongsTo(Tenant::class, 'user_id', 'id');
     }
 }

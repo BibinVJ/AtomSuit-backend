@@ -19,9 +19,15 @@ class DashboardController extends Controller
      */
     public function home()
     {
-        $dto = $this->dashboardService->getMetrics();
+        $metrics = $this->dashboardService->getMetrics();
 
-        return ApiResponse::success('Dashboard data fetched.', new DashboardResource($dto));
+        // For central (superadmin), return array directly
+        // For tenant, wrap in DashboardResource
+        if (is_array($metrics)) {
+            return ApiResponse::success('Dashboard data fetched.', $metrics);
+        }
+
+        return ApiResponse::success('Dashboard data fetched.', new DashboardResource($metrics));
     }
 
     /**
@@ -42,5 +48,15 @@ class DashboardController extends Controller
         $layouts = $this->dashboardService->updateLayout($request->validated());
 
         return ApiResponse::success('Dashboard layouts updated.', DashboardLayoutResource::collection($layouts));
+    }
+
+    /**
+     * Get available dashboard cards for the user.
+     */
+    public function getCards()
+    {
+        $cards = $this->dashboardService->getAvailableCards();
+
+        return ApiResponse::success('Dashboard cards fetched.', $cards);
     }
 }

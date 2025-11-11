@@ -78,6 +78,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Billable Model
+    |--------------------------------------------------------------------------
+    |
+    | This is the model in your application that implements the Billable trait
+    | provided by Cashier. It will serve as the primary billable model for all
+    | Stripe billing operations. You may freely change this to any model.
+    |
+    */
+
+    'model' => env('CASHIER_MODEL', App\Models\Tenant::class),
+
+    /*
+    |--------------------------------------------------------------------------
     | Payment Confirmation Notification
     |--------------------------------------------------------------------------
     |

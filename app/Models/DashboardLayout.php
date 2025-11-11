@@ -37,4 +37,9 @@ class DashboardLayout extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function card()
+    {
+        return $this->belongsTo(DashboardCard::class, 'card_id', 'card_id');
+    }
 }

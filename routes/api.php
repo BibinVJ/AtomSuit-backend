@@ -7,6 +7,7 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DomainController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\NotificationController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\UnitController;
@@ -76,6 +78,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', [DashboardController::class, 'home']);
         Route::get('layout', [DashboardController::class, 'getLayout']);
         Route::post('layout', [DashboardController::class, 'updateLayout']);
+        Route::get('cards', [DashboardController::class, 'getCards']);
     });
 
     Route::prefix('notifications')->group(function () {
@@ -94,7 +97,11 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
 
-    
+    /*
+    |--------------------------------------------------------------------------
+    | Plan
+    |--------------------------------------------------------------------------
+    */
     Route::prefix('plan')->group(function () {
         Route::get('/{plan}', [PlanController::class, 'show']);
         Route::post('/', [PlanController::class, 'store']);
@@ -102,14 +109,19 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/{plan}', [PlanController::class, 'destroy']);
     });
 
+
+    /*
+    |--------------------------------------------------------------------------
+    | Tenant, Subscription & Domain Management
+    |--------------------------------------------------------------------------
+    */
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
     Route::apiResource('tenant', TenantController::class);
 
     Route::apiResource('subscription', SubscriptionController::class);
 
-    // domains
-
+    Route::get('domain', [DomainController::class, 'index']);
 
 
     /*
@@ -126,6 +138,7 @@ Route::middleware(['auth:api'])->group(function () {
     // exchange rate
     // gl settings
 
+
     /*
     |--------------------------------------------------------------------------
     | Inventory
@@ -137,6 +150,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('batch', BatchController::class);
     // warehouse
 
+
     /*
     |--------------------------------------------------------------------------
     | Customer & Sales
@@ -145,6 +159,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('customer', CustomerController::class);
     Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
     Route::apiResource('sale', SaleController::class);
+
 
     /*
     |--------------------------------------------------------------------------
@@ -155,11 +170,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
     Route::apiResource('purchase', PurchaseController::class);
 
+
     /*
     |--------------------------------------------------------------------------
     | Reports
     |--------------------------------------------------------------------------
     */
+
 
     /*
     |--------------------------------------------------------------------------
@@ -174,8 +191,23 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('role', RoleController::class);
     Route::get('permissions', [PermissionController::class, 'index']);
 
-    // update settings
+    /*
+    |--------------------------------------------------------------------------
+    | Settings Management (Superadmin)
+    |--------------------------------------------------------------------------
+    */
+    Route::prefix('settings')->group(function () {
+        Route::get('/', [SettingController::class, 'index']);
+        Route::get('groups', [SettingController::class, 'groups']);
+        Route::get('group/{group}', [SettingController::class, 'getByGroup']);
+        Route::get('{key}', [SettingController::class, 'show']);
+        Route::post('{key}', [SettingController::class, 'update']);
+        Route::post('/', [SettingController::class, 'bulkUpdate']);
+        Route::delete('{key}', [SettingController::class, 'destroy']);
+        Route::delete('{key}/file', [SettingController::class, 'deleteFile']);
+    });
 });
+
 
 /*
 |--------------------------------------------------------------------------
@@ -184,5 +216,5 @@ Route::middleware(['auth:api'])->group(function () {
 */
 Route::prefix('webhook')->middleware('log.webhook')->group(function () {
     Route::get('/', fn() => response()->json(['message' => 'Central webhook ping successful!']));
-    Route::post('stripe', [\Laravel\Cashier\Http\Controllers\WebhookController::class, 'handleWebhook']);
+    Route::post('stripe', [\App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
 });

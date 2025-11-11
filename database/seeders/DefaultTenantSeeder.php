@@ -2,14 +2,10 @@
 
 namespace Database\Seeders;
 
-use App\Enums\TenantStatusEnum;
 use App\Models\Plan;
 use App\Models\Tenant;
 use App\Services\TenantService;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Cashier\Subscription;
-use Laravel\Cashier\SubscriptionItem;
 
 class DefaultTenantSeeder extends Seeder
 {
@@ -25,43 +21,36 @@ class DefaultTenantSeeder extends Seeder
             return;
         }
 
-        if (!Tenant::where('email', 'company@example.com')->exists()) {
-            $tenant = Tenant::create([
+        // Check if tenant already exists
+        if (Tenant::where('email', 'company@example.com')->exists()) {
+            $this->command->info('Default tenant already exists. Skipping...');
+            return;
+        }
+
+        // Use TenantService to properly create tenant with domain and database
+        $tenantService = app(TenantService::class);
+        
+        try {
+            $tenant = $tenantService->create([
                 'name' => 'company',
                 'email' => 'company@example.com',
-                'password' => Hash::make('Example@123'),
-                'status' => TenantStatusEnum::ACTIVE->value,
-                'trial_ends_at' => null,
-                'grace_period_ends_at' => null,
-                'email_verified_at' => now(),
+                'password' => 'Example@123',
                 'plan_id' => $plan->id,
                 'domain_name' => 'company',
                 'load_sample_data' => true,
             ]);
 
-            // Map plan to a Cashier subscription for this seeded tenant (lifetime)
-            // Only create if not already present
-            if (!Subscription::where('user_id', $tenant->id)->exists()) {
-                $subscription = new Subscription();
-                $subscription->user_id = $tenant->id;
-                $subscription->name = 'default';
-                $subscription->stripe_id = 'seed_lifetime_' . $tenant->id;
-                $subscription->stripe_status = 'active';
-                $subscription->stripe_price = $plan->stripe_price_id; // may be null for lifetime
-                $subscription->quantity = 1;
-                $subscription->trial_ends_at = null;
-                $subscription->ends_at = null;
-                $subscription->save();
+            // Update email_verified_at since this is a seed tenant
+            $tenant->email_verified_at = now();
+            $tenant->save();
 
-                // Create subscription item mapping to plan's Stripe price/product when available
-                $item = new SubscriptionItem();
-                $item->subscription_id = $subscription->id;
-                $item->stripe_id = 'seed_item_' . $tenant->id;
-                $item->stripe_product = $plan->stripe_product_id ?? ('lifetime_product_' . $tenant->id);
-                $item->stripe_price = $plan->stripe_price_id ?? ('lifetime_price_' . $tenant->id);
-                $item->quantity = 1;
-                $item->save();
-            }
+            $this->command->info('✓ Default tenant created successfully!');
+            $this->command->info('  Email: company@example.com');
+            $this->command->info('  Password: Example@123');
+            $this->command->info('  Domain: ' . $tenant->domains->first()?->domain);
+            
+        } catch (\Exception $e) {
+            $this->command->error('Failed to create default tenant: ' . $e->getMessage());
         }
     }
 }

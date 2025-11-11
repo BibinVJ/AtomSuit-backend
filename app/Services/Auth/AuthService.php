@@ -48,6 +48,7 @@ class AuthService extends ContextAwareService
         $tenant = app(TenantService::class)->create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'] ?? null,
             'password' => $data['password'],
             'plan_id' => $trialPlan->id,
             'domain_name' => $data['domain_name'],
@@ -81,8 +82,8 @@ class AuthService extends ContextAwareService
 
         // If a paid plan is selected, prepare checkout
         $checkoutUrl = null;
-        if (!empty($data['selected_plan_id'])) {
-            $selectedPlan = Plan::findOrFail((int)$data['selected_plan_id']);
+        if (!empty($data['plan_id'])) {
+            $selectedPlan = Plan::findOrFail((int)$data['plan_id']);
 
             $client = Cashier::stripe();
             if (empty($selectedPlan->stripe_price_id)) {

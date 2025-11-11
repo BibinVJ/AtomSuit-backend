@@ -15,6 +15,7 @@ class CentralDatabaseSeeder extends Seeder
             CentralRolesAndPermissionsSeeder::class,
             SuperAdminSeeder::class,
             PlanSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

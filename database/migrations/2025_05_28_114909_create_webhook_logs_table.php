@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('url');
             $table->string('method');
+            $table->string('event_type')->nullable()->index();
+            $table->string('event_id')->nullable();
             $table->json('headers')->nullable();
             $table->json('payload')->nullable();
             $table->integer('response_status')->nullable();

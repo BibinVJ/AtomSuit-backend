@@ -26,6 +26,7 @@ class PlanResource extends BaseResource
             'trial_duration_in_days' => $this->trial_duration_in_days,
             'is_expired_user_plan' => $this->is_expired_user_plan,
             'is_active' => $this->is_active,
+            'features' => PlanFeatureResource::collection($this->whenLoaded('features')),
             'subscribed_tenants' => TenantResource::collection($this->whenLoaded('subscribedTenants')),
         ];
     }

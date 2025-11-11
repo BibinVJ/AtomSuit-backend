@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
@@ -12,20 +13,67 @@ class Setting extends Model
         'group',
         'type',
         'description',
-        'is_active',
     ];
 
-    protected $casts = [
-        'is_active' => 'boolean',
-    ];
-
-    public static function get($key, $default = null)
+    /**
+     * Get the value attribute and cast it based on type.
+     */
+    public function getValueAttribute($value)
     {
-        return static::where('key', $key)->value('value') ?? $default;
+        return match ($this->type) {
+            'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
+            'integer' => (int) $value,
+            'json' => json_decode($value, true),
+            'file' => $value, // Return path as-is
+            default => $value, // string
+        };
     }
 
-    public static function set($key, $value): void
+    /**
+     * Set the value attribute and encode if needed.
+     */
+    public function setValueAttribute($value)
     {
-        static::updateOrCreate(['key' => $key], ['value' => $value]);
+        $this->attributes['value'] = match ($this->type ?? 'string') {
+            'boolean' => $value ? '1' : '0',
+            'json' => is_array($value) ? json_encode($value) : $value,
+            default => $value,
+        };
+    }
+
+    /**
+     * Get a setting value by key.
+     */
+    public static function getValue(string $key, $default = null)
+    {
+        return Cache::remember("setting.{$key}", 3600, function () use ($key, $default) {
+            $setting = static::where('key', $key)->first();
+            return $setting ? $setting->value : $default;
+        });
+    }
+
+    /**
+     * Set a setting value by key.
+     */
+    public static function setValue(string $key, $value, ?string $type = null, ?string $group = null): void
+    {
+        static::updateOrCreate(
+            ['key' => $key],
+            array_filter([
+                'value' => $value,
+                'type' => $type,
+                'group' => $group,
+            ])
+        );
+        
+        Cache::forget("setting.{$key}");
+    }
+
+    /**
+     * Clear the settings cache.
+     */
+    public static function clearCache(): void
+    {
+        Cache::flush();
     }
 }

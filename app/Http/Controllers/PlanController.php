@@ -53,21 +53,21 @@ class PlanController extends Controller
 
     public function show(Plan $plan)
     {
-        $plan = $this->planRepository->find($plan->id, ['subscribedTenants']);
+        $plan = $this->planRepository->find($plan->id, ['subscribedTenants', 'features']);
 
         return ApiResponse::success('Plan fetched successfully.', PlanResource::make($plan));
     }
 
     public function store(PlanRequest $request)
     {
-        $plan = $this->planRepository->create($request->validated());
+        $plan = $this->planService->create($request->validated());
 
         return ApiResponse::success('Plan created successfully.', PlanResource::make($plan));
     }
 
     public function update(PlanRequest $request, Plan $plan)
     {
-        $updatedPlan = $this->planRepository->update($plan, $request->validated());
+        $updatedPlan = $this->planService->update($plan, $request->validated());
 
         return ApiResponse::success('Plan updated successfully.', PlanResource::make($updatedPlan));
     }

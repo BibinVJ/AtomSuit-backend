@@ -32,6 +32,14 @@ class PlanRequest extends FormRequest
             'trial_duration_in_days' => 'required_if:is_trial_plan,true|integer|min:1',
             'is_expired_user_plan' => 'boolean',
             'is_active' => 'boolean',
+            'features' => 'sometimes|array',
+            'features.*.id' => 'sometimes|integer|exists:plan_features,id',
+            'features.*.key' => 'required_with:features|string|max:255',
+            'features.*.value' => 'required_with:features',
+            'features.*.type' => 'required_with:features|in:string,integer,boolean',
+            'features.*.display_name' => 'required_with:features|string|max:255',
+            'features.*.description' => 'sometimes|nullable|string',
+            'features.*.display_order' => 'sometimes|integer|min:0',
         ];
     }
 }
