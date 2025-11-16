@@ -62,7 +62,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
             'pm_type',
             'pm_last_four',
             'data',
-            'plan_id',
         ];
     }
 
@@ -71,7 +70,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->hasOne(Domain::class);
     }
 
-    public function plan(): BelongsTo
+    public function plan()
     {
         // Direct plan relationship (used for trial/lifetime plans)
         return $this->currentSubscription?->plan ?? $this->belongsTo(Plan::class);

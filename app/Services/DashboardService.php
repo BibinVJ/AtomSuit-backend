@@ -62,11 +62,6 @@ class DashboardService extends ContextAwareService
 
     public function getLayouts()
     {
-        // Central context (superadmin) doesn't have dashboard layouts
-        if ($this->isCentralContext()) {
-            return collect(); // Return empty collection
-        }
-
         $user = Auth::user();
         $existingLayouts = DashboardLayout::with('card')
             ->where('user_id', $user->id)

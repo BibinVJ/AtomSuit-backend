@@ -9,6 +9,24 @@ use Laravel\Cashier\Subscription as CashierSubscription;
 class Subscription extends CashierSubscription
 {
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'user_id',
+        'plan_id',
+        'stripe_id',
+        'name',
+        'type',
+        'stripe_status',
+        'stripe_price',
+        'quantity',
+        'trial_ends_at',
+        'ends_at',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array

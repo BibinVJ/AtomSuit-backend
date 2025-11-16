@@ -140,6 +140,55 @@ class StripeSubscriptionService
     }
 
     /**
+     * Change subscription plan.
+     *
+     * @param Subscription $subscription
+     * @param Plan $newPlan
+     * @param bool $prorate
+     * @return Subscription
+     */
+    public function changePlan(Subscription $subscription, Plan $newPlan, bool $prorate = true): Subscription
+    {
+        try {
+            // Get the subscription from Stripe
+            $stripeSubscription = $this->stripe->subscriptions->retrieve($subscription->stripe_id);
+            
+            // Update the subscription with new price
+            $updatedSubscription = $this->stripe->subscriptions->update($subscription->stripe_id, [
+                'items' => [[
+                    'id' => $stripeSubscription->items->data[0]->id,
+                    'price' => $newPlan->stripe_price_id,
+                ]],
+                'proration_behavior' => $prorate ? 'create_prorations' : 'none',
+            ]);
+
+            // Update local subscription record
+            $subscription->update([
+                'stripe_price' => $newPlan->stripe_price_id,
+                'plan_id' => $newPlan->id,
+            ]);
+
+            // Update tenant's plan
+            $subscription->billable->update(['plan_id' => $newPlan->id]);
+
+            Log::info('Subscription plan changed', [
+                'subscription_id' => $subscription->stripe_id,
+                'new_plan_id' => $newPlan->id,
+                'prorate' => $prorate,
+            ]);
+
+            return $subscription->fresh();
+        } catch (\Exception $e) {
+            Log::error('Failed to change subscription plan', [
+                'subscription_id' => $subscription->stripe_id,
+                'new_plan_id' => $newPlan->id,
+                'error' => $e->getMessage(),
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
      * Retrieve Stripe subscription by ID.
      *
      * @param string $subscriptionId

@@ -19,6 +19,10 @@ enum PermissionsEnum: string
     case UPDATE_TENANT = 'update-tenant';
     case DELETE_TENANT = 'delete-tenant';
 
+    // Subscription Management
+    case VIEW_SUBSCRIPTION = 'view-subscription';
+    case MY_SUBSCRIPTION = 'my-subscription';
+
     // Domain Management
     case VIEW_DOMAIN = 'view-domain';
 
@@ -105,6 +109,9 @@ enum PermissionsEnum: string
             self::UPDATE_TENANT->value,
             self::DELETE_TENANT->value,
 
+            // Subscription
+            self::VIEW_SUBSCRIPTION->value,
+
             // Domain
             self::VIEW_DOMAIN->value,
 
@@ -140,6 +147,10 @@ enum PermissionsEnum: string
             self::CREATE_TENANT->value,
             self::UPDATE_TENANT->value,
             self::DELETE_TENANT->value,
+
+            self::VIEW_DOMAIN->value,
+
+            self::VIEW_SUBSCRIPTION->value,
         ];
 
         return collect(self::cases())

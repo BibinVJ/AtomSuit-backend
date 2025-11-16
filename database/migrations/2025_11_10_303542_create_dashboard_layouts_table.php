@@ -15,7 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
 
-            $table->string('card_id')->comment('e.g. "sales", "stock_alerts"');
+            $table->string('card_id');
+            $table->foreign('card_id')
+                ->references('card_id')
+                ->on('dashboard_cards')
+                ->onDelete('cascade');
+                
             $table->string('area')->nullable()->comment('Position group, e.g. "left", "right"');
             $table->float('x')->nullable();
             $table->float('y')->nullable();

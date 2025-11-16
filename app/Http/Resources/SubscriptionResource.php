@@ -18,7 +18,6 @@ class SubscriptionResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'tenant_id' => $this->tenant_id,
             'tenant' => new TenantResource($this->whenLoaded('tenant')),
             'name' => $this->name,
             'stripe_id' => $this->stripe_id,
@@ -27,7 +26,6 @@ class SubscriptionResource extends BaseResource
             'quantity' => $this->quantity,
             'trial_ends_at' => $this->trial_ends_at?->format('Y-m-d H:i:s'),
             'ends_at' => $this->ends_at?->format('Y-m-d H:i:s'),
-            'plan_id' => $this->plan_id,
             'plan' => new PlanResource($this->whenLoaded('plan')),
             'is_active' => $this->active(),
             'is_canceled' => $this->canceled(),

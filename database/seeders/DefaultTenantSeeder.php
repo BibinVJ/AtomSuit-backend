@@ -35,6 +35,7 @@ class DefaultTenantSeeder extends Seeder
                 'name' => 'company',
                 'email' => 'company@example.com',
                 'password' => 'Example@123',
+                'email_verified_at' => now(),
                 'plan_id' => $plan->id,
                 'domain_name' => 'company',
                 'load_sample_data' => true,
@@ -43,11 +44,6 @@ class DefaultTenantSeeder extends Seeder
             // Update email_verified_at since this is a seed tenant
             $tenant->email_verified_at = now();
             $tenant->save();
-
-            $this->command->info('✓ Default tenant created successfully!');
-            $this->command->info('  Email: company@example.com');
-            $this->command->info('  Password: Example@123');
-            $this->command->info('  Domain: ' . $tenant->domains->first()?->domain);
             
         } catch (\Exception $e) {
             $this->command->error('Failed to create default tenant: ' . $e->getMessage());

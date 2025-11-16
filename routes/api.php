@@ -17,8 +17,10 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
+use App\Http\Controllers\TenantSubscriptionController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -121,6 +123,12 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::apiResource('subscription', SubscriptionController::class);
 
+    Route::prefix('tenant-subscription')->group(function () {
+        Route::get('current', [TenantSubscriptionController::class, 'current']);
+        Route::get('change-plan', [TenantSubscriptionController::class, 'availablePlans']);
+        Route::post('cancel', [TenantSubscriptionController::class, 'cancel']);
+    });
+
     Route::get('domain', [DomainController::class, 'index']);
 
 
@@ -193,7 +201,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
-    | Settings Management (Superadmin)
+    | Settings Management
     |--------------------------------------------------------------------------
     */
     Route::prefix('settings')->group(function () {
@@ -216,5 +224,5 @@ Route::middleware(['auth:api'])->group(function () {
 */
 Route::prefix('webhook')->middleware('log.webhook')->group(function () {
     Route::get('/', fn() => response()->json(['message' => 'Central webhook ping successful!']));
-    Route::post('stripe', [\App\Http\Controllers\StripeWebhookController::class, 'handleWebhook']);
+    Route::post('stripe', [StripeWebhookController::class, 'handleWebhook']);
 });

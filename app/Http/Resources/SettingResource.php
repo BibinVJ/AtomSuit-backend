@@ -3,12 +3,11 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @mixin \App\Models\Setting
  */
-class SettingResource extends JsonResource
+class SettingResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
@@ -20,14 +19,11 @@ class SettingResource extends JsonResource
         return [
             'id' => $this->id,
             'key' => $this->key,
-            'value' => $this->value, // Uses accessor for type casting
+            'value' => $this->value,
             'type' => $this->type,
             'group' => $this->group,
             'description' => $this->description,
-            'file_url' => $this->when(
-                $this->type === 'file' && $this->value,
-                fn() => asset('storage/' . $this->value)
-            ),
+            'file_url' => $this->type === 'file' && $this->value ? asset('storage/' . $this->value) : null,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

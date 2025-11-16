@@ -10,6 +10,7 @@ use App\Models\Plan;
 use App\Repositories\PlanRepository;
 use App\Services\PlanService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class PlanController extends Controller
@@ -29,7 +30,15 @@ class PlanController extends Controller
         $paginate = ! $request->boolean('unpaginated');
         $perPage = $request->integer('perPage', 15);
 
-        $plans = $this->planRepository->all($paginate, $perPage, $filters);
+        $with = ['features'];
+        if (Auth::check() && Auth::user()->can(PermissionsEnum::VIEW_TENANT->value)) {
+            $with[] = 'subscribedTenants';
+        }
+
+        // Use central connection to get plans for tenant upgrade purposes
+        $plans = tenancy()->central(function () use ($paginate, $perPage, $filters, $with) {
+            return $this->planRepository->all($paginate, $perPage, $filters, $with);
+        });
 
         if ($paginate) {
             $paginated = PlanResource::paginated($plans);

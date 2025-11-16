@@ -30,6 +30,7 @@ class TenantResource extends BaseResource
             'current_plan' => new PlanResource(
                 $this->currentSubscription?->plan ?? $this->whenLoaded('plan')
             ),
+            'created_at' => $this->created_at,
         ];
     }
 }

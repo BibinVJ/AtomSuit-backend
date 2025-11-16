@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Services\DashboardService;
 use Illuminate\Database\Seeder;
 
 class TenantDefaultDataSeeder extends Seeder
@@ -14,8 +13,8 @@ class TenantDefaultDataSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            DashboardService::class,
-
+            DashboardCardSeeder::class,
+            SettingSeeder::class,
         ]);
     }
 }

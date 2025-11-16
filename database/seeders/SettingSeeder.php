@@ -13,27 +13,106 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            // General Settings
+            // Company Information
             [
-                'key' => 'app_name',
-                'value' => config('app.name', 'Atomsuit'),
+                'key' => 'company_name',
+                'value' => 'Your Company Name',
                 'type' => 'string',
-                'group' => 'general',
-                'description' => 'Application name displayed across the platform',
+                'group' => 'company',
+                'description' => 'Company name displayed throughout the application',
             ],
             [
-                'key' => 'app_tagline',
-                'value' => 'Comprehensive ERP Solution',
+                'key' => 'company_legal_name',
+                'value' => 'Your Company Legal Name LLC',
                 'type' => 'string',
-                'group' => 'general',
-                'description' => 'Short tagline or description of your application',
+                'group' => 'company',
+                'description' => 'Legal company name for documents and contracts',
             ],
+            [
+                'key' => 'company_address',
+                'value' => '123 Business Street, Suite 100',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company street address',
+            ],
+            [
+                'key' => 'company_city',
+                'value' => 'Business City',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company city',
+            ],
+            [
+                'key' => 'company_state',
+                'value' => 'State',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company state/province',
+            ],
+            [
+                'key' => 'company_zip',
+                'value' => '12345',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company postal/zip code',
+            ],
+            [
+                'key' => 'company_country',
+                'value' => 'United States',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company country',
+            ],
+            [
+                'key' => 'company_phone',
+                'value' => '+1 (555) 123-4567',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company main phone number',
+            ],
+            [
+                'key' => 'company_email',
+                'value' => 'info@yourcompany.com',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company main email address',
+            ],
+            [
+                'key' => 'company_website',
+                'value' => 'https://www.yourcompany.com',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company website URL',
+            ],
+            [
+                'key' => 'company_tax_id',
+                'value' => '12-3456789',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company tax identification number',
+            ],
+            [
+                'key' => 'company_registration_number',
+                'value' => 'REG123456789',
+                'type' => 'string',
+                'group' => 'company',
+                'description' => 'Company registration number',
+            ],
+
+            // General Application Settings
             [
                 'key' => 'timezone',
                 'value' => config('app.timezone', 'UTC'),
                 'type' => 'string',
                 'group' => 'general',
                 'description' => 'Default timezone for the application',
+            ],
+            [
+                'key' => 'language',
+                'value' => 'en',
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Default application language',
             ],
             [
                 'key' => 'date_format',
@@ -50,34 +129,138 @@ class SettingSeeder extends Seeder
                 'description' => 'Default time format (PHP date format)',
             ],
             [
-                'key' => 'maintenance_mode',
-                'value' => '0',
-                'type' => 'boolean',
+                'key' => 'datetime_format',
+                'value' => 'Y-m-d H:i:s',
+                'type' => 'string',
                 'group' => 'general',
-                'description' => 'Enable/disable maintenance mode for the platform',
+                'description' => 'Default datetime format (PHP date format)',
+            ],
+            [
+                'key' => 'week_start',
+                'value' => '1',
+                'type' => 'integer',
+                'group' => 'general',
+                'description' => 'First day of week (0=Sunday, 1=Monday)',
+            ],
+
+            // Financial Settings
+            [
+                'key' => 'currency',
+                'value' => 'USD',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Default currency code (ISO 4217)',
+            ],
+            [
+                'key' => 'currency_symbol',
+                'value' => '$',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Currency symbol to display',
+            ],
+            [
+                'key' => 'currency_position',
+                'value' => 'before',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Currency symbol position (before/after)',
+            ],
+            [
+                'key' => 'decimal_separator',
+                'value' => '.',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Decimal separator for currency display',
+            ],
+            [
+                'key' => 'thousand_separator',
+                'value' => ',',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Thousand separator for currency display',
+            ],
+            [
+                'key' => 'decimal_places',
+                'value' => '2',
+                'type' => 'integer',
+                'group' => 'financial',
+                'description' => 'Number of decimal places for currency',
+            ],
+            [
+                'key' => 'fiscal_year_start',
+                'value' => '01-01',
+                'type' => 'string',
+                'group' => 'financial',
+                'description' => 'Fiscal year start date (MM-DD format)',
+            ],
+
+            // Invoice Settings
+            [
+                'key' => 'invoice_prefix',
+                'value' => 'INV-',
+                'type' => 'string',
+                'group' => 'invoicing',
+                'description' => 'Invoice number prefix',
+            ],
+            [
+                'key' => 'invoice_number_format',
+                'value' => '{prefix}{year}{month}{number:4}',
+                'type' => 'string',
+                'group' => 'invoicing',
+                'description' => 'Invoice number format template',
+            ],
+            [
+                'key' => 'invoice_due_days',
+                'value' => '30',
+                'type' => 'integer',
+                'group' => 'invoicing',
+                'description' => 'Default invoice due days',
+            ],
+            [
+                'key' => 'invoice_terms',
+                'value' => 'Payment is due within 30 days of invoice date.',
+                'type' => 'text',
+                'group' => 'invoicing',
+                'description' => 'Default invoice terms and conditions',
+            ],
+            [
+                'key' => 'invoice_footer',
+                'value' => 'Thank you for your business!',
+                'type' => 'text',
+                'group' => 'invoicing',
+                'description' => 'Default invoice footer text',
+            ],
+
+            // Email Settings
+            [
+                'key' => 'email_from_name',
+                'value' => config('app.name', 'Atomsuit'),
+                'type' => 'string',
+                'group' => 'email',
+                'description' => 'Default sender name for emails',
+            ],
+            [
+                'key' => 'email_from_address',
+                'value' => 'noreply@yourcompany.com',
+                'type' => 'string',
+                'group' => 'email',
+                'description' => 'Default sender email address',
+            ],
+            [
+                'key' => 'email_signature',
+                'value' => 'Best regards,\nYour Company Team',
+                'type' => 'text',
+                'group' => 'email',
+                'description' => 'Default email signature',
             ],
 
             // Appearance Settings
             [
-                'key' => 'logo',
-                'value' => 'logos/logo.png',
-                'type' => 'file',
+                'key' => 'theme',
+                'value' => 'light',
+                'type' => 'string',
                 'group' => 'appearance',
-                'description' => 'Main logo of the application',
-            ],
-            [
-                'key' => 'logo_dark',
-                'value' => 'logos/logo.png',
-                'type' => 'file',
-                'group' => 'appearance',
-                'description' => 'Logo for dark mode',
-            ],
-            [
-                'key' => 'favicon',
-                'value' => 'logos/icon.png',
-                'type' => 'file',
-                'group' => 'appearance',
-                'description' => 'Favicon for the application',
+                'description' => 'Default theme (light/dark)',
             ],
             [
                 'key' => 'primary_color',
@@ -94,120 +277,53 @@ class SettingSeeder extends Seeder
                 'description' => 'Secondary brand color (hex)',
             ],
 
-            // Payment/Currency Settings
+            // Notification Settings
             [
-                'key' => 'currency',
-                'value' => 'USD',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Default currency code (ISO 4217)',
-            ],
-            [
-                'key' => 'currency_symbol',
-                'value' => '$',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Currency symbol to display',
-            ],
-            [
-                'key' => 'currency_position',
-                'value' => 'before',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Currency symbol position (before/after)',
-            ],
-            [
-                'key' => 'decimal_separator',
-                'value' => '.',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Decimal separator for currency display',
-            ],
-            [
-                'key' => 'thousand_separator',
-                'value' => ',',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Thousand separator for currency display',
-            ],
-            [
-                'key' => 'decimal_places',
-                'value' => '2',
-                'type' => 'integer',
-                'group' => 'payment',
-                'description' => 'Number of decimal places for currency',
-            ],
-
-            // Email Settings
-            [
-                'key' => 'mail_from_name',
-                'value' => config('app.name', 'Atomsuit'),
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender name for emails',
-            ],
-            [
-                'key' => 'mail_from_address',
-                'value' => config('mail.from.address', 'noreply@atomsuit.com'),
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender email address',
-            ],
-            [
-                'key' => 'support_email',
-                'value' => 'support@atomsuit.com',
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Support email address displayed to users',
-            ],
-
-            // Registration Settings
-            [
-                'key' => 'registration_enabled',
+                'key' => 'notifications_enabled',
                 'value' => '1',
                 'type' => 'boolean',
-                'group' => 'registration',
-                'description' => 'Enable/disable new tenant registrations',
+                'group' => 'notifications',
+                'description' => 'Enable system notifications',
             ],
             [
-                'key' => 'email_verification_required',
+                'key' => 'email_notifications',
                 'value' => '1',
                 'type' => 'boolean',
-                'group' => 'registration',
-                'description' => 'Require email verification on registration',
+                'group' => 'notifications',
+                'description' => 'Enable email notifications',
             ],
             [
-                'key' => 'default_trial_days',
-                'value' => '14',
-                'type' => 'integer',
-                'group' => 'registration',
-                'description' => 'Default trial period in days for new tenants',
+                'key' => 'sms_notifications',
+                'value' => '0',
+                'type' => 'boolean',
+                'group' => 'notifications',
+                'description' => 'Enable SMS notifications',
             ],
 
-            // SEO Settings
+            // Business Settings
             [
-                'key' => 'meta_title',
-                'value' => config('app.name', 'Atomsuit') . ' - ERP Solution',
+                'key' => 'business_hours_start',
+                'value' => '09:00',
                 'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Default meta title for pages',
+                'group' => 'business',
+                'description' => 'Business hours start time (HH:MM format)',
             ],
             [
-                'key' => 'meta_description',
-                'value' => 'Comprehensive multi-tenant ERP solution for businesses',
+                'key' => 'business_hours_end',
+                'value' => '17:00',
                 'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Default meta description',
+                'group' => 'business',
+                'description' => 'Business hours end time (HH:MM format)',
             ],
             [
-                'key' => 'meta_keywords',
-                'value' => 'ERP, business management, accounting, inventory',
+                'key' => 'business_days',
+                'value' => '1,2,3,4,5',
                 'type' => 'string',
-                'group' => 'seo',
-                'description' => 'Default meta keywords (comma-separated)',
+                'group' => 'business',
+                'description' => 'Business days (1=Monday, 7=Sunday)',
             ],
 
-            // Social Links
+            // Social Media Links
             [
                 'key' => 'facebook_url',
                 'value' => null,
@@ -236,6 +352,13 @@ class SettingSeeder extends Seeder
                 'group' => 'social',
                 'description' => 'Instagram profile URL',
             ],
+            [
+                'key' => 'youtube_url',
+                'value' => null,
+                'type' => 'string',
+                'group' => 'social',
+                'description' => 'YouTube channel URL',
+            ]
         ];
 
         foreach ($settings as $setting) {
@@ -244,7 +367,5 @@ class SettingSeeder extends Seeder
                 $setting
             );
         }
-
-        $this->command->info('✓ Default settings seeded successfully!');
     }
 }

@@ -16,8 +16,7 @@ class SubscriptionController extends Controller
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository
     ) {
-        // Only central (superadmin) can view all subscriptions
-        // Tenants can view their own via the index method context check
+        $this->middleware('permission:' . PermissionsEnum::VIEW_SUBSCRIPTION->value)->only(['index', 'show', 'destroy']);
     }
 
     /**
@@ -26,42 +25,30 @@ class SubscriptionController extends Controller
      */
     public function index(Request $request)
     {
-        // Check if we're in central (superadmin) context
-        if (!tenant()) {
-            // Central context - show all subscriptions with pagination and filters
-            $filters = $request->only(['status', 'plan_id', 'tenant_id', 'search', 'is_active', 'is_canceled', 'sort_by', 'sort_direction']);
-            $paginate = !$request->boolean('unpaginated');
-            $perPage = $request->integer('perPage', 15);
+        // Central context - show all subscriptions with pagination and filters
+        $filters = $request->only(['status', 'plan_id', 'tenant_id', 'search', 'is_active', 'is_canceled', 'sort_by', 'sort_direction']);
+        $paginate = !$request->boolean('unpaginated');
+        $perPage = $request->integer('perPage', 15);
 
-            $subscriptions = $this->subscriptionRepository->all($paginate, $perPage, $filters, ['tenant', 'plan']);
+        $subscriptions = $this->subscriptionRepository->all($paginate, $perPage, $filters, ['tenant', 'plan']);
 
-            if ($paginate) {
-                $paginated = SubscriptionResource::paginated($subscriptions);
-
-                return ApiResponse::success(
-                    'Subscriptions fetched successfully.',
-                    $paginated['data'],
-                    Response::HTTP_OK,
-                    $paginated['meta'],
-                    $paginated['links']
-                );
-            }
+        if ($paginate) {
+            $paginated = SubscriptionResource::paginated($subscriptions);
 
             return ApiResponse::success(
                 'Subscriptions fetched successfully.',
-                SubscriptionResource::collection($subscriptions),
+                $paginated['data'],
                 Response::HTTP_OK,
-                ['total' => count($subscriptions)]
+                $paginated['meta'],
+                $paginated['links']
             );
         }
 
-        // Tenant context - show only their subscriptions
-        $tenant = Tenant::find(tenant()->id);
-        $subscriptions = $tenant->subscriptions()->with('plan')->latest()->get();
-
         return ApiResponse::success(
             'Subscriptions fetched successfully.',
-            SubscriptionResource::collection($subscriptions)
+            SubscriptionResource::collection($subscriptions),
+            Response::HTTP_OK,
+            ['total' => count($subscriptions)]
         );
     }
 
@@ -72,15 +59,6 @@ class SubscriptionController extends Controller
     {
         // Load relationships
         $subscription->load(['tenant', 'plan', 'subscriptionInvoices', 'items']);
-        
-        // In tenant context, ensure they can only view their own subscription
-        if (tenant() && $subscription->tenant_id !== tenant()->id) {
-            return ApiResponse::error(
-                'Unauthorized to view this subscription.',
-                [],
-                Response::HTTP_FORBIDDEN
-            );
-        }
         
         return ApiResponse::success(
             'Subscription details fetched successfully.',
@@ -93,14 +71,6 @@ class SubscriptionController extends Controller
      */
     public function destroy(Subscription $subscription)
     {
-        // In tenant context, ensure they can only cancel their own subscription
-        if (tenant() && $subscription->tenant_id !== tenant()->id) {
-            return ApiResponse::error(
-                'Unauthorized to cancel this subscription.',
-                [],
-                Response::HTTP_FORBIDDEN
-            );
-        }
         
         // If it's a Stripe subscription, cancel it via Stripe
         if ($subscription->stripe_id && !str_starts_with($subscription->stripe_id, 'manual_')) {

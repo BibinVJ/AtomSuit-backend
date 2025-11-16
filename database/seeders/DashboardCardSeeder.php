@@ -179,7 +179,5 @@ class DashboardCardSeeder extends Seeder
                 $card
             );
         }
-
-        $this->command->info('✓ Dashboard cards seeded successfully!');
     }
 }

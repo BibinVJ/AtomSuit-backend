@@ -3,11 +3,14 @@ This repository contains the API-only backend for the **Atom Suit** platform. It
 
 
 this is a erp system, and the backend in backend folder in laravel, frontend in frontend folder in nextjs, desktop in desktop folder in electron.
-
+it is a multitenant based subdomain for multiple tenant with seperate db for each tenant.
 it uses tenancy for laravel package and is a multi tenant based, subdomain and seperate db setup.
+registration and payment are captured using stripe.
 
-registration and payment are captured using stripe webhook,
-before setting in local or in server set the stripw webhook correctly.
+
+
+
+before setting stripe in local or in server set the stripw webhook correctly.
 
 
 ## System Requirements

@@ -139,6 +139,7 @@ class TenantService
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'email_verified_at' => $data['email_verified_at'] ?? null,
             'status' => TenantStatusEnum::ACTIVE->value,
             'trial_ends_at' => $plan->is_trial_plan ? now()->addDays($plan->trial_duration_in_days) : null,
             'grace_period_ends_at' => null,

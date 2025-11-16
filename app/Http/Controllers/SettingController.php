@@ -25,16 +25,9 @@ class SettingController extends Controller
     {
         $settings = $this->settingService->getAllGrouped();
         
-        // Transform grouped settings to resources
-        $transformed = collect($settings)->map(function ($groupSettings) {
-            return SettingResource::collection(
-                collect($groupSettings)->map(fn($s) => (object)$s)
-            );
-        });
-        
         return ApiResponse::success(
             'Settings fetched successfully.',
-            $transformed
+            $settings
         );
     }
 

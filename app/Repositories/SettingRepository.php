@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Http\Resources\SettingResource;
 use App\Models\Setting;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -44,17 +45,7 @@ class SettingRepository
             ->orderBy('key')
             ->get()
             ->groupBy('group')
-            ->map(function ($settings) {
-                return $settings->map(function ($setting) {
-                    return [
-                        'id' => $setting->id,
-                        'key' => $setting->key,
-                        'value' => $setting->value,
-                        'type' => $setting->type,
-                        'description' => $setting->description,
-                    ];
-                });
-            })
+            ->map(fn($settings) => SettingResource::collection($settings))
             ->toArray();
     }
 }
