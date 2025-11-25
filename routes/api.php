@@ -125,7 +125,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::prefix('tenant-subscription')->group(function () {
         Route::get('current', [TenantSubscriptionController::class, 'current']);
-        Route::get('change-plan', [TenantSubscriptionController::class, 'availablePlans']);
+        Route::get('change-plan', [TenantSubscriptionController::class, 'changePLan']);
         Route::post('cancel', [TenantSubscriptionController::class, 'cancel']);
     });
 

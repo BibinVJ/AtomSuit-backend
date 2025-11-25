@@ -14,6 +14,7 @@
         "laravel/telescope": "^5.9",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.29",
+        "me-shaon/laravel-request-analytics": "^1.8",
         "spatie/laravel-permission": "^6.18",
         "stancl/tenancy": "^3.9"
     },

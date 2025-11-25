@@ -317,8 +317,8 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'business_days',
-                'value' => '1,2,3,4,5',
-                'type' => 'string',
+                'value' => json_encode([1, 2, 3, 4, 5]),
+                'type' => 'json',
                 'group' => 'business',
                 'description' => 'Business days (1=Monday, 7=Sunday)',
             ],

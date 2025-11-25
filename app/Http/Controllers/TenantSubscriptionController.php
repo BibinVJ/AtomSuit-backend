@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ApiResponse;
-use App\Http\Resources\PlanResource;
+use App\Http\Requests\ChangePlanRequest;
 use App\Http\Resources\SubscriptionResource;
+use App\Models\Plan;
 use App\Services\StripeSubscriptionService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class TenantSubscriptionController extends Controller
@@ -27,16 +26,12 @@ class TenantSubscriptionController extends Controller
 
         return ApiResponse::success(
             'Current subscription fetched successfully',
-            SubscriptionResource::make($subscription->load('items.price'))
+            SubscriptionResource::make($subscription->load(['items.price', 'tenant', 'plan']))
         );
     }
 
-    public function changePlan(Request $request)
+    public function changePlan(ChangePlanRequest $request)
     {
-        $request->validate([
-            'plan_id' => 'required|exists:plans,id',
-        ]);
-
         $tenant = tenant();
         $subscription = $tenant->subscription('default');
 
@@ -46,14 +41,14 @@ class TenantSubscriptionController extends Controller
 
         try {
             $plan = tenancy()->central(function () use ($request) {
-                return \App\Models\Plan::findOrFail($request->plan_id);
+                return Plan::findOrFail($request->validated('plan_id'));
             });
 
             $updatedSubscription = $this->subscriptionService->changePlan($subscription, $plan);
 
             return ApiResponse::success(
                 'Subscription upgraded successfully',
-                SubscriptionResource::make($updatedSubscription->load('items.price'))
+                SubscriptionResource::make($updatedSubscription->load(['items.price', 'tenant', 'plan']))
             );
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to upgrade subscription: ' . $e->getMessage(), Response::HTTP_BAD_REQUEST);
@@ -74,7 +69,7 @@ class TenantSubscriptionController extends Controller
 
             return ApiResponse::success(
                 'Subscription will be cancelled at the end of current billing period',
-                SubscriptionResource::make($subscription->load('items.price'))
+                SubscriptionResource::make($subscription->load(['items.price', 'tenant', 'plan']))
             );
         } catch (\Exception $e) {
             return ApiResponse::error('Failed to cancel subscription: ' . $e->getMessage(), Response::HTTP_BAD_REQUEST);
