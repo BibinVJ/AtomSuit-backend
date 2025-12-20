@@ -6,27 +6,17 @@ use App\Models\Customer;
 use App\Repositories\CustomerRepository;
 use Exception;
 
-class CustomerService
+class CustomerService extends BaseService
 {
-    public function __construct(protected CustomerRepository $customerRepository) {}
-
-    public function delete(Customer $customer, bool $force = false)
-    {
-        if ($force) {
-            if ($customer->sales()->exists()) {
-                throw new Exception('Customer has active transactions and cannot be hard deleted.');
-            }
-            return $this->customerRepository->forceDelete($customer);
-        }
-
-        return $this->customerRepository->delete($customer);
+    public function __construct(protected CustomerRepository $customerRepository) {
+        $this->repository = $customerRepository;
     }
 
-    public function restore(int $id): Customer
+    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $customer): void
     {
-        $customer = Customer::onlyTrashed()->findOrFail($id);
-        $this->customerRepository->restore($customer);
-
-        return $customer;
+        /** @var \App\Models\Customer $customer */
+        if ($customer->sales()->exists()) {
+            throw new Exception('Customer has active transactions and cannot be hard deleted.');
+        }
     }
 }

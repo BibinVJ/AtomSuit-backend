@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\SettingBulkUpdateRequest;
 use App\Http\Requests\SettingRequest;
 use App\Http\Resources\SettingResource;
 use App\Services\SettingService;
@@ -95,9 +96,9 @@ class SettingController extends Controller
     /**
      * Bulk update settings.
      */
-    public function bulkUpdate(Request $request)
+    public function bulkUpdate(SettingBulkUpdateRequest $request)
     {
-        $settings = $request->except(['_token', '_method']);
+        $settings = $request->validated();
         
         $updated = $this->settingService->bulkUpdate($settings);
         

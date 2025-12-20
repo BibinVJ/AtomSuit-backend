@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class BatchController extends Controller
 {
+
     public function __construct(
         protected BatchRepository $batchRepository
     ) {

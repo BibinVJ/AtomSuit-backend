@@ -7,11 +7,13 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 
-class UserService
+class UserService extends BaseService
 {
     public function __construct(
-        private readonly UserRepository $userRepository
-    ) {}
+        protected readonly UserRepository $userRepository
+    ) {
+        $this->repository = $userRepository;
+    }
 
     public function create(array $data): User
     {
@@ -44,21 +46,5 @@ class UserService
         return $user;
     }
 
-    public function delete(User $user, bool $force = false)
-    {
-        if ($force) {
-            // Add checks if needed
-            return $this->userRepository->forceDelete($user);
-        }
-
-        return $this->userRepository->delete($user);
-    }
-
-    public function restore(int $id): User
-    {
-        $user = User::onlyTrashed()->findOrFail($id);
-        $this->userRepository->restore($user);
-
-        return $user;
-    }
+    // delete and restore are now handled by BaseService
 }

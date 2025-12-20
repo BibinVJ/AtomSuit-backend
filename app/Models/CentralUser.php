@@ -77,6 +77,6 @@ class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
 
     public function canAccessAnalyticsDashboard(): bool
     {
-        return $this->hasRole(\App\Enums\RolesEnum::SUPER_ADMIN->value);
+        return $this->hasPermissionTo(\App\Enums\PermissionsEnum::VIEW_SYSTEM_ANALYTICS->value);
     }
 }

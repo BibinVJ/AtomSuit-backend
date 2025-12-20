@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TenantController extends Controller
 {
+
     public function __construct(
         protected TenantRepository $tenantRepository,
         protected TenantService $tenantService,

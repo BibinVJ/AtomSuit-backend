@@ -17,13 +17,6 @@ class VendorRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (isset($filters['trashed'])) {
-            if ($filters['trashed'] === 'only') {
-                $query->onlyTrashed();
-            } elseif ($filters['trashed'] === 'with') {
-                $query->withTrashed();
-            }
-        }
 
 
         if (! empty($filters['search'])) {

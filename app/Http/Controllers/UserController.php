@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
+
     public function __construct(
         protected UserRepository $userRepository,
         protected UserService $userService,
@@ -72,12 +73,8 @@ class UserController extends Controller
             return ApiResponse::error('You cannot delete your own account.', Response::HTTP_FORBIDDEN);
         }
 
-        try {
-            $this->userService->delete($user, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'User permanently deleted.' : 'User deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->userService->delete($user, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'User permanently deleted.' : 'User deleted successfully.');
     }
 
     public function restore(int $id)

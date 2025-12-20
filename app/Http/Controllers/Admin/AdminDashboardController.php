@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\SetTenantContextRequest;
 use App\Models\Tenant;
 use Illuminate\Http\Request;
 
@@ -20,13 +21,11 @@ class AdminDashboardController extends Controller
     /**
      * Set the tenant context in session for analytics/tools.
      */
-    public function setTenantContext(Request $request)
+    public function setTenantContext(SetTenantContextRequest $request)
     {
-        $request->validate([
-            'tenant_id' => 'required|exists:tenants,id',
-        ]);
+        $validated = $request->validated();
 
-        session(['admin_tenant_id' => $request->tenant_id]);
+        session(['admin_tenant_id' => $validated['tenant_id']]);
 
         return redirect()->back()->with('success', 'Tenant context set successfully.');
     }

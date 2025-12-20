@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\ImportRequest;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
 use App\Models\Unit;
@@ -17,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class UnitController extends Controller
 {
+
     public function __construct(
         protected UnitRepository $unitRepository,
         protected UnitService $unitService
@@ -67,12 +69,8 @@ class UnitController extends Controller
     {
         $unit = Unit::withTrashed()->findOrFail($id);
         
-        try {
-            $this->unitService->delete($unit, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Unit permanently deleted.' : 'Unit deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->unitService->delete($unit, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Unit permanently deleted.' : 'Unit deleted successfully.');
     }
 
     public function restore(int $id)
@@ -87,12 +85,8 @@ class UnitController extends Controller
         return Excel::download(new UnitExport, 'units_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
-
         Excel::import(new UnitImport, $request->file('file'));
 
         return ApiResponse::success('Units imported successfully.');

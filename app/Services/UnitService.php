@@ -6,27 +6,17 @@ use App\Models\Unit;
 use App\Repositories\UnitRepository;
 use Exception;
 
-class UnitService
+class UnitService extends BaseService
 {
-    public function __construct(protected UnitRepository $unitRepository) {}
-
-    public function delete(Unit $unit, bool $force = false)
-    {
-        if ($force) {
-            if ($unit->items()->exists()) {
-                throw new Exception('Unit is assigned to items and cannot be hard deleted.');
-            }
-            return $this->unitRepository->forceDelete($unit);
-        }
-
-        return $this->unitRepository->delete($unit);
+    public function __construct(protected UnitRepository $unitRepository) {
+        $this->repository = $unitRepository;
     }
 
-    public function restore(int $id): Unit
+    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $unit): void
     {
-        $unit = Unit::onlyTrashed()->findOrFail($id);
-        $this->unitRepository->restore($unit);
-
-        return $unit;
+        /** @var \App\Models\Unit $unit */
+        if ($unit->items()->exists()) {
+            throw new Exception('Unit is assigned to items and cannot be hard deleted.');
+        }
     }
 }

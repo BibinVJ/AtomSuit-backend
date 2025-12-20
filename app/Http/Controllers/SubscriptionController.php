@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionController extends Controller
 {
+
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository
     ) {

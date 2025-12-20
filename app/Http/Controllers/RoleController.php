@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
+
     public function __construct(
         protected RoleRepository $roleRepository,
         protected RoleService $roleService,
@@ -88,12 +89,8 @@ class RoleController extends Controller
             return ApiResponse::error('Cannot delete a protected role.', code: Response::HTTP_FORBIDDEN);
         }
 
-        try {
-            $this->roleService->delete($role, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Role permanently deleted.' : 'Role deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->roleService->delete($role, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Role permanently deleted.' : 'Role deleted successfully.');
     }
 
     public function restore(int $id)

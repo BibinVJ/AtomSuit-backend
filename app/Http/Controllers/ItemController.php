@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PermissionsEnum;
 use App\Exports\ItemExport;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\ImportRequest;
 use App\Http\Requests\ItemRequest;
 use App\Http\Resources\ItemResource;
 use App\Imports\ItemImport;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends Controller
 {
+
     public function __construct(
         protected ItemRepository $itemRepository,
         protected ItemService $itemService
@@ -79,12 +81,8 @@ class ItemController extends Controller
     {
         $item = Item::withTrashed()->findOrFail($id);
         
-        try {
-            $this->itemService->delete($item, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Item permanently deleted.' : 'Item deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->itemService->delete($item, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Item permanently deleted.' : 'Item deleted successfully.');
     }
 
     public function restore(int $id)
@@ -99,19 +97,11 @@ class ItemController extends Controller
         return Excel::download(new ItemExport, 'items_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
+        Excel::import(new ItemImport, $request->file('file'));
 
-        try {
-            Excel::import(new ItemImport, $request->file('file'));
-
-            return ApiResponse::success('Items imported successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error('Import failed: '.$e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        return ApiResponse::success('Items imported successfully.');
     }
 
     public function downloadSample()

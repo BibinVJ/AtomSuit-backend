@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CustomerRequest;
+use App\Http\Requests\ImportRequest;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
@@ -17,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
+
     public function __construct(
         protected CustomerRepository $customerRepository,
         protected CustomerService $customerService
@@ -67,12 +69,8 @@ class CustomerController extends Controller
     {
         $customer = Customer::withTrashed()->findOrFail($id);
         
-        try {
-            $this->customerService->delete($customer, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Customer permanently deleted.' : 'Customer deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->customerService->delete($customer, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Customer permanently deleted.' : 'Customer deleted successfully.');
     }
 
     public function restore(int $id)
@@ -87,12 +85,8 @@ class CustomerController extends Controller
         return Excel::download(new CustomerExport, 'customers_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
-
         Excel::import(new CustomerImport, $request->file('file'));
 
         return ApiResponse::success('Customers imported successfully.');

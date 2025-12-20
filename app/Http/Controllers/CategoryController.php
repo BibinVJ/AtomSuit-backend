@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\ImportRequest;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Repositories\CategoryRepository;
@@ -17,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
+
     public function __construct(
         protected CategoryRepository $categoryRepository,
         protected CategoryService $categoryService
@@ -67,12 +69,8 @@ class CategoryController extends Controller
     {
         $category = Category::withTrashed()->findOrFail($id);
         
-        try {
-            $this->categoryService->delete($category, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Category permanently deleted.' : 'Category deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->categoryService->delete($category, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Category permanently deleted.' : 'Category deleted successfully.');
     }
 
     public function restore(int $id)
@@ -87,12 +85,8 @@ class CategoryController extends Controller
         return Excel::download(new CategoryExport, 'categories_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
-
         Excel::import(new CategoryImport, $request->file('file'));
 
         return ApiResponse::success('Categories imported successfully.');

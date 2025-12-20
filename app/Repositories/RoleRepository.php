@@ -17,18 +17,9 @@ class RoleRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (isset($filters['trashed'])) {
-            if ($filters['trashed'] === 'only') {
-                $query->onlyTrashed();
-            } elseif ($filters['trashed'] === 'with') {
-                $query->withTrashed();
-            }
-        }
-
         if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%'.$filters['search'].'%')
-                    ->orWhere('email', 'like', '%'.$filters['search'].'%');
+                $q->where('name', 'like', '%'.$filters['search'].'%');
             });
         }
 

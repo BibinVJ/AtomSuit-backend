@@ -23,7 +23,10 @@ trait HasCrudRepository
             $query->with($with);
         }
 
-        // Optional hook to apply filters
+        // Apply global filters (trashed, etc.)
+        $query = $this->applyGlobalFilters($query, $filters);
+
+        // Optional hook to apply specific filters
         if (method_exists($this, 'applyFilters')) {
             $query = $this->applyFilters($query, $filters);
         }
@@ -98,5 +101,23 @@ trait HasCrudRepository
     public function forceDelete(Model $model): bool
     {
         return $model->forceDelete();
+    }
+
+    protected function applyGlobalFilters(\Illuminate\Database\Eloquent\Builder $query, array $filters): \Illuminate\Database\Eloquent\Builder
+    {
+        if (isset($filters['trashed'])) {
+            if ($filters['trashed'] === 'only') {
+                $query->onlyTrashed();
+            } elseif ($filters['trashed'] === 'with') {
+                $query->withTrashed();
+            }
+        }
+
+        return $query;
+    }
+
+    public function getModel(): Model
+    {
+        return $this->model;
     }
 }

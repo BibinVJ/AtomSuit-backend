@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
 {
+
     public function __construct(
         protected SaleService $saleService,
         protected SaleRepository $saleRepo

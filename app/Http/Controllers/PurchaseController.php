@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseController extends Controller
 {
+
     public function __construct(
         protected PurchaseService $purchaseService,
         protected PurchaseRepository $purchaseRepo

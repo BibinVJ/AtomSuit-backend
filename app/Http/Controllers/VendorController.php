@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\ImportRequest;
 use App\Http\Requests\VendorRequest;
 use App\Http\Resources\VendorResource;
 use App\Models\Vendor;
@@ -17,6 +18,7 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class VendorController extends Controller
 {
+
     public function __construct(
         protected VendorRepository $vendorRepository,
         protected VendorService $vendorService
@@ -67,12 +69,8 @@ class VendorController extends Controller
     {
         $vendor = Vendor::withTrashed()->findOrFail($id);
         
-        try {
-            $this->vendorService->delete($vendor, $request->boolean('force'));
-            return ApiResponse::success($request->boolean('force') ? 'Vendor permanently deleted.' : 'Vendor deleted successfully.');
-        } catch (\Exception $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $this->vendorService->delete($vendor, $request->boolean('force'));
+        return ApiResponse::success($request->boolean('force') ? 'Vendor permanently deleted.' : 'Vendor deleted successfully.');
     }
 
     public function restore(int $id)
@@ -87,12 +85,8 @@ class VendorController extends Controller
         return Excel::download(new VendorExport, 'vendors_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
     }
 
-    public function import(Request $request)
+    public function import(ImportRequest $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:xlsx,xls,csv',
-        ]);
-
         Excel::import(new VendorImport, $request->file('file'));
 
         return ApiResponse::success('Vendors imported successfully.');

@@ -11,6 +11,7 @@ use Spatie\Activitylog\Models\Activity;
 
 class AuditController extends Controller
 {
+
     public function __construct(
         protected AuditRepository $auditRepository
     ) {
