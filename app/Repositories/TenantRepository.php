@@ -39,11 +39,4 @@ class TenantRepository
     {
         return Tenant::where('email', $email)->first();
     }
-
-    public function tenantCount(?array $statuses = null, ?array $roles = null): int
-    {
-        return Tenant::when($statuses, fn ($query) => $query->whereIn('status', $statuses))
-            ->when($roles, fn ($query) => $query->whereHas('roles', fn ($q) => $q->whereIn('name', $roles)))
-            ->count();
-    }
 }
