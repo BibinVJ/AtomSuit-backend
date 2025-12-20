@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('base_currency_id')->constrained('currencies')->onDelete('cascade');
             $table->foreignId('target_currency_id')->constrained('currencies')->onDelete('cascade');
             $table->decimal('rate', 15, 6);
-            $table->date('effective_date')->default(now());
+            $table->date('effective_date');
+            $table->softDeletes();
             $table->timestamps();
 
             $table->unique(['base_currency_id', 'target_currency_id', 'effective_date'], 'exchange_rate_unique');

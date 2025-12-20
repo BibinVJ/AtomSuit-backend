@@ -38,6 +38,7 @@ class CustomerRequest extends FormRequest
                 'required_without:email',
             ],
             'address' => 'nullable|string|max:500',
+            'currency_id' => 'required|exists:currencies,id',
         ];
     }
 

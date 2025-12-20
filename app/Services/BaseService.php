@@ -23,9 +23,8 @@ abstract class BaseService
         return $this->repository->delete($model);
     }
 
-    public function restore(int $id): Model
+    public function restore(Model $model): Model
     {
-        $model = $this->repository->getModel()::onlyTrashed()->findOrFail($id);
         $this->repository->restore($model);
 
         return $model;

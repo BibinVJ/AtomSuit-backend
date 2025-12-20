@@ -22,6 +22,7 @@ class CustomerResource extends BaseResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            'currency' => new CurrencyResource($this->whenLoaded('currency')),
             // 'total_spent' => $this->totalSpent(),
             'deleted_at' => $this->deleted_at,
         ];

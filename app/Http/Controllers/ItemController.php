@@ -76,18 +76,16 @@ class ItemController extends Controller
         return ApiResponse::success('Item updated successfully.', ItemResource::make($updatedItem));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Item $item)
     {
-        $item = Item::withTrashed()->findOrFail($id);
-
         $this->itemService->delete($item, $request->boolean('force'));
 
         return ApiResponse::success($request->boolean('force') ? 'Item permanently deleted.' : 'Item deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Item $item)
     {
-        $item = $this->itemService->restore($id);
+        $item = $this->itemService->restore($item);
 
         return ApiResponse::success('Item restored successfully.', ItemResource::make($item));
     }

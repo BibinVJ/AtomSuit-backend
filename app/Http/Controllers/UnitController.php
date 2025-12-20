@@ -64,18 +64,16 @@ class UnitController extends Controller
         return ApiResponse::success('Unit updated successfully.', UnitResource::make($updatedUnit));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Unit $unit)
     {
-        $unit = Unit::withTrashed()->findOrFail($id);
-
         $this->unitService->delete($unit, $request->boolean('force'));
 
         return ApiResponse::success($request->boolean('force') ? 'Unit permanently deleted.' : 'Unit deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Unit $unit)
     {
-        $unit = $this->unitService->restore($id);
+        $unit = $this->unitService->restore($unit);
 
         return ApiResponse::success('Unit restored successfully.', UnitResource::make($unit));
     }

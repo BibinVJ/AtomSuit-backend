@@ -64,18 +64,16 @@ class CategoryController extends Controller
         return ApiResponse::success('Category updated successfully.', CategoryResource::make($updatedCategory));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Category $category)
     {
-        $category = Category::withTrashed()->findOrFail($id);
-
         $this->categoryService->delete($category, $request->boolean('force'));
 
         return ApiResponse::success($request->boolean('force') ? 'Category permanently deleted.' : 'Category deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Category $category)
     {
-        $category = $this->categoryService->restore($id);
+        $category = $this->categoryService->restore($category);
 
         return ApiResponse::success('Category restored successfully.', CategoryResource::make($category));
     }

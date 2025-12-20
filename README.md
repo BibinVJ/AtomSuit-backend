@@ -2,8 +2,8 @@
 This repository contains the API-only backend for the **Atom Suit** platform. It is built using the Laravel framework (v12).
 
 
-this is a erp system, and the backend in backend folder in laravel, frontend in frontend folder in nextjs, desktop in desktop folder in electron.
-it is a multitenant based subdomain for multiple tenant with seperate db for each tenant.
+this is a complete erp system suit, and the backend is in the backend folder written in laravel, frontend is in frontend folder written in nextjs, desktop is in desktop folder written in electron.
+it is a multitenant based, seperate subdomain for each tenant with seperate db for each tenant.
 it uses tenancy for laravel package and is a multi tenant based, subdomain and seperate db setup.
 registration and payment are captured using stripe.
 
@@ -102,6 +102,12 @@ git checkout -b enhancement/optimize-export-performance
 
 ---
 
+
+
+
+
+
+
 # Transaction Workflow
 
 ## Purchasing Flow
@@ -135,9 +141,16 @@ git checkout -b enhancement/optimize-export-performance
 
 Same principles apply for Sales as well.
 
-# Manual Transaction Creation
-- **No auto-created records.** All transactions (Invoices, GRNs, Delivery Notes) must be explicitly created by the user through the frontend interface.
-- This may evolve based on user feedback for streamlining bulk operations.
+
+# currency setup
+and for a tenant there is only one dafault system currency, this is set up on their first login time, if they have not set it up it will prompt to set it up on login.
+
+nad once this default system currency is set they cannot change it.
+
+
+
+
+
 
 ---
 

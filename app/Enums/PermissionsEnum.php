@@ -90,6 +90,18 @@ enum PermissionsEnum: string
     case UPDATE_SALE = 'update-sale';
     case DELETE_SALE = 'delete-sale';
 
+    // currency management
+    case VIEW_CURRENCY = 'view-currency';
+    case CREATE_CURRENCY = 'create-currency';
+    case UPDATE_CURRENCY = 'update-currency';
+    case DELETE_CURRENCY = 'delete-currency';
+
+    // exchange rate management
+    case VIEW_EXCHANGE_RATE = 'view-exchange-rate';
+    case CREATE_EXCHANGE_RATE = 'create-exchange-rate';
+    case UPDATE_EXCHANGE_RATE = 'update-exchange-rate';
+    case DELETE_EXCHANGE_RATE = 'delete-exchange-rate';
+
     // Audit
     case VIEW_AUDIT = 'view-audit';
 

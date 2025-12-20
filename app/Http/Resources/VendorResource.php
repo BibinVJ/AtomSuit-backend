@@ -22,6 +22,7 @@ class VendorResource extends BaseResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
+            'currency' => new CurrencyResource($this->whenLoaded('currency')),
             'deleted_at' => $this->deleted_at,
         ];
     }

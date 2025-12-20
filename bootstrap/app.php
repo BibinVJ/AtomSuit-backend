@@ -31,7 +31,8 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         // Force all API responses to be JSON
-        $middleware->group('api', [
+        // Force all API responses to be JSON
+        $middleware->api(append: [
             \App\Http\Middleware\ForceJsonResponse::class,
         ]);
     })

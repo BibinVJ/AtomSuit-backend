@@ -64,18 +64,16 @@ class CustomerController extends Controller
         return ApiResponse::success('Customer updated successfully.', CustomerResource::make($updatedCustomer));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Customer $customer)
     {
-        $customer = Customer::withTrashed()->findOrFail($id);
-
         $this->customerService->delete($customer, $request->boolean('force'));
 
         return ApiResponse::success($request->boolean('force') ? 'Customer permanently deleted.' : 'Customer deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Customer $customer)
     {
-        $customer = $this->customerService->restore($id);
+        $customer = $this->customerService->restore($customer);
 
         return ApiResponse::success('Customer restored successfully.', CustomerResource::make($customer));
     }

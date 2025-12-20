@@ -64,10 +64,8 @@ class UserController extends Controller
         return ApiResponse::success('User updated successfully.', UserResource::make($updatedUser));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, User $user)
     {
-        $user = User::withTrashed()->findOrFail($id);
-
         if ($user->id === auth()->id()) {
             return ApiResponse::error('You cannot delete your own account.', Response::HTTP_FORBIDDEN);
         }
@@ -77,9 +75,9 @@ class UserController extends Controller
         return ApiResponse::success($request->boolean('force') ? 'User permanently deleted.' : 'User deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(User $user)
     {
-        $user = $this->userService->restore($id);
+        $user = $this->userService->restore($user);
 
         return ApiResponse::success('User restored successfully.', UserResource::make($user));
     }

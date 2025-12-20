@@ -64,18 +64,16 @@ class VendorController extends Controller
         return ApiResponse::success('Vendor updated successfully.', VendorResource::make($updatedVendor));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Vendor $vendor)
     {
-        $vendor = Vendor::withTrashed()->findOrFail($id);
-
         $this->vendorService->delete($vendor, $request->boolean('force'));
 
         return ApiResponse::success($request->boolean('force') ? 'Vendor permanently deleted.' : 'Vendor deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Vendor $vendor)
     {
-        $vendor = $this->vendorService->restore($id);
+        $vendor = $this->vendorService->restore($vendor);
 
         return ApiResponse::success('Vendor restored successfully.', VendorResource::make($vendor));
     }

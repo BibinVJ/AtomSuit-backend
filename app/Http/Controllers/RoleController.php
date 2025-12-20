@@ -80,10 +80,8 @@ class RoleController extends Controller
         return ApiResponse::success('Role updated successfully.', RoleResource::make($updatedRole));
     }
 
-    public function destroy(Request $request, int $id)
+    public function destroy(Request $request, Role $role)
     {
-        $role = Role::withTrashed()->findOrFail($id);
-
         if (in_array($role->name, [RolesEnum::SUPER_ADMIN->value, RolesEnum::ADMIN->value])) {
             return ApiResponse::error('Cannot delete a protected role.', code: Response::HTTP_FORBIDDEN);
         }
@@ -93,9 +91,9 @@ class RoleController extends Controller
         return ApiResponse::success($request->boolean('force') ? 'Role permanently deleted.' : 'Role deleted successfully.');
     }
 
-    public function restore(int $id)
+    public function restore(Role $role)
     {
-        $role = $this->roleService->restore($id);
+        $role = $this->roleService->restore($role);
 
         return ApiResponse::success('Role restored successfully.', RoleResource::make($role));
     }
