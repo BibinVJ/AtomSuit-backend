@@ -2,9 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Models\Role;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
-use App\Models\Role;
 
 class RoleRepository
 {

@@ -9,7 +9,6 @@ use App\Models\Subscription;
 use App\Models\SubscriptionInvoice;
 use App\Models\Tenant;
 use App\Repositories\TenantRepository;
-use App\Services\StripeSubscriptionService;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 
@@ -23,84 +22,82 @@ class TenantService
 
     /**
      * Get comprehensive tenant statistics.
-     *
-     * @return array
      */
     public function getStats(): array
     {
         $totalTenants = Tenant::count();
         $activeTenants = Tenant::where('status', TenantStatusEnum::ACTIVE->value)->count();
         $suspendedTenants = Tenant::where('status', TenantStatusEnum::SUSPENDED->value)->count();
-        
+
         // Tenants on trial (trial_ends_at is in the future)
         $onTrial = Tenant::where('trial_ends_at', '>', now())
             ->where('status', TenantStatusEnum::ACTIVE->value)
             ->count();
-        
+
         // Tenants in grace period
         $inGracePeriod = Tenant::where('grace_period_ends_at', '>', now())
             ->count();
-        
+
         // Expired tenants (trial/grace period ended)
-        $expired = Tenant::where(function($query) {
+        $expired = Tenant::where(function ($query) {
             $query->where('trial_ends_at', '<=', now())
-                  ->orWhere('grace_period_ends_at', '<=', now());
+                ->orWhere('grace_period_ends_at', '<=', now());
         })
-        ->whereDoesntHave('subscriptions', function($query) {
-            $query->whereIn('stripe_status', ['active', 'trialing']);
-        })
-        ->count();
-        
+            ->whereDoesntHave('subscriptions', function ($query) {
+                $query->whereIn('stripe_status', ['active', 'trialing']);
+            })
+            ->count();
+
         // Paid subscribers (active Stripe subscriptions)
-        $paidSubscribers = Tenant::whereHas('subscriptions', function($query) {
+        $paidSubscribers = Tenant::whereHas('subscriptions', function ($query) {
             $query->whereIn('stripe_status', ['active', 'trialing']);
         })->count();
-        
+
         // Breakdown by plan - get from subscriptions or direct plan relationship
         $planBreakdown = [];
-        
+
         // Get plans from active subscriptions
         $subscriptionPlans = Subscription::whereIn('stripe_status', ['active', 'trialing'])
             ->with('plan:id,name')
             ->get()
-            ->groupBy(fn($sub) => $sub->plan?->name ?? 'Unknown')
-            ->map(fn($subs) => $subs->count())
+            ->groupBy(fn ($sub) => $sub->plan?->name ?? 'Unknown')
+            ->map(fn ($subs) => $subs->count())
             ->toArray();
-        
+
         // Get plans from tenants without active subscriptions (trial/expired users)
         $directPlans = Tenant::with('plan:id,name')
-            ->whereDoesntHave('subscriptions', function($query) {
+            ->whereDoesntHave('subscriptions', function ($query) {
                 $query->whereIn('stripe_status', ['active', 'trialing']);
             })
             ->get()
-            ->groupBy(fn($tenant) => $tenant->plan?->name ?? 'No Plan')
-            ->map(fn($tenants) => $tenants->count())
+            ->groupBy(fn ($tenant) => $tenant->plan?->name ?? 'No Plan')
+            ->map(fn ($tenants) => $tenants->count())
             ->toArray();
-        
+
         // Merge both arrays
         foreach ($subscriptionPlans as $planName => $count) {
             $planBreakdown[$planName] = ($planBreakdown[$planName] ?? 0) + $count;
         }
-        
+
         foreach ($directPlans as $planName => $count) {
             $planBreakdown[$planName] = ($planBreakdown[$planName] ?? 0) + $count;
         }
-        
+
         // Revenue stats (from subscription invoices)
         $totalRevenue = SubscriptionInvoice::where('payment_status', 'paid')
             ->sum('amount');
-        
+
         $monthlyRevenue = SubscriptionInvoice::where('payment_status', 'paid')
             ->whereMonth('invoice_date', now()->month)
             ->whereYear('invoice_date', now()->year)
             ->sum('amount');
-        
+
         // Recent registrations (last 30 days)
         $recentRegistrations = Tenant::where('created_at', '>=', now()->subDays(30))->count();
-        
+
         // Archived tenants
         $archivedTotal = ArchivedTenant::count();
-        
+
         return [
             'overview' => [
                 'total' => $totalTenants,
@@ -121,8 +118,8 @@ class TenantService
             ],
             'growth' => [
                 'last_30_days' => $recentRegistrations,
-                'conversion_rate' => $totalTenants > 0 
-                    ? number_format(($paidSubscribers / $totalTenants) * 100, 2) . '%'
+                'conversion_rate' => $totalTenants > 0
+                    ? number_format(($paidSubscribers / $totalTenants) * 100, 2).'%'
                     : '0%',
             ],
         ];
@@ -132,7 +129,7 @@ class TenantService
     {
         $plan = Plan::findOrFail($data['plan_id']);
 
-        //check domain availability
+        // check domain availability
         $this->domainService->checkDomainAvailability($data['domain_name']);
 
         $tenant = Tenant::create([
@@ -150,7 +147,7 @@ class TenantService
 
         // Create manual subscription for paid plans (offline payment)
         // Skip for trial plans as they will create subscription after payment
-        if (!$plan->is_trial_plan) {
+        if (! $plan->is_trial_plan) {
             $this->createManualSubscription($tenant, $plan);
         }
 
@@ -162,15 +159,11 @@ class TenantService
      * This is used when payment is received outside of Stripe (cash, bank transfer, etc.)
      * or when superadmin creates a tenant directly with a paid plan.
      * Also creates an initial invoice record.
-     *
-     * @param Tenant $tenant
-     * @param Plan $plan
-     * @return Subscription
      */
     public function createManualSubscription(Tenant $tenant, Plan $plan): Subscription
     {
         // Generate a unique subscription ID for manual subscriptions
-        $stripeId = 'manual_' . $plan->slug . '_' . $tenant->id;
+        $stripeId = 'manual_'.$plan->slug.'_'.$tenant->id;
 
         $subscription = $tenant->subscriptions()->updateOrCreate(
             ['stripe_id' => $stripeId],
@@ -187,13 +180,13 @@ class TenantService
         );
 
         // Create initial invoice for manual subscription (if not exists)
-        if (!$subscription->subscriptionInvoices()->exists()) {
+        if (! $subscription->subscriptionInvoices()->exists()) {
             SubscriptionInvoice::create([
                 'subscription_id' => $subscription->id,
                 'amount' => $plan->price,
                 'currency' => 'USD',
                 'payment_status' => 'paid',
-                'transaction_id' => 'manual_' . $subscription->id . '_initial',
+                'transaction_id' => 'manual_'.$subscription->id.'_initial',
                 'invoice_date' => now(),
                 'metadata' => [
                     'payment_method' => 'manual',
@@ -220,9 +213,7 @@ class TenantService
      * 3. Delete tenant database and files
      * 4. Delete tenant record from database
      *
-     * @param Tenant $tenant
-     * @param string|null $reason Reason for deletion
-     * @return void
+     * @param  string|null  $reason  Reason for deletion
      */
     public function delete(Tenant $tenant, ?string $reason = null): void
     {
@@ -238,10 +229,6 @@ class TenantService
 
     /**
      * Archive tenant data for future reference and marketing.
-     *
-     * @param Tenant $tenant
-     * @param string|null $reason
-     * @return ArchivedTenant
      */
     protected function archiveTenant(Tenant $tenant, ?string $reason = null): ArchivedTenant
     {
@@ -269,5 +256,4 @@ class TenantService
             ],
         ]);
     }
-
 }

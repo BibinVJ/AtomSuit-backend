@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Item;
 use App\Repositories\ItemRepository;
 use Exception;
 
 class ItemService extends BaseService
 {
-    public function __construct(protected ItemRepository $itemRepository) {
+    public function __construct(protected ItemRepository $itemRepository)
+    {
         $this->repository = $itemRepository;
     }
 

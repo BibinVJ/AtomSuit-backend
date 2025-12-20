@@ -11,6 +11,7 @@ class DomainService
     {
         $url = preg_replace('#^https?://#', '', $url);
         $url = preg_replace('#^www\.#', '', $url);
+
         return rtrim($url, '/');
     }
 
@@ -19,8 +20,8 @@ class DomainService
         $baseUrl = self::normalize(config('tenancy.base_domain'));
         $domain = strtolower(str_replace(' ', '-', $slug));
 
-        if (!str_ends_with($domain, $baseUrl)) {
-            $domain .= '.' . $baseUrl;
+        if (! str_ends_with($domain, $baseUrl)) {
+            $domain .= '.'.$baseUrl;
         }
 
         return $domain;

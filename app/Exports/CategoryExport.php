@@ -12,8 +12,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class CategoryExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return Category::all();

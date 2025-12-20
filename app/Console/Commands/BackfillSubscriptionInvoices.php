@@ -11,14 +11,16 @@ use Stripe\StripeClient;
 class BackfillSubscriptionInvoices extends Command
 {
     protected $signature = 'subscriptions:backfill-invoices {--limit=100 : Number of invoices to fetch per subscription}';
+
     protected $description = 'Backfill subscription invoices from Stripe for existing subscriptions';
 
     protected StripeClient $stripe;
 
     public function handle()
     {
-        if (!config('services.stripe.secret')) {
+        if (! config('services.stripe.secret')) {
             $this->error('Stripe secret key not configured.');
+
             return Command::FAILURE;
         }
 
@@ -29,6 +31,7 @@ class BackfillSubscriptionInvoices extends Command
 
         if ($subscriptions->isEmpty()) {
             $this->info('No subscriptions found.');
+
             return Command::SUCCESS;
         }
 
@@ -52,6 +55,7 @@ class BackfillSubscriptionInvoices extends Command
                     $this->createManualInvoiceIfNeeded($subscription);
                     $totalSkipped++;
                     $progressBar->advance();
+
                     continue;
                 }
 
@@ -127,7 +131,7 @@ class BackfillSubscriptionInvoices extends Command
 
         // Create initial invoice for manual subscription
         $plan = $subscription->plan;
-        if (!$plan) {
+        if (! $plan) {
             return;
         }
 
@@ -136,7 +140,7 @@ class BackfillSubscriptionInvoices extends Command
             'amount' => $plan->price,
             'currency' => 'USD',
             'payment_status' => 'paid',
-            'transaction_id' => 'manual_' . $subscription->id . '_initial',
+            'transaction_id' => 'manual_'.$subscription->id.'_initial',
             'invoice_date' => $subscription->created_at,
             'metadata' => [
                 'payment_method' => 'manual',

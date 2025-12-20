@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use App\Enums\UserStatus;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,9 +15,10 @@ use Spatie\Permission\Traits\HasRoles;
 
 class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes, AppAudit;
+    use AppAudit, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $table = 'users';
+
     protected $guard_name = 'api';
 
     /**
@@ -67,8 +69,6 @@ class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
 
     /**
      * Get the name of the provider for the model.
-     *
-     * @return string
      */
     public function getProviderName(): string
     {

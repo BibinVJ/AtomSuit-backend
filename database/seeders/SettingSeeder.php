@@ -363,7 +363,7 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'group' => 'social',
                 'description' => 'YouTube channel URL',
-            ]
+            ],
         ];
 
         foreach ($settings as $setting) {

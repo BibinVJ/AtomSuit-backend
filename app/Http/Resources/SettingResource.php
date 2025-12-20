@@ -23,7 +23,7 @@ class SettingResource extends BaseResource
             'type' => $this->type,
             'group' => $this->group,
             'description' => $this->description,
-            'file_url' => $this->type === 'file' && $this->value ? asset('storage/' . $this->value) : null,
+            'file_url' => $this->type === 'file' && $this->value ? asset('storage/'.$this->value) : null,
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

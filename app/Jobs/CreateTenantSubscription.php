@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Subscription;
 use App\Models\Tenant;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -25,6 +24,6 @@ class CreateTenantSubscription implements ShouldQueue
     {
         // Cashier will create subscriptions upon successful Stripe checkout.
         // Trials are managed via tenants.trial_ends_at.
-        return;
+
     }
 }

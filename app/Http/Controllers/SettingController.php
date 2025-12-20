@@ -8,15 +8,14 @@ use App\Http\Requests\SettingBulkUpdateRequest;
 use App\Http\Requests\SettingRequest;
 use App\Http\Resources\SettingResource;
 use App\Services\SettingService;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class SettingController extends Controller
 {
     public function __construct(protected SettingService $settingService)
     {
-        $this->middleware('permission:' . PermissionsEnum::VIEW_SETTING->value)->only(['index', 'show', 'getByGroup', 'groups']);
-        $this->middleware('permission:' . PermissionsEnum::UPDATE_SETTING->value)->only(['update', 'bulkUpdate', 'destroy', 'deleteFile']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_SETTING->value)->only(['index', 'show', 'getByGroup', 'groups']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_SETTING->value)->only(['update', 'bulkUpdate', 'destroy', 'deleteFile']);
     }
 
     /**
@@ -25,7 +24,7 @@ class SettingController extends Controller
     public function index()
     {
         $settings = $this->settingService->getAllGrouped();
-        
+
         return ApiResponse::success(
             'Settings fetched successfully.',
             $settings
@@ -38,7 +37,7 @@ class SettingController extends Controller
     public function getByGroup(string $group)
     {
         $settings = $this->settingService->getByGroup($group);
-        
+
         return ApiResponse::success(
             'Settings fetched successfully.',
             SettingResource::collection($settings)
@@ -51,14 +50,14 @@ class SettingController extends Controller
     public function show(string $key)
     {
         $value = $this->settingService->get($key);
-        
+
         if ($value === null) {
             return ApiResponse::error(
                 'Setting not found.',
                 Response::HTTP_NOT_FOUND
             );
         }
-        
+
         return ApiResponse::success(
             'Setting fetched successfully.',
             [
@@ -86,7 +85,7 @@ class SettingController extends Controller
         }
 
         $setting = $this->settingService->set($key, $value, $type, $group);
-        
+
         return ApiResponse::success(
             'Setting updated successfully.',
             SettingResource::make($setting)
@@ -99,9 +98,9 @@ class SettingController extends Controller
     public function bulkUpdate(SettingBulkUpdateRequest $request)
     {
         $settings = $request->validated();
-        
+
         $updated = $this->settingService->bulkUpdate($settings);
-        
+
         return ApiResponse::success(
             'Settings updated successfully.',
             $updated
@@ -114,14 +113,14 @@ class SettingController extends Controller
     public function destroy(string $key)
     {
         $deleted = $this->settingService->delete($key);
-        
-        if (!$deleted) {
+
+        if (! $deleted) {
             return ApiResponse::error(
                 'Setting not found.',
                 Response::HTTP_NOT_FOUND
             );
         }
-        
+
         return ApiResponse::success('Setting deleted successfully.');
     }
 
@@ -131,14 +130,14 @@ class SettingController extends Controller
     public function deleteFile(string $key)
     {
         $deleted = $this->settingService->deleteFile($key);
-        
-        if (!$deleted) {
+
+        if (! $deleted) {
             return ApiResponse::error(
                 'File not found or setting is not a file type.',
                 Response::HTTP_NOT_FOUND
             );
         }
-        
+
         return ApiResponse::success('File deleted successfully.');
     }
 
@@ -148,7 +147,7 @@ class SettingController extends Controller
     public function groups()
     {
         $groups = $this->settingService->getGroups();
-        
+
         return ApiResponse::success(
             'Setting groups fetched successfully.',
             $groups

@@ -10,7 +10,7 @@ return new class extends Migration
     {
         $tableName = config('request-analytics.database.table', 'request_analytics');
         $connection = config('request-analytics.database.connection');
-        
+
         Schema::connection($connection)->table($tableName, function (Blueprint $table) {
             $table->index('visited_at');
             $table->index('session_id');
@@ -29,7 +29,7 @@ return new class extends Migration
     {
         $tableName = config('request-analytics.database.table', 'request_analytics');
         $connection = config('request-analytics.database.connection');
-        
+
         Schema::connection($connection)->table($tableName, function (Blueprint $table) {
             $table->dropIndex(['visited_at']);
             $table->dropIndex(['session_id']);

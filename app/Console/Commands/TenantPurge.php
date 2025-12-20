@@ -44,9 +44,9 @@ class TenantPurge extends Command
     private function getAllTables($connection): array
     {
         $dbName = $connection->getDatabaseName();
-        $tables = $connection->select("SHOW TABLES");
+        $tables = $connection->select('SHOW TABLES');
         $column = "Tables_in_{$dbName}";
 
-        return array_map(fn($row) => $row->$column, $tables);
+        return array_map(fn ($row) => $row->$column, $tables);
     }
 }

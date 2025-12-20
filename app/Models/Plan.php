@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use App\Enums\PlanIntervalEnum;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Plan extends Model
 {
-    use SoftDeletes, AppAudit;
+    use AppAudit, SoftDeletes;
+
     protected $fillable = [
         'name',
         'price',
@@ -67,6 +68,7 @@ class Plan extends Model
     public function getFeature(string $featureKey, $default = null)
     {
         $feature = $this->features()->where('feature_key', $featureKey)->first();
+
         return $feature ? $feature->value : $default;
     }
 

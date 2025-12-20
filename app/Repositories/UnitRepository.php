@@ -2,7 +2,6 @@
 
 namespace App\Repositories;
 
-use App\Enums\RolesEnum;
 use App\Models\Unit;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -18,7 +17,6 @@ class UnitRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-
 
         if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {

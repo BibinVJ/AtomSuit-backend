@@ -14,12 +14,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class User extends Authenticatable implements OAuthenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes, AppAudit;
+    use AppAudit, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
 
@@ -98,8 +97,6 @@ class User extends Authenticatable implements OAuthenticatable
 
     /**
      * Get the name of the provider for the model.
-     *
-     * @return string
      */
     public function getProviderName(): string
     {

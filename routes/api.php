@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ApiResponse;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\BatchController;
@@ -21,7 +22,6 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantSubscriptionController;
-use App\Http\Controllers\AuditController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -46,8 +46,9 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    $context = tenant() ? 'Tenant: ' . tenant()->name : 'Central';
-    return ApiResponse::success('API ping successful - ' . config('app.name') . ' (' . $context . ')');
+    $context = tenant() ? 'Tenant: '.tenant()->name : 'Central';
+
+    return ApiResponse::success('API ping successful - '.config('app.name').' ('.$context.')');
 });
 
 Route::get('plan', [PlanController::class, 'index']);
@@ -66,7 +67,6 @@ Route::prefix('auth')->group(function () {
     Route::post('verify-otp', [PasswordResetController::class, 'verifyOtp']);
     Route::post('reset-password', [PasswordResetController::class, 'resetPassword']);
 });
-
 
 /*
 |--------------------------------------------------------------------------
@@ -99,7 +99,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('profile-image', [UserProfileController::class, 'removeProfileImage']);
     });
 
-
     /*
     |--------------------------------------------------------------------------
     | Plan
@@ -111,7 +110,6 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/{plan}', [PlanController::class, 'update']);
         Route::delete('/{plan}', [PlanController::class, 'destroy']);
     });
-
 
     /*
     |--------------------------------------------------------------------------
@@ -132,7 +130,6 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('domain', [DomainController::class, 'index']);
 
-
     /*
     |--------------------------------------------------------------------------
     | Accounting
@@ -146,7 +143,6 @@ Route::middleware(['auth:api'])->group(function () {
     // currency
     // exchange rate
     // gl settings
-
 
     /*
     |--------------------------------------------------------------------------
@@ -177,7 +173,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('batch', BatchController::class);
     // warehouse
 
-
     /*
     |--------------------------------------------------------------------------
     | Customer & Sales
@@ -193,7 +188,6 @@ Route::middleware(['auth:api'])->group(function () {
     /* Sale */
     Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
     Route::apiResource('sale', SaleController::class);
-
 
     /*
     |--------------------------------------------------------------------------
@@ -211,13 +205,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
     Route::apiResource('purchase', PurchaseController::class);
 
-
     /*
     |--------------------------------------------------------------------------
     | Reports
     |--------------------------------------------------------------------------
     */
-
 
     /*
     |--------------------------------------------------------------------------
@@ -255,13 +247,12 @@ Route::middleware(['auth:api'])->group(function () {
     });
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | Webhook Callback Routes
 |--------------------------------------------------------------------------
 */
 Route::prefix('webhook')->middleware('log.webhook')->group(function () {
-    Route::get('/', fn() => response()->json(['message' => 'Central webhook ping successful!']));
+    Route::get('/', fn () => response()->json(['message' => 'Central webhook ping successful!']));
     Route::post('stripe', [StripeWebhookController::class, 'handleWebhook']);
 });

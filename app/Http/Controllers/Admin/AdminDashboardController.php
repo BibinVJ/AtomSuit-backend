@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\SetTenantContextRequest;
 use App\Models\Tenant;
-use Illuminate\Http\Request;
 
 class AdminDashboardController extends Controller
 {
@@ -15,6 +14,7 @@ class AdminDashboardController extends Controller
     public function index()
     {
         $tenants = Tenant::with('domains')->get();
+
         return view('admin.dashboard', compact('tenants'));
     }
 

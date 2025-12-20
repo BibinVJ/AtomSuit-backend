@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use Illuminate\Database\Eloquent\Model;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseService
 {
@@ -16,6 +16,7 @@ abstract class BaseService
     {
         if ($force) {
             $this->validateForceDelete($model);
+
             return $this->repository->forceDelete($model);
         }
 

@@ -2,12 +2,11 @@
 
 use App\Models\Setting;
 
-if (!function_exists('setting')) {
+if (! function_exists('setting')) {
     /**
      * Get a setting value by key with optional default.
      *
-     * @param string $key
-     * @param mixed $default
+     * @param  mixed  $default
      * @return mixed
      */
     function setting(string $key, $default = null)
@@ -16,15 +15,11 @@ if (!function_exists('setting')) {
     }
 }
 
-if (!function_exists('set_setting')) {
+if (! function_exists('set_setting')) {
     /**
      * Set a setting value.
      *
-     * @param string $key
-     * @param mixed $value
-     * @param string|null $type
-     * @param string|null $group
-     * @return void
+     * @param  mixed  $value
      */
     function set_setting(string $key, $value, ?string $type = null, ?string $group = null): void
     {
@@ -32,13 +27,9 @@ if (!function_exists('set_setting')) {
     }
 }
 
-if (!function_exists('format_currency')) {
+if (! function_exists('format_currency')) {
     /**
      * Format a number as currency based on settings.
-     *
-     * @param float $amount
-     * @param string|null $currency
-     * @return string
      */
     function format_currency(float $amount, ?string $currency = null): string
     {
@@ -51,8 +42,8 @@ if (!function_exists('format_currency')) {
 
         $formatted = number_format($amount, $decimalPlaces, $decimalSeparator, $thousandSeparator);
 
-        return $position === 'before' 
-            ? $symbol . $formatted 
-            : $formatted . $symbol;
+        return $position === 'before'
+            ? $symbol.$formatted
+            : $formatted.$symbol;
     }
 }

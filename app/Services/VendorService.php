@@ -2,14 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\Vendor;
 use App\Repositories\VendorRepository;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class VendorService extends BaseService
 {
-    public function __construct(protected VendorRepository $vendorRepository) {
+    public function __construct(protected VendorRepository $vendorRepository)
+    {
         $this->repository = $vendorRepository;
     }
 

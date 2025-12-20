@@ -187,7 +187,7 @@ class CentralSettingSeeder extends Seeder
             // SEO Settings
             [
                 'key' => 'meta_title',
-                'value' => config('app.name', 'Atomsuit') . ' - ERP Solution',
+                'value' => config('app.name', 'Atomsuit').' - ERP Solution',
                 'type' => 'string',
                 'group' => 'seo',
                 'description' => 'Default meta title for pages',

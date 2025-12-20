@@ -165,8 +165,8 @@ enum PermissionsEnum: string
         ];
 
         return collect(self::cases())
-            ->map(fn($case) => $case->value)
-            ->reject(fn($permission) => in_array($permission, $excluded, true))
+            ->map(fn ($case) => $case->value)
+            ->reject(fn ($permission) => in_array($permission, $excluded, true))
             ->values()
             ->toArray();
     }

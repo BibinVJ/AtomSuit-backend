@@ -3,15 +3,13 @@
 namespace App\Services\Auth;
 
 use App\DataTransferObjects\AuthenticatedUserDTO;
-use App\Enums\TenantStatusEnum;
 use App\Enums\UserStatus;
 use App\Helpers\AuthResponseFormatter;
 use App\Http\Resources\UserResource;
-use App\Jobs\SendWelcomeUserMailJob;
-use App\Models\User;
 use App\Models\CentralUser;
 use App\Models\Plan;
 use App\Models\Tenant;
+use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\ContextAwareService;
 use App\Services\TenantService;
@@ -29,7 +27,7 @@ class AuthService extends ContextAwareService
 
     /**
      * Register a new tenant
-     * 
+     *
      * Central-only: Provision tenant, admin, token, and optionally prepare checkout.
      */
     public function register(array $data): array
@@ -52,7 +50,7 @@ class AuthService extends ContextAwareService
             'password' => $data['password'],
             'plan_id' => $trialPlan->id,
             'domain_name' => $data['domain_name'],
-            'load_sample_data' => (bool)($data['load_sample_data'] ?? false),
+            'load_sample_data' => (bool) ($data['load_sample_data'] ?? false),
         ]);
 
         // Create admin token inside tenant context
@@ -78,12 +76,12 @@ class AuthService extends ContextAwareService
 
         // Domain URL
         $domain = $tenant->domains()->first();
-        $subdomainUrl = $domain ? ('http://' . $domain->domain) : null; // protocol configurable
+        $subdomainUrl = $domain ? ('http://'.$domain->domain) : null; // protocol configurable
 
         // If a paid plan is selected, prepare checkout
         $checkoutUrl = null;
-        if (!empty($data['plan_id'])) {
-            $selectedPlan = Plan::findOrFail((int)$data['plan_id']);
+        if (! empty($data['plan_id'])) {
+            $selectedPlan = Plan::findOrFail((int) $data['plan_id']);
 
             $client = Cashier::stripe();
             if (empty($selectedPlan->stripe_price_id)) {
@@ -108,8 +106,8 @@ class AuthService extends ContextAwareService
                     'price' => $selectedPlan->stripe_price_id,
                     'quantity' => 1,
                 ]],
-                'success_url' => $subdomainUrl . '/dashboard?payment_status=success&session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url' => $subdomainUrl . '/dashboard?payment_status=fail',
+                'success_url' => $subdomainUrl.'/dashboard?payment_status=success&session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => $subdomainUrl.'/dashboard?payment_status=fail',
                 'client_reference_id' => $tenant->id,
             ]);
 
@@ -137,7 +135,7 @@ class AuthService extends ContextAwareService
 
         if ($this->isCentralContext()) {
             // Central user login - only email is supported
-            if (!$isEmail) {
+            if (! $isEmail) {
                 throw new UnauthorizedHttpException('', 'Only email login is supported for central users');
             }
 

@@ -3,15 +3,11 @@
 namespace App\Providers;
 
 use App\Auth\DynamicUserProvider;
+use App\Models\Passport\ContextAwareToken;
 use App\Models\User;
-use App\Models\UserLoginDetail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Request;
-use Laravel\Passport\Events\AccessTokenCreated;
 use Laravel\Passport\Passport;
-use App\Models\Passport\ContextAwareToken;
 
 class AuthServiceProvider extends ServiceProvider
 {

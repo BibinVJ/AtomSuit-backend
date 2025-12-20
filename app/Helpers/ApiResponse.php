@@ -15,12 +15,12 @@ class ApiResponse
     ): \Illuminate\Http\JsonResponse {
         $response = array_filter([
             'message' => $message,
-            'error'   => false,
-            'code'    => $code,
-            'data'    => $data,
-            'meta'    => $meta,
-            'links'   => $links,
-        ], fn($value) => ! (is_null($value) || $value === [] || $value === ''));
+            'error' => false,
+            'code' => $code,
+            'data' => $data,
+            'meta' => $meta,
+            'links' => $links,
+        ], fn ($value) => ! (is_null($value) || $value === [] || $value === ''));
 
         return response()->json($response, $code);
     }

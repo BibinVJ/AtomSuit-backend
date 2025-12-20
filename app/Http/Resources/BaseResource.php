@@ -43,7 +43,7 @@ abstract class BaseResource extends JsonResource
                 'data' => static::collection($resource['data']),
                 'meta' => array_merge([
                     'total' => $resource['total'] ?? count($resource['data']),
-                ], $customMeta)
+                ], $customMeta),
             ];
         }
 
@@ -51,7 +51,7 @@ abstract class BaseResource extends JsonResource
             'data' => static::collection($resource),
             'meta' => array_merge([
                 'total' => count($resource),
-            ], $customMeta)
+            ], $customMeta),
         ];
     }
 

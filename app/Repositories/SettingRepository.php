@@ -13,23 +13,23 @@ class SettingRepository
 
     public function __construct()
     {
-        $this->model = new Setting();
+        $this->model = new Setting;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('key', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $filters['search'] . '%');
+                $q->where('key', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('description', 'like', '%'.$filters['search'].'%');
             });
         }
 
-        if (!empty($filters['group'])) {
+        if (! empty($filters['group'])) {
             $query->where('group', $filters['group']);
         }
 
-        if (!empty($filters['type'])) {
+        if (! empty($filters['type'])) {
             $query->where('type', $filters['type']);
         }
 
@@ -44,7 +44,7 @@ class SettingRepository
         return Setting::orderBy('id')
             ->get()
             ->groupBy('group')
-            ->map(fn($settings) => SettingResource::collection($settings))
+            ->map(fn ($settings) => SettingResource::collection($settings))
             ->toArray();
     }
 }

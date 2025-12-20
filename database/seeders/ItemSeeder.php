@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Item;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class ItemSeeder extends Seeder
 {

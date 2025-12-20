@@ -21,7 +21,7 @@ class IdentifyAdminTenantContext
         if (auth()->guard('web')->check() && auth()->guard('web')->user()->hasRole(RolesEnum::SUPER_ADMIN->value)) {
             $tenantId = session('admin_tenant_id');
 
-            if ($tenantId && !tenancy()->initialized) {
+            if ($tenantId && ! tenancy()->initialized) {
                 $tenant = Tenant::find($tenantId);
                 if ($tenant) {
                     \Illuminate\Support\Facades\Log::info('Initializing Tenant Context from Session', ['tenant_id' => $tenantId]);

@@ -2,19 +2,19 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property \Illuminate\Support\Carbon|null $expiry_date
  */
 class Batch extends Model
 {
-    use SoftDeletes, AppAudit;
-    
+    use AppAudit, SoftDeletes;
+
     protected $fillable = [
         'item_id',
         'batch_number',

@@ -5,8 +5,6 @@ namespace App\Repositories;
 use App\Models\Tenant;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class TenantRepository
 {

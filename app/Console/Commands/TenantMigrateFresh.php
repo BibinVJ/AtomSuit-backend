@@ -20,9 +20,9 @@ class TenantMigrateFresh extends Command
         foreach ($tenantIds as $tenantId) {
             $this->call('tenants:run', [
                 'commandname' => 'migrate:fresh',
-                '--tenants'   => [$tenantId],
-                '--option'    => [
-                    'path=' . database_path('migrations/tenant'),
+                '--tenants' => [$tenantId],
+                '--option' => [
+                    'path='.database_path('migrations/tenant'),
                     'realpath=true',
                 ],
             ]);

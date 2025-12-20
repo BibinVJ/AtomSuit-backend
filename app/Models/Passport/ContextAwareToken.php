@@ -8,8 +8,6 @@ class ContextAwareToken extends Token
 {
     /**
      * Get the database connection for the model.
-     *
-     * @return string|null
      */
     public function getConnectionName(): ?string
     {
@@ -22,7 +20,8 @@ class ContextAwareToken extends Token
      */
     public static function forCurrentContext()
     {
-        $instance = new static();
+        $instance = new static;
+
         return $instance->setConnection(tenant() ? 'tenant' : null);
     }
 
@@ -40,6 +39,7 @@ class ContextAwareToken extends Token
     public function newQuery()
     {
         $this->setConnection($this->getConnectionName());
+
         return parent::newQuery();
     }
 
@@ -49,8 +49,9 @@ class ContextAwareToken extends Token
     public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         // Always get client from central database (not tenant database)
-        $client = new \Laravel\Passport\Client();
+        $client = new \Laravel\Passport\Client;
         $client->setConnection(null); // Use default (central) connection
+
         return $this->belongsTo(get_class($client), 'client_id', 'id');
     }
 

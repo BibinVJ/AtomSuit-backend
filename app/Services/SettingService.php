@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Models\Setting;
 use App\Repositories\SettingRepository;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class SettingService
 {
@@ -26,6 +26,7 @@ class SettingService
     public function set(string $key, $value, ?string $type = null, ?string $group = null): Setting
     {
         Setting::setValue($key, $value, $type, $group);
+
         return Setting::where('key', $key)->first();
     }
 
@@ -60,7 +61,7 @@ class SettingService
                 }
 
                 $setting = Setting::where('key', $key)->first();
-                
+
                 if ($setting) {
                     $setting->value = $value;
                     $setting->save();
@@ -74,7 +75,7 @@ class SettingService
                 Setting::clearCache();
             } catch (\Exception $e) {
                 Log::error("Failed to update setting: {$key}", [
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -95,9 +96,9 @@ class SettingService
 
         // Store new file
         $path = $file->store('settings', 'public');
-        
+
         Log::info("File uploaded for setting: {$key}", ['path' => $path]);
-        
+
         return $path;
     }
 
@@ -107,19 +108,19 @@ class SettingService
     public function deleteFile(string $key): bool
     {
         $setting = Setting::where('key', $key)->first();
-        
+
         if ($setting && $setting->type === 'file' && $setting->value) {
             if (Storage::disk('public')->exists($setting->value)) {
                 Storage::disk('public')->delete($setting->value);
             }
-            
+
             $setting->value = null;
             $setting->save();
             Setting::clearCache();
-            
+
             return true;
         }
-        
+
         return false;
     }
 
@@ -129,11 +130,11 @@ class SettingService
     public function getMultiple(array $keys): array
     {
         $results = [];
-        
+
         foreach ($keys as $key) {
             $results[$key] = $this->get($key);
         }
-        
+
         return $results;
     }
 
@@ -151,19 +152,19 @@ class SettingService
     public function delete(string $key): bool
     {
         $setting = Setting::where('key', $key)->first();
-        
+
         if ($setting) {
             // Delete file if it's a file type
             if ($setting->type === 'file' && $setting->value) {
                 $this->deleteFile($key);
             }
-            
+
             $setting->delete();
             Setting::clearCache();
-            
+
             return true;
         }
-        
+
         return false;
     }
 

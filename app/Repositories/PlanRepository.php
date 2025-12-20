@@ -12,7 +12,7 @@ class PlanRepository
 
     public function __construct()
     {
-        $this->model = new Plan();
+        $this->model = new Plan;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder

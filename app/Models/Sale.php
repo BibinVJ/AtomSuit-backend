@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
-    use HasFactory, SoftDeletes, AppAudit;
+    use AppAudit, HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',

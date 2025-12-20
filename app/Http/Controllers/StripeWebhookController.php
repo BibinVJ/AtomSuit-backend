@@ -12,9 +12,11 @@ class StripeWebhookController extends CashierController
     ) {
         parent::__construct();
     }
+
     public function handleCheckoutSessionCompleted(array $payload)
     {
         $this->webhookService->handleCheckoutSessionCompleted($payload['data']['object']);
+
         return $this->successMethod();
     }
 
@@ -22,8 +24,9 @@ class StripeWebhookController extends CashierController
     {
         $subscription = $payload['data']['object'];
         $tenant = $this->webhookService->getTenantByCustomerId($subscription['customer']);
-        
+
         $this->webhookService->handleSubscriptionCreated($subscription, $tenant);
+
         return $this->successMethod();
     }
 
@@ -31,8 +34,9 @@ class StripeWebhookController extends CashierController
     {
         $subscription = $payload['data']['object'];
         $tenant = $this->webhookService->getTenantByCustomerId($subscription['customer']);
-        
+
         $this->webhookService->handleSubscriptionUpdated($subscription, $tenant);
+
         return $this->successMethod();
     }
 
@@ -40,8 +44,9 @@ class StripeWebhookController extends CashierController
     {
         $subscription = $payload['data']['object'];
         $tenant = $this->webhookService->getTenantByCustomerId($subscription['customer']);
-        
+
         $this->webhookService->handleSubscriptionDeleted($subscription, $tenant);
+
         return parent::handleCustomerSubscriptionDeleted($payload);
     }
 
@@ -49,8 +54,9 @@ class StripeWebhookController extends CashierController
     {
         $invoice = $payload['data']['object'];
         $tenant = $this->webhookService->getTenantByCustomerId($invoice['customer']);
-        
+
         $this->webhookService->handleInvoicePaymentSucceeded($invoice, $tenant);
+
         return $this->successMethod();
     }
 
@@ -58,8 +64,9 @@ class StripeWebhookController extends CashierController
     {
         $invoice = $payload['data']['object'];
         $tenant = $this->webhookService->getTenantByCustomerId($invoice['customer']);
-        
+
         $this->webhookService->handleInvoicePaymentFailed($invoice, $tenant);
+
         return $this->successMethod();
     }
 

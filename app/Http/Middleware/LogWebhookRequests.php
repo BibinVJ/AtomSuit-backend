@@ -17,11 +17,11 @@ class LogWebhookRequests
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        
+
         $payload = $request->all();
         $eventType = $payload['type'] ?? null;
         $eventId = $payload['id'] ?? null;
-        
+
         \Log::info('Incoming Webhook Request', [
             'url' => $request->fullUrl(),
             'method' => $request->method(),

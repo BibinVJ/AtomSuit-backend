@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Enums\PermissionsEnum;
 use App\Models\DashboardCard;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Contracts\Permission;
 
 class DashboardCardSeeder extends Seeder
 {

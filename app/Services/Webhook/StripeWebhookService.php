@@ -12,14 +12,10 @@ class StripeWebhookService
 {
     public function __construct(
         protected StripeSubscriptionService $subscriptionService
-    ) {
-    }
+    ) {}
 
     /**
      * Handle checkout session completed event.
-     *
-     * @param array $session
-     * @return void
      */
     public function handleCheckoutSessionCompleted(array $session): void
     {
@@ -33,19 +29,21 @@ class StripeWebhookService
         $customerId = $session['customer'] ?? null;
         $subscriptionId = $session['subscription'] ?? null;
 
-        if (!$tenantId) {
+        if (! $tenantId) {
             Log::warning('Stripe webhook: No tenant_id in checkout session', ['session_id' => $session['id']]);
+
             return;
         }
 
         $tenant = Tenant::find($tenantId);
-        if (!$tenant) {
+        if (! $tenant) {
             Log::warning('Stripe webhook: Tenant not found', ['tenant_id' => $tenantId]);
+
             return;
         }
 
         // Update tenant with Stripe customer ID
-        if ($customerId && !$tenant->stripe_id) {
+        if ($customerId && ! $tenant->stripe_id) {
             $tenant->update(['stripe_id' => $customerId]);
         }
 
@@ -64,7 +62,7 @@ class StripeWebhookService
             } catch (\Exception $e) {
                 Log::error('Failed to retrieve subscription after checkout', [
                     'subscription_id' => $subscriptionId,
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
             }
         }
@@ -72,14 +70,10 @@ class StripeWebhookService
 
     /**
      * Handle subscription created event.
-     *
-     * @param array $subscription
-     * @param Tenant|null $tenant
-     * @return void
      */
     public function handleSubscriptionCreated(array $subscription, ?Tenant $tenant): void
     {
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
@@ -94,14 +88,10 @@ class StripeWebhookService
 
     /**
      * Handle subscription updated event.
-     *
-     * @param array $subscription
-     * @param Tenant|null $tenant
-     * @return void
      */
     public function handleSubscriptionUpdated(array $subscription, ?Tenant $tenant): void
     {
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
@@ -116,10 +106,6 @@ class StripeWebhookService
 
     /**
      * Handle subscription deleted event.
-     *
-     * @param array $subscription
-     * @param Tenant|null $tenant
-     * @return void
      */
     public function handleSubscriptionDeleted(array $subscription, ?Tenant $tenant): void
     {
@@ -134,10 +120,6 @@ class StripeWebhookService
 
     /**
      * Handle invoice payment succeeded event.
-     *
-     * @param array $invoice
-     * @param Tenant|null $tenant
-     * @return void
      */
     public function handleInvoicePaymentSucceeded(array $invoice, ?Tenant $tenant): void
     {
@@ -147,12 +129,12 @@ class StripeWebhookService
             'amount_paid' => $invoice['amount_paid'],
         ]);
 
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
         $stripeSubscriptionId = $invoice['subscription'] ?? null;
-        if (!$stripeSubscriptionId) {
+        if (! $stripeSubscriptionId) {
             return;
         }
 
@@ -160,7 +142,7 @@ class StripeWebhookService
             ->where('stripe_id', $stripeSubscriptionId)
             ->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
             return;
         }
 
@@ -182,10 +164,6 @@ class StripeWebhookService
 
     /**
      * Handle invoice payment failed event.
-     *
-     * @param array $invoice
-     * @param Tenant|null $tenant
-     * @return void
      */
     public function handleInvoicePaymentFailed(array $invoice, ?Tenant $tenant): void
     {
@@ -195,12 +173,12 @@ class StripeWebhookService
             'amount_due' => $invoice['amount_due'],
         ]);
 
-        if (!$tenant) {
+        if (! $tenant) {
             return;
         }
 
         $stripeSubscriptionId = $invoice['subscription'] ?? null;
-        if (!$stripeSubscriptionId) {
+        if (! $stripeSubscriptionId) {
             return;
         }
 
@@ -208,7 +186,7 @@ class StripeWebhookService
             ->where('stripe_id', $stripeSubscriptionId)
             ->first();
 
-        if (!$subscription) {
+        if (! $subscription) {
             return;
         }
 
@@ -229,9 +207,6 @@ class StripeWebhookService
 
     /**
      * Get tenant by Stripe customer ID.
-     *
-     * @param string $customerId
-     * @return Tenant|null
      */
     public function getTenantByCustomerId(string $customerId): ?Tenant
     {
@@ -239,11 +214,11 @@ class StripeWebhookService
         $tenant = Tenant::where('stripe_id', $customerId)->first();
 
         // If not found, try data column
-        if (!$tenant) {
+        if (! $tenant) {
             $tenant = Tenant::where('data->stripe_customer_id', $customerId)->first();
         }
 
-        if (!$tenant) {
+        if (! $tenant) {
             Log::warning('Tenant not found for customer', ['customer_id' => $customerId]);
         }
 

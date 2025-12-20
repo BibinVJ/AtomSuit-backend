@@ -7,7 +7,8 @@ use App\Repositories\BatchRepository;
 
 class BatchService extends BaseService
 {
-    public function __construct(protected BatchRepository $batchRepository) {
+    public function __construct(protected BatchRepository $batchRepository)
+    {
         $this->repository = $batchRepository;
     }
 

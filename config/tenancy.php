@@ -19,7 +19,7 @@ return [
     'central_domains' => [
         '127.0.0.1',
         'localhost',
-        'api.' . env('TENANCY_BASE_DOMAIN', 'atomsuit.test'),
+        'api.'.env('TENANCY_BASE_DOMAIN', 'atomsuit.test'),
     ],
 
     'base_domain' => env('TENANCY_BASE_DOMAIN', 'atomsuit.test'),

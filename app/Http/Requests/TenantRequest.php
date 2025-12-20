@@ -43,5 +43,4 @@ class TenantRequest extends FormRequest
             'domain_name.regex' => 'The domain name may only contain letters, numbers, and hyphens, and cannot start or end with a hyphen.',
         ];
     }
-
 }

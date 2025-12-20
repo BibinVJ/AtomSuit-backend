@@ -12,31 +12,31 @@ class AuditRepository
 
     public function __construct()
     {
-        $this->model = new Activity();
+        $this->model = new Activity;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (!empty($filters['log_name'])) {
+        if (! empty($filters['log_name'])) {
             $query->where('log_name', $filters['log_name']);
         }
 
-        if (!empty($filters['event'])) {
+        if (! empty($filters['event'])) {
             $query->where('event', $filters['event']);
         }
 
-        if (!empty($filters['causer_id'])) {
+        if (! empty($filters['causer_id'])) {
             $query->where('causer_id', $filters['causer_id']);
         }
 
-        if (!empty($filters['subject_type'])) {
+        if (! empty($filters['subject_type'])) {
             $query->where('subject_type', $filters['subject_type']);
         }
 
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
-                $q->where('description', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('properties', 'like', '%' . $filters['search'] . '%');
+                $q->where('description', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('properties', 'like', '%'.$filters['search'].'%');
             });
         }
 

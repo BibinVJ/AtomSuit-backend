@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\CustomerExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Requests\ImportRequest;
 use App\Http\Resources\CustomerResource;
+use App\Imports\CustomerImport;
 use App\Models\Customer;
 use App\Repositories\CustomerRepository;
 use App\Services\CustomerService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Exports\CustomerExport;
-use App\Imports\CustomerImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
-
     public function __construct(
         protected CustomerRepository $customerRepository,
         protected CustomerService $customerService
@@ -68,8 +67,9 @@ class CustomerController extends Controller
     public function destroy(Request $request, int $id)
     {
         $customer = Customer::withTrashed()->findOrFail($id);
-        
+
         $this->customerService->delete($customer, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Customer permanently deleted.' : 'Customer deleted successfully.');
     }
 
@@ -82,7 +82,7 @@ class CustomerController extends Controller
 
     public function export()
     {
-        return Excel::download(new CustomerExport, 'customers_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new CustomerExport, 'customers_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function import(ImportRequest $request)
@@ -94,7 +94,8 @@ class CustomerController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
+        {
             public function collection()
             {
                 return collect([

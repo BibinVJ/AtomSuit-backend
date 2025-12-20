@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Unit;
 use App\Repositories\UnitRepository;
 use Exception;
 
 class UnitService extends BaseService
 {
-    public function __construct(protected UnitRepository $unitRepository) {
+    public function __construct(protected UnitRepository $unitRepository)
+    {
         $this->repository = $unitRepository;
     }
 

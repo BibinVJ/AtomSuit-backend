@@ -38,7 +38,7 @@ class CreateTenantAdmin implements ShouldQueue
             $adminUser->assignRole(RolesEnum::ADMIN->value);
 
             if ($this->tenant->load_sample_data ?? false) {
-                (new TenantSampleDataSeeder())->run();
+                (new TenantSampleDataSeeder)->run();
             }
         });
     }

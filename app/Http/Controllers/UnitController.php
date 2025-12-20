@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\UnitExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\UnitRequest;
 use App\Http\Resources\UnitResource;
+use App\Imports\UnitImport;
 use App\Models\Unit;
 use App\Repositories\UnitRepository;
 use App\Services\UnitService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Exports\UnitExport;
-use App\Imports\UnitImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class UnitController extends Controller
 {
-
     public function __construct(
         protected UnitRepository $unitRepository,
         protected UnitService $unitService
@@ -68,8 +67,9 @@ class UnitController extends Controller
     public function destroy(Request $request, int $id)
     {
         $unit = Unit::withTrashed()->findOrFail($id);
-        
+
         $this->unitService->delete($unit, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Unit permanently deleted.' : 'Unit deleted successfully.');
     }
 
@@ -82,7 +82,7 @@ class UnitController extends Controller
 
     public function export()
     {
-        return Excel::download(new UnitExport, 'units_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new UnitExport, 'units_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function import(ImportRequest $request)
@@ -94,7 +94,8 @@ class UnitController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
+        {
             public function collection()
             {
                 return collect([

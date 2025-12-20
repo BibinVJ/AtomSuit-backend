@@ -12,7 +12,7 @@ class DomainRepository
 
     public function __construct()
     {
-        $this->model = new Domain();
+        $this->model = new Domain;
     }
 
     protected function applyFilters(Builder $query, array $filters): Builder

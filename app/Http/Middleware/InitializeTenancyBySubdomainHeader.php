@@ -13,7 +13,6 @@ use Stancl\Tenancy\Tenancy;
 
 class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
 {
-    /** @var string */
     public static string $header = 'X-Tenant';
 
     /** @var callable|null */
@@ -50,7 +49,7 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
         }
 
         // Case 2: Has X-Tenant → resolve tenant
-        $fullDomain = $subdomain . '.' . config('tenancy.base_domain');
+        $fullDomain = $subdomain.'.'.config('tenancy.base_domain');
 
         try {
             return $this->initializeTenancy($request, $next, $fullDomain);

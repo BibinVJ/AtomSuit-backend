@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('dashboard_card_id')
                 ->constrained('dashboard_cards')
                 ->onDelete('cascade');
-                
+
             $table->string('area')->nullable()->comment('Position group, e.g. "left", "right"');
             $table->float('x')->nullable();
             $table->float('y')->nullable();

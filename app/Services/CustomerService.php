@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Customer;
 use App\Repositories\CustomerRepository;
 use Exception;
 
 class CustomerService extends BaseService
 {
-    public function __construct(protected CustomerRepository $customerRepository) {
+    public function __construct(protected CustomerRepository $customerRepository)
+    {
         $this->repository = $customerRepository;
     }
 

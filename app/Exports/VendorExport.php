@@ -12,8 +12,8 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class VendorExport implements FromCollection, WithHeadings, WithMapping, WithStyles
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
         return Vendor::all();

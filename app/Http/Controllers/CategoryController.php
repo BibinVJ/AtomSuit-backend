@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\CategoryExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\ImportRequest;
 use App\Http\Resources\CategoryResource;
+use App\Imports\CategoryImport;
 use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Exports\CategoryExport;
-use App\Imports\CategoryImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
-
     public function __construct(
         protected CategoryRepository $categoryRepository,
         protected CategoryService $categoryService
@@ -68,8 +67,9 @@ class CategoryController extends Controller
     public function destroy(Request $request, int $id)
     {
         $category = Category::withTrashed()->findOrFail($id);
-        
+
         $this->categoryService->delete($category, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Category permanently deleted.' : 'Category deleted successfully.');
     }
 
@@ -82,7 +82,7 @@ class CategoryController extends Controller
 
     public function export()
     {
-        return Excel::download(new CategoryExport, 'categories_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new CategoryExport, 'categories_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function import(ImportRequest $request)
@@ -94,7 +94,8 @@ class CategoryController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
+        {
             public function collection()
             {
                 return collect([

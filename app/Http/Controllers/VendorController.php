@@ -3,22 +3,21 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\VendorExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\VendorRequest;
 use App\Http\Resources\VendorResource;
+use App\Imports\VendorImport;
 use App\Models\Vendor;
 use App\Repositories\VendorRepository;
 use App\Services\VendorService;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Exports\VendorExport;
-use App\Imports\VendorImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\Response;
 
 class VendorController extends Controller
 {
-
     public function __construct(
         protected VendorRepository $vendorRepository,
         protected VendorService $vendorService
@@ -68,8 +67,9 @@ class VendorController extends Controller
     public function destroy(Request $request, int $id)
     {
         $vendor = Vendor::withTrashed()->findOrFail($id);
-        
+
         $this->vendorService->delete($vendor, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Vendor permanently deleted.' : 'Vendor deleted successfully.');
     }
 
@@ -82,7 +82,7 @@ class VendorController extends Controller
 
     public function export()
     {
-        return Excel::download(new VendorExport, 'vendors_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
+        return Excel::download(new VendorExport, 'vendors_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function import(ImportRequest $request)
@@ -94,7 +94,8 @@ class VendorController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
+        {
             public function collection()
             {
                 return collect([

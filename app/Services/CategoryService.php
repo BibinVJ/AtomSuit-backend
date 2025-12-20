@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
-use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use Exception;
 
 class CategoryService extends BaseService
 {
-    public function __construct(protected CategoryRepository $categoryRepository) {
+    public function __construct(protected CategoryRepository $categoryRepository)
+    {
         $this->repository = $categoryRepository;
     }
 

@@ -20,9 +20,9 @@ class TenantMigrate extends Command
         foreach ($tenantIds as $tenantId) {
             $this->call('tenants:run', [
                 'commandname' => 'migrate',
-                '--tenants'   => [$tenantId],
-                '--option'    => [
-                    'path=' . database_path('migrations/tenant'),
+                '--tenants' => [$tenantId],
+                '--option' => [
+                    'path='.database_path('migrations/tenant'),
                     'realpath=true',
                 ],
             ]);

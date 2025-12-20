@@ -2,8 +2,8 @@
 
 namespace App\Services\Auth;
 
-use App\Models\User;
 use App\Models\CentralUser;
+use App\Models\User;
 use Laravel\Passport\PersonalAccessTokenResult;
 use Laravel\Passport\Token;
 
@@ -12,11 +12,11 @@ class TokenService
     public function create(User|CentralUser $user): PersonalAccessTokenResult
     {
         // Revoke existing tokens for this user in this context
-        $context = tenant() ? 'tenant:' . tenant()->id : 'central';
-        
+        $context = tenant() ? 'tenant:'.tenant()->id : 'central';
+
         // Create token with context information in the name
-        $tokenName = 'PAT-' . $context . '-' . $user->id . '-' . time();
-        
+        $tokenName = 'PAT-'.$context.'-'.$user->id.'-'.time();
+
         return $user->createToken($tokenName);
     }
 

@@ -16,16 +16,15 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TenantController extends Controller
 {
-
     public function __construct(
         protected TenantRepository $tenantRepository,
         protected TenantService $tenantService,
         protected SendTenantMailAction $sendTenantMailAction
     ) {
-        $this->middleware('permission:' . PermissionsEnum::VIEW_TENANT->value)->only(['index']);
-        $this->middleware('permission:' . PermissionsEnum::CREATE_TENANT->value)->only(['store']);
-        $this->middleware('permission:' . PermissionsEnum::UPDATE_TENANT->value)->only(['update']);
-        $this->middleware('permission:' . PermissionsEnum::DELETE_TENANT->value)->only(['destroy']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_TENANT->value)->only(['index']);
+        $this->middleware('permission:'.PermissionsEnum::CREATE_TENANT->value)->only(['store']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_TENANT->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::DELETE_TENANT->value)->only(['destroy']);
     }
 
     public function index(Request $request)

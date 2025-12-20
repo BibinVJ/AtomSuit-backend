@@ -45,10 +45,10 @@ trait HasCrudRepository
                 $skip = max(0, $from - 1);
                 $take = $to - $from + 1;
                 $data = $query->skip($skip)->take($take)->get();
-                
+
                 return [
                     'data' => $data,
-                    'total' => $total
+                    'total' => $total,
                 ];
             }
         }

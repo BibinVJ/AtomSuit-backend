@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role as SpatieRole;
 
 class Role extends SpatieRole
 {
-    use SoftDeletes, AppAudit;
+    use AppAudit, SoftDeletes;
 
     protected $guard_name = 'api';
 }

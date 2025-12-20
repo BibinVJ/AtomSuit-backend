@@ -21,9 +21,9 @@ class TenantSeed extends Command
         foreach ($tenantIds as $tenantId) {
             $this->call('tenants:run', [
                 'commandname' => 'db:seed',
-                '--tenants'   => [$tenantId],
-                '--option'    => [
-                    'class=' . $this->option('class'),
+                '--tenants' => [$tenantId],
+                '--option' => [
+                    'class='.$this->option('class'),
                 ],
             ]);
         }

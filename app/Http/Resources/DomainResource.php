@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 
 /**

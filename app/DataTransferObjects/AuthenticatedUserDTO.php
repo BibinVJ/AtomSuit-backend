@@ -2,8 +2,8 @@
 
 namespace App\DataTransferObjects;
 
-use App\Models\User;
 use App\Models\CentralUser;
+use App\Models\User;
 use Laravel\Passport\PersonalAccessTokenResult;
 
 readonly class AuthenticatedUserDTO

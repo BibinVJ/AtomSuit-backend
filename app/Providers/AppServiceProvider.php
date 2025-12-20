@@ -10,7 +10,6 @@ use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\ServiceProvider;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**

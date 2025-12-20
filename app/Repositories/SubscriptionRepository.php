@@ -33,13 +33,12 @@ class SubscriptionRepository
         }
 
         // Search by tenant name/email
-        if (!empty($filters['search'])) {
+        if (! empty($filters['search'])) {
             $query->whereHas('tenant', function ($q) use ($filters) {
-                $q->where('name', 'like', '%' . $filters['search'] . '%')
-                    ->orWhere('email', 'like', '%' . $filters['search'] . '%');
+                $q->where('name', 'like', '%'.$filters['search'].'%')
+                    ->orWhere('email', 'like', '%'.$filters['search'].'%');
             });
         }
-
 
         // Filter by canceled subscriptions
         if (isset($filters['is_canceled']) && filter_var($filters['is_canceled'], FILTER_VALIDATE_BOOLEAN)) {

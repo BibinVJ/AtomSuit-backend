@@ -21,10 +21,10 @@ class TenantRollback extends Command
         foreach ($tenantIds as $tenantId) {
             $this->call('tenants:run', [
                 'commandname' => 'migrate:rollback',
-                '--tenants'   => [$tenantId],
-                '--option'    => [
-                    'step=' . $this->option('step'),
-                    'path=' . database_path('migrations/tenant'),
+                '--tenants' => [$tenantId],
+                '--option' => [
+                    'step='.$this->option('step'),
+                    'path='.database_path('migrations/tenant'),
                     'realpath=true',
                 ],
             ]);

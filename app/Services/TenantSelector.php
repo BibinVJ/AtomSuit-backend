@@ -12,9 +12,8 @@ class TenantSelector
      * Resolve tenant IDs based on IDs or emails.
      * Validates that all provided IDs or emails exist.
      *
-     * @param string|array|null $ids
-     * @param string|array|null $emails
      * @return array<int>
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public static function resolve(null|string|array $ids, null|string|array $emails): array
@@ -29,9 +28,9 @@ class TenantSelector
             $foundIds = $tenants->pluck('id')->toArray();
             $missingIds = array_diff($idsArray, $foundIds);
 
-            if (!empty($missingIds)) {
+            if (! empty($missingIds)) {
                 throw ValidationException::withMessages([
-                    'ids' => ['Tenant(s) not found for IDs: ' . implode(',', $missingIds)]
+                    'ids' => ['Tenant(s) not found for IDs: '.implode(',', $missingIds)],
                 ]);
             }
 
@@ -45,9 +44,9 @@ class TenantSelector
             $foundIds = $tenants->pluck('id')->toArray();
             $missingEmails = array_diff($emailsArray, Tenant::whereIn('id', $foundIds)->pluck('email')->toArray());
 
-            if (!empty($missingEmails)) {
+            if (! empty($missingEmails)) {
                 throw ValidationException::withMessages([
-                    'emails' => ['Tenant(s) not found for emails: ' . implode(',', $missingEmails)]
+                    'emails' => ['Tenant(s) not found for emails: '.implode(',', $missingEmails)],
                 ]);
             }
 

@@ -5,9 +5,6 @@ namespace App\Services\Billing;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Models\Tenant;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use Stripe\StripeClient;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
@@ -56,7 +53,7 @@ class StripeService
                 'price' => $plan->stripe_price_id,
                 'quantity' => 1,
             ]],
-            'success_url' => $successUrl . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => $successUrl.'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $cancelUrl,
             'client_reference_id' => $tenant->id,
             'metadata' => [
@@ -104,10 +101,14 @@ class StripeService
     {
         $tenantId = $session->client_reference_id ?? null;
         $customerId = $session->customer ?? null;
-        if (!$tenantId || !$customerId) return;
+        if (! $tenantId || ! $customerId) {
+            return;
+        }
 
         $tenant = Tenant::find($tenantId);
-        if (!$tenant) return;
+        if (! $tenant) {
+            return;
+        }
 
         $tenant->update(['data' => array_merge($tenant->data ?? [], ['stripe_customer_id' => $customerId])]);
     }
@@ -115,15 +116,19 @@ class StripeService
     protected function onSubscriptionChanged($subscription): void
     {
         $customerId = $subscription->customer ?? null;
-        if (!$customerId) return;
+        if (! $customerId) {
+            return;
+        }
 
         $tenant = Tenant::where('data->stripe_customer_id', $customerId)->first();
-        if (!$tenant) return;
+        if (! $tenant) {
+            return;
+        }
 
         $stripeSubId = $subscription->id;
         $status = $subscription->status; // trialing, active, past_due, canceled, unpaid
         $currentPeriodEnd = isset($subscription->current_period_end) ? \Carbon\Carbon::createFromTimestamp($subscription->current_period_end) : null;
-        $cancelAtPeriodEnd = (bool)($subscription->cancel_at_period_end ?? false);
+        $cancelAtPeriodEnd = (bool) ($subscription->cancel_at_period_end ?? false);
 
         // Find plan by price id if present
         $priceId = $subscription->items->data[0]->price->id ?? null;

@@ -30,6 +30,7 @@ class SystemMonitoringAuthController extends Controller
             }
 
             Auth::guard('web')->logout();
+
             return back()->withErrors([
                 'email' => 'You do not have permission to access this area.',
             ]);

@@ -13,11 +13,10 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SubscriptionController extends Controller
 {
-
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository
     ) {
-        $this->middleware('permission:' . PermissionsEnum::VIEW_SUBSCRIPTION->value)->only(['index', 'show', 'destroy']);
+        $this->middleware('permission:'.PermissionsEnum::VIEW_SUBSCRIPTION->value)->only(['index', 'show', 'destroy']);
     }
 
     /**
@@ -60,7 +59,7 @@ class SubscriptionController extends Controller
     {
         // Load relationships
         $subscription->load(['tenant', 'plan', 'subscriptionInvoices', 'items']);
-        
+
         return ApiResponse::success(
             'Subscription details fetched successfully.',
             new SubscriptionResource($subscription)
@@ -72,14 +71,14 @@ class SubscriptionController extends Controller
      */
     public function destroy(Subscription $subscription)
     {
-        
+
         // If it's a Stripe subscription, cancel it via Stripe
-        if ($subscription->stripe_id && !str_starts_with($subscription->stripe_id, 'manual_')) {
+        if ($subscription->stripe_id && ! str_starts_with($subscription->stripe_id, 'manual_')) {
             try {
                 $subscription->cancel();
             } catch (\Exception $e) {
                 return ApiResponse::error(
-                    'Failed to cancel subscription: ' . $e->getMessage(),
+                    'Failed to cancel subscription: '.$e->getMessage(),
                     [],
                     Response::HTTP_INTERNAL_SERVER_ERROR
                 );
@@ -91,7 +90,7 @@ class SubscriptionController extends Controller
                 'ends_at' => now(),
             ]);
         }
-        
+
         return ApiResponse::success(
             'Subscription cancelled successfully.',
             new SubscriptionResource($subscription->fresh())

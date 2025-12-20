@@ -7,15 +7,14 @@ use App\Enums\RolesEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
+use App\Models\Role;
 use App\Repositories\RoleRepository;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
-use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
 {
-
     public function __construct(
         protected RoleRepository $roleRepository,
         protected RoleService $roleService,
@@ -90,6 +89,7 @@ class RoleController extends Controller
         }
 
         $this->roleService->delete($role, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Role permanently deleted.' : 'Role deleted successfully.');
     }
 

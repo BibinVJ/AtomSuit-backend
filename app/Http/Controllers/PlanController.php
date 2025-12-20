@@ -19,9 +19,9 @@ class PlanController extends Controller
         protected PlanRepository $planRepository,
         protected PlanService $planService,
     ) {
-        $this->middleware('permission:' . PermissionsEnum::CREATE_PLAN->value)->only(['store']);
-        $this->middleware('permission:' . PermissionsEnum::UPDATE_PLAN->value)->only(['update']);
-        $this->middleware('permission:' . PermissionsEnum::DELETE_PLAN->value)->only(['destroy']);
+        $this->middleware('permission:'.PermissionsEnum::CREATE_PLAN->value)->only(['store']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_PLAN->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::DELETE_PLAN->value)->only(['destroy']);
     }
 
     public function index(Request $request)

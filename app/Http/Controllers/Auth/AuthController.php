@@ -56,14 +56,14 @@ class AuthController extends Controller
 
         return ApiResponse::success('Logged out from all devices successfully.');
     }
-    
+
     /**
      * Get user profile
      */
     public function profile(Request $request)
     {
         $user = $request->user()->load('roles');
-        
+
         return ApiResponse::success('Profile retrieved successfully.', $user);
     }
 }

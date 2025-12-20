@@ -16,10 +16,6 @@ class PlanService
 
     /**
      * Find or create Stripe product by name.
-     *
-     * @param string $name
-     * @param string|null $description
-     * @return \Stripe\Product
      */
     public function findOrCreateStripeProduct(string $name, ?string $description = null): \Stripe\Product
     {
@@ -32,32 +28,26 @@ class PlanService
 
         if ($existingProducts->count() > 0) {
             Log::info('Found existing Stripe product', ['product_id' => $existingProducts->data[0]->id]);
+
             return $existingProducts->data[0];
         }
 
         // Create new product - only include description if not empty
         $productData = ['name' => $name];
-        
-        if (!empty($description)) {
+
+        if (! empty($description)) {
             $productData['description'] = $description;
         }
-        
+
         $stripeProduct = $stripe->products->create($productData);
-        
+
         Log::info('Created new Stripe product', ['product_id' => $stripeProduct->id]);
+
         return $stripeProduct;
     }
 
     /**
      * Find or create Stripe price by lookup key.
-     *
-     * @param string $productId
-     * @param float $price
-     * @param string $lookupKey
-     * @param bool $isTrialPlan
-     * @param string $interval
-     * @param int $intervalCount
-     * @return \Stripe\Price
      */
     public function findOrCreateStripePrice(
         string $productId,
@@ -76,18 +66,19 @@ class PlanService
 
         if (count($existingPrices->data) > 0) {
             Log::info('Found existing Stripe price', ['price_id' => $existingPrices->data[0]->id]);
+
             return $existingPrices->data[0];
         }
 
         // Create new price
         $priceData = [
             'product' => $productId,
-            'unit_amount' => (int)($price * 100), // Convert to cents
+            'unit_amount' => (int) ($price * 100), // Convert to cents
             'currency' => 'usd',
             'lookup_key' => $lookupKey,
         ];
 
-        if (!$isTrialPlan) {
+        if (! $isTrialPlan) {
             $priceData['recurring'] = [
                 'interval' => $interval,
                 'interval_count' => $intervalCount,
@@ -96,15 +87,12 @@ class PlanService
 
         $stripePrice = $stripe->prices->create($priceData);
         Log::info('Created new Stripe price', ['price_id' => $stripePrice->id]);
-        
+
         return $stripePrice;
     }
 
     /**
      * Create a plan and sync with Stripe.
-     *
-     * @param array $data
-     * @return Plan
      */
     public function create(array $data): Plan
     {
@@ -137,7 +125,7 @@ class PlanService
                 // Create plan in database
                 $data['stripe_product_id'] = $stripeProduct->id;
                 $data['stripe_price_id'] = $stripePrice->id;
-                
+
                 $plan = $this->planRepository->create($data);
 
                 // Create features
@@ -150,21 +138,17 @@ class PlanService
                 'error' => $e->getMessage(),
                 'data' => $data,
             ]);
-            throw new Exception('Failed to sync plan with Stripe: ' . $e->getMessage());
+            throw new Exception('Failed to sync plan with Stripe: '.$e->getMessage());
         }
     }
 
     /**
      * Update a plan and sync with Stripe.
-     *
-     * @param Plan $plan
-     * @param array $data
-     * @return Plan
      */
     public function update(Plan $plan, array $data): Plan
     {
         $stripe = new \Stripe\StripeClient(config('services.stripe.secret'));
-        
+
         try {
             return DB::transaction(function () use ($plan, $data, $stripe) {
                 // Extract features before updating plan
@@ -201,7 +185,7 @@ class PlanService
                         'metadata' => ['plan_slug' => $slug, 'plan_id' => $plan->id],
                     ];
 
-                    if (!($data['is_trial_plan'] ?? $plan->is_trial_plan)) {
+                    if (! ($data['is_trial_plan'] ?? $plan->is_trial_plan)) {
                         $priceData['recurring'] = [
                             'interval' => $interval,
                             'interval_count' => $intervalCount,
@@ -210,7 +194,7 @@ class PlanService
 
                     $stripePrice = $stripe->prices->create($priceData);
                     $data['stripe_price_id'] = $stripePrice->id;
-                    
+
                     Log::info('Created new Stripe price for updated plan', ['price_id' => $stripePrice->id]);
                 }
 
@@ -228,21 +212,19 @@ class PlanService
                 'plan_id' => $plan->id,
                 'error' => $e->getMessage(),
             ]);
-            throw new Exception('Failed to sync plan update with Stripe: ' . $e->getMessage());
+            throw new Exception('Failed to sync plan update with Stripe: '.$e->getMessage());
         }
     }
 
     /**
      * Soft delete plan by marking as inactive.
      * Does not actually delete the plan from database.
-     *
-     * @param Plan $plan
-     * @return Plan
      */
     public function delete(Plan $plan): Plan
     {
         // Soft delete the plan
         $plan->delete();
+
         return $plan;
     }
 
@@ -258,10 +240,6 @@ class PlanService
      *   ['id' => 1, 'value' => '5'],
      *   ['key' => 'new_feature', 'value' => 'true', ...],
      * ]
-     *
-     * @param Plan $plan
-     * @param array $features
-     * @return void
      */
     protected function syncFeatures(Plan $plan, array $features): void
     {
@@ -273,7 +251,7 @@ class PlanService
                 $feature = PlanFeature::where('plan_id', $plan->id)
                     ->where('id', $featureData['id'])
                     ->first();
-                
+
                 if ($feature) {
                     $feature->update($featureData);
                     $processedIds[] = $feature->id;
@@ -300,7 +278,7 @@ class PlanService
 
         // Remove features that weren't in the update (if any IDs were processed)
         // Only delete if features array was provided and processed
-        if (!empty($processedIds)) {
+        if (! empty($processedIds)) {
             PlanFeature::where('plan_id', $plan->id)
                 ->whereNotIn('id', $processedIds)
                 ->delete();

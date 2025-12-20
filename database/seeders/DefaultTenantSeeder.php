@@ -15,21 +15,23 @@ class DefaultTenantSeeder extends Seeder
     public function run(): void
     {
         $plan = Plan::where('name', 'Lifetime')->first();
-        
-        if (!$plan) {
+
+        if (! $plan) {
             $this->command->error('Lifetime plan not found. Please run PlanSeeder first.');
+
             return;
         }
 
         // Check if tenant already exists
         if (Tenant::where('email', 'company@example.com')->exists()) {
             $this->command->info('Default tenant already exists. Skipping...');
+
             return;
         }
 
         // Use TenantService to properly create tenant with domain and database
         $tenantService = app(TenantService::class);
-        
+
         try {
             $tenant = $tenantService->create([
                 'name' => 'company',
@@ -44,9 +46,9 @@ class DefaultTenantSeeder extends Seeder
             // Update email_verified_at since this is a seed tenant
             $tenant->email_verified_at = now();
             $tenant->save();
-            
+
         } catch (\Exception $e) {
-            $this->command->error('Failed to create default tenant: ' . $e->getMessage());
+            $this->command->error('Failed to create default tenant: '.$e->getMessage());
         }
     }
 }

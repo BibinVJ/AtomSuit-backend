@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Tenant;
-use Illuminate\Console\Command;
 use App\Services\TenantSelector;
+use Illuminate\Console\Command;
 
 class TenantDelete extends Command
 {
@@ -20,8 +20,9 @@ class TenantDelete extends Command
 
         foreach ($tenantIds as $tenantId) {
             $tenant = Tenant::find($tenantId);
-            if (!$tenant) {
+            if (! $tenant) {
                 $this->warn("Tenant with ID {$tenantId} not found, skipping.");
+
                 continue;
             }
 

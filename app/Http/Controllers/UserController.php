@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
-
     public function __construct(
         protected UserRepository $userRepository,
         protected UserService $userService,
@@ -74,6 +73,7 @@ class UserController extends Controller
         }
 
         $this->userService->delete($user, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'User permanently deleted.' : 'User deleted successfully.');
     }
 

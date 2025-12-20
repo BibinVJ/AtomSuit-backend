@@ -20,7 +20,7 @@ class TenantSubscriptionController extends Controller
         $tenant = tenant();
         $subscription = $tenant->subscription('default');
 
-        if (!$subscription) {
+        if (! $subscription) {
             return ApiResponse::error('No active subscription found', Response::HTTP_NOT_FOUND);
         }
 
@@ -35,7 +35,7 @@ class TenantSubscriptionController extends Controller
         $tenant = tenant();
         $subscription = $tenant->subscription('default');
 
-        if (!$subscription) {
+        if (! $subscription) {
             return ApiResponse::error('No active subscription to upgrade', Response::HTTP_BAD_REQUEST);
         }
 
@@ -51,7 +51,7 @@ class TenantSubscriptionController extends Controller
                 SubscriptionResource::make($updatedSubscription->load(['items.price', 'tenant', 'plan']))
             );
         } catch (\Exception $e) {
-            return ApiResponse::error('Failed to upgrade subscription: ' . $e->getMessage(), Response::HTTP_BAD_REQUEST);
+            return ApiResponse::error('Failed to upgrade subscription: '.$e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -60,7 +60,7 @@ class TenantSubscriptionController extends Controller
         $tenant = tenant();
         $subscription = $tenant->subscription('default');
 
-        if (!$subscription) {
+        if (! $subscription) {
             return ApiResponse::error('No active subscription to cancel', Response::HTTP_BAD_REQUEST);
         }
 
@@ -72,7 +72,7 @@ class TenantSubscriptionController extends Controller
                 SubscriptionResource::make($subscription->load(['items.price', 'tenant', 'plan']))
             );
         } catch (\Exception $e) {
-            return ApiResponse::error('Failed to cancel subscription: ' . $e->getMessage(), Response::HTTP_BAD_REQUEST);
+            return ApiResponse::error('Failed to cancel subscription: '.$e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
 }

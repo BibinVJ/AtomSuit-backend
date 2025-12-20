@@ -20,9 +20,6 @@ class StripeSubscriptionService
 
     /**
      * Cancel all active Stripe subscriptions for a tenant.
-     *
-     * @param Tenant $tenant
-     * @return void
      */
     public function cancelTenantSubscriptions(Tenant $tenant): void
     {
@@ -37,9 +34,6 @@ class StripeSubscriptionService
 
     /**
      * Cancel a single Stripe subscription.
-     *
-     * @param Subscription $subscription
-     * @return void
      */
     public function cancelSubscription(Subscription $subscription): void
     {
@@ -48,6 +42,7 @@ class StripeSubscriptionService
             Log::info('Skipping manual subscription cancellation', [
                 'subscription_id' => $subscription->stripe_id,
             ]);
+
             return;
         }
 
@@ -69,15 +64,13 @@ class StripeSubscriptionService
      * Sync Stripe subscription data with local database.
      * Creates or updates subscription record and links it to the plan.
      *
-     * @param Tenant $tenant
-     * @param array|\Stripe\Subscription $stripeSubscription
-     * @return Subscription
+     * @param  array|\Stripe\Subscription  $stripeSubscription
      */
     public function syncSubscription(Tenant $tenant, $stripeSubscription): Subscription
     {
         // Handle both array and object formats
-        $subscriptionId = is_array($stripeSubscription) 
-            ? $stripeSubscription['id'] 
+        $subscriptionId = is_array($stripeSubscription)
+            ? $stripeSubscription['id']
             : $stripeSubscription->id;
 
         $status = is_array($stripeSubscription)
@@ -85,15 +78,15 @@ class StripeSubscriptionService
             : $stripeSubscription->status;
 
         // Get items
-        $items = is_array($stripeSubscription) 
-            ? $stripeSubscription['items']['data'] 
+        $items = is_array($stripeSubscription)
+            ? $stripeSubscription['items']['data']
             : $stripeSubscription->items->data;
-        
+
         $firstItem = $items[0];
-        $priceId = is_array($firstItem) 
-            ? $firstItem['price']['id'] 
+        $priceId = is_array($firstItem)
+            ? $firstItem['price']['id']
             : $firstItem->price->id;
-        
+
         $quantity = is_array($firstItem)
             ? $firstItem['quantity']
             : $firstItem->quantity;
@@ -105,7 +98,7 @@ class StripeSubscriptionService
         $trialEnd = is_array($stripeSubscription)
             ? ($stripeSubscription['trial_end'] ?? null)
             : $stripeSubscription->trial_end;
-        
+
         $endedAt = is_array($stripeSubscription)
             ? ($stripeSubscription['ended_at'] ?? null)
             : $stripeSubscription->ended_at;
@@ -128,7 +121,7 @@ class StripeSubscriptionService
         // Update tenant's plan_id to reflect the paid plan
         if ($plan) {
             $tenant->update(['plan_id' => $plan->id]);
-            
+
             Log::info('Subscription synced with plan', [
                 'tenant_id' => $tenant->id,
                 'subscription_id' => $subscriptionId,
@@ -141,18 +134,13 @@ class StripeSubscriptionService
 
     /**
      * Change subscription plan.
-     *
-     * @param Subscription $subscription
-     * @param Plan $newPlan
-     * @param bool $prorate
-     * @return Subscription
      */
     public function changePlan(Subscription $subscription, Plan $newPlan, bool $prorate = true): Subscription
     {
         try {
             // Get the subscription from Stripe
             $stripeSubscription = $this->stripe->subscriptions->retrieve($subscription->stripe_id);
-            
+
             // Update the subscription with new price
             $updatedSubscription = $this->stripe->subscriptions->update($subscription->stripe_id, [
                 'items' => [[
@@ -190,9 +178,6 @@ class StripeSubscriptionService
 
     /**
      * Retrieve Stripe subscription by ID.
-     *
-     * @param string $subscriptionId
-     * @return \Stripe\Subscription
      */
     public function retrieveSubscription(string $subscriptionId): \Stripe\Subscription
     {

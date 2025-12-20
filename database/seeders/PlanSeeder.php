@@ -6,14 +6,12 @@ use App\Models\Plan;
 use App\Models\PlanFeature;
 use App\Services\PlanService;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class PlanSeeder extends Seeder
 {
-    public function __construct(protected PlanService $planService)
-    {
-    }
+    public function __construct(protected PlanService $planService) {}
 
     /**
      * Run the database seeds.
@@ -96,7 +94,7 @@ class PlanSeeder extends Seeder
         ];
 
         $secret = env('STRIPE_SECRET');
-        if (!$secret) {
+        if (! $secret) {
             Log::info('PlanSeeder: STRIPE_SECRET missing; skipping Stripe product/price creation.');
         }
 
@@ -104,7 +102,7 @@ class PlanSeeder extends Seeder
             // Extract features before creating plan
             $features = $payload['features'] ?? [];
             unset($payload['features']);
-            
+
             /** @var Plan $plan */
             $plan = Plan::updateOrCreate(['name' => $payload['name']], $payload);
 
@@ -114,9 +112,9 @@ class PlanSeeder extends Seeder
                 : (string) $plan->interval;
 
             // Link to Stripe for paid recurring plans (not lifetime/free/trial)
-            $isRecurring = $intervalValue !== 'lifetime' && (float)$plan->price > 0;
-            
-            if ($secret && $isRecurring && !$plan->stripe_product_id) {
+            $isRecurring = $intervalValue !== 'lifetime' && (float) $plan->price > 0;
+
+            if ($secret && $isRecurring && ! $plan->stripe_product_id) {
                 try {
                     // Use PlanService to find or create Stripe product and price
                     $slug = Str::slug($plan->name);
@@ -125,7 +123,7 @@ class PlanSeeder extends Seeder
                     $stripeProduct = $this->planService->findOrCreateStripeProduct($plan->name);
                     $stripePrice = $this->planService->findOrCreateStripePrice(
                         $stripeProduct->id,
-                        (float)$plan->price,
+                        (float) $plan->price,
                         $lookupKey,
                         false,
                         $intervalValue,
@@ -135,7 +133,7 @@ class PlanSeeder extends Seeder
                     $plan->stripe_product_id = $stripeProduct->id;
                     $plan->stripe_price_id = $stripePrice->id;
                     $plan->save();
-                    
+
                     Log::info('PlanSeeder: Synced plan with Stripe', [
                         'plan' => $plan->name,
                         'product_id' => $stripeProduct->id,
@@ -145,7 +143,7 @@ class PlanSeeder extends Seeder
                     Log::warning('PlanSeeder: Stripe sync failed for plan '.$plan->name.' - '.$e->getMessage());
                 }
             }
-            
+
             // Add features to plan
             foreach ($features as $feature) {
                 PlanFeature::updateOrCreate(
@@ -163,7 +161,7 @@ class PlanSeeder extends Seeder
                 );
             }
         }
-        
+
         Log::info('PlanSeeder: Plans and features seeded successfully');
     }
 }

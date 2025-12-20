@@ -18,7 +18,6 @@ class ItemRepository
     protected function applyFilters(Builder $query, array $filters): Builder
     {
 
-
         if (! empty($filters['category_id'])) {
             $query->where('category_id', $filters['category_id']);
         }

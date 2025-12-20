@@ -4,19 +4,18 @@ namespace App\Models;
 
 use App\Enums\TenantStatusEnum;
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Cashier\Billable;
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 use Stancl\Tenancy\Contracts\TenantWithDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDatabase;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Domain;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains, Billable, AppAudit;
+    use AppAudit, Billable, HasDatabase, HasDomains;
 
     protected $fillable = [
         'id',
@@ -95,6 +94,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function currentPlanPriceId(): ?string
     {
         $sub = $this->currentSubscription()->first();
+
         return $sub?->items()->first()?->stripe_price;
     }
 
@@ -125,7 +125,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         if ($subscription && $subscription->plan) {
             return $subscription->plan;
         }
-        
+
         // Fallback to direct plan relationship (for trial/lifetime)
         return $this->plan;
     }
@@ -136,6 +136,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function hasFeature(string $featureKey): bool
     {
         $plan = $this->getCurrentPlan();
+
         return $plan ? $plan->hasFeature($featureKey) : false;
     }
 
@@ -145,6 +146,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function getFeature(string $featureKey, $default = null)
     {
         $plan = $this->getCurrentPlan();
+
         return $plan ? $plan->getFeature($featureKey, $default) : $default;
     }
 

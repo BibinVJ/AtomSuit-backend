@@ -48,6 +48,7 @@ class Setting extends Model
     {
         return Cache::remember("setting.{$key}", 3600, function () use ($key, $default) {
             $setting = static::where('key', $key)->first();
+
             return $setting ? $setting->value : $default;
         });
     }
@@ -63,9 +64,9 @@ class Setting extends Model
                 'value' => $value,
                 'type' => $type,
                 'group' => $group,
-            ], fn($v) => !is_null($v))
+            ], fn ($v) => ! is_null($v))
         );
-        
+
         Cache::forget("setting.{$key}");
     }
 

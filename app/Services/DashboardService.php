@@ -8,7 +8,6 @@ use App\Models\DashboardLayout;
 use App\Repositories\CustomerRepository;
 use App\Repositories\DashboardRepository;
 use App\Repositories\ItemRepository;
-use App\Services\TenantService;
 use Illuminate\Support\Facades\Auth;
 
 class DashboardService extends ContextAwareService
@@ -88,7 +87,7 @@ class DashboardService extends ContextAwareService
 
         foreach ($cards as $card) {
             // Check if user has permission for this card
-            if ($card->permission && !$user->can($card->permission)) {
+            if ($card->permission && ! $user->can($card->permission)) {
                 continue;
             }
 
@@ -117,12 +116,12 @@ class DashboardService extends ContextAwareService
         }
 
         $user = Auth::user();
-        
+
         return DashboardCard::orderBy('default_order')
             ->get()
             ->filter(function ($card) use ($user) {
                 // If card has permission requirement, check it
-                return !$card->permission || $user->can($card->permission);
+                return ! $card->permission || $user->can($card->permission);
             })
             ->values();
     }

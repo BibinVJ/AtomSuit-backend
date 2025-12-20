@@ -3,10 +3,10 @@
 namespace App\Auth;
 
 use App\Models\CentralUser;
+use App\Models\Passport\ContextAwareToken;
 use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
-use App\Models\Passport\ContextAwareToken;
 
 class DynamicUserProvider extends EloquentUserProvider
 {
@@ -24,6 +24,7 @@ class DynamicUserProvider extends EloquentUserProvider
     public function createModel()
     {
         $class = $this->getUserModelClass();
+
         return new $class;
     }
 
@@ -34,7 +35,7 @@ class DynamicUserProvider extends EloquentUserProvider
     {
         // Check if this is called during token authentication
         $tokenContext = $this->getTokenContextFromRequest();
-        
+
         if ($tokenContext) {
             // Use the token's original context to determine the model
             $model = $this->createModelFromTokenContext($tokenContext);
@@ -42,30 +43,30 @@ class DynamicUserProvider extends EloquentUserProvider
             // Fallback to current context (for regular authentication)
             $model = $this->createModel();
         }
-        
+
         $user = $this->newModelQuery($model)
             ->where($model->getAuthIdentifierName(), $identifier)
             ->first();
-            
+
         // Additional validation: ensure the returned user matches the expected context
         if ($user && $tokenContext) {
             $expectedModelClass = $tokenContext === 'central' ? CentralUser::class : User::class;
-            if (!is_a($user, $expectedModelClass)) {
+            if (! is_a($user, $expectedModelClass)) {
                 return null; // Block authentication
             }
-            
+
             // Additional check: validate the user actually belongs to the right context
-            if ($tokenContext !== 'central' && !str_starts_with($tokenContext, 'tenant:')) {
+            if ($tokenContext !== 'central' && ! str_starts_with($tokenContext, 'tenant:')) {
                 return null;
             }
-            
+
             // Extra security: If current context doesn't match token context, block access
-            $currentContext = tenant() ? 'tenant:' . tenant()->id : 'central';
+            $currentContext = tenant() ? 'tenant:'.tenant()->id : 'central';
             if ($currentContext !== $tokenContext) {
                 return null; // Block authentication at provider level
             }
         }
-        
+
         return $user;
     }
 
@@ -79,11 +80,12 @@ class DynamicUserProvider extends EloquentUserProvider
             ->where($model->getAuthIdentifierName(), $identifier)
             ->first();
 
-        if (!$retrievedModel) {
+        if (! $retrievedModel) {
             return null;
         }
 
         $rememberToken = $retrievedModel->getRememberToken();
+
         return $rememberToken && hash_equals($rememberToken, $token) ? $retrievedModel : null;
     }
 
@@ -134,6 +136,7 @@ class DynamicUserProvider extends EloquentUserProvider
     protected function newModelQuery($model = null)
     {
         $model = $model ?: $this->createModel();
+
         return $model->newQuery();
     }
 
@@ -144,29 +147,29 @@ class DynamicUserProvider extends EloquentUserProvider
     {
         try {
             $request = request();
-            if (!$request) {
+            if (! $request) {
                 return null;
             }
 
             $tokenValue = $request->bearerToken();
-            if (!$tokenValue) {
+            if (! $tokenValue) {
                 return null;
             }
 
             // Parse the JWT to get token ID
             $tokenId = $this->getTokenIdFromJWT($tokenValue);
-            if (!$tokenId) {
+            if (! $tokenId) {
                 return null;
             }
 
             $token = ContextAwareToken::find($tokenId);
-            if (!$token) {
+            if (! $token) {
                 return null;
             }
 
             return $this->extractContextFromTokenName($token->name);
-        } catch (\Exception $e) {        
-                
+        } catch (\Exception $e) {
+
             return null;
         }
     }
@@ -185,6 +188,7 @@ class DynamicUserProvider extends EloquentUserProvider
 
             // Decode the payload (second part)
             $payload = json_decode(base64_decode($parts[1]), true);
+
             return $payload['jti'] ?? null;
         } catch (\Exception $e) {
             return null;
@@ -200,12 +204,12 @@ class DynamicUserProvider extends EloquentUserProvider
         if (preg_match('/^PAT-(.+?)-\d+-\d+$/', $tokenName, $matches)) {
             return $matches[1];
         }
-        
+
         // Fallback for simpler format: "PAT-central" or "PAT-tenant:uuid"
         if (preg_match('/^PAT-(.+)$/', $tokenName, $matches)) {
             return $matches[1];
         }
-        
+
         return 'unknown';
     }
 
@@ -215,11 +219,11 @@ class DynamicUserProvider extends EloquentUserProvider
     protected function createModelFromTokenContext(string $tokenContext)
     {
         if ($tokenContext === 'central') {
-            return new CentralUser();
+            return new CentralUser;
         } elseif (str_starts_with($tokenContext, 'tenant:')) {
-            return new User();
+            return new User;
         }
-        
+
         // Fallback to current context
         return $this->createModel();
     }

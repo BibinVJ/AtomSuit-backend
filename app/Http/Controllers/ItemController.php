@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ItemController extends Controller
 {
-
     public function __construct(
         protected ItemRepository $itemRepository,
         protected ItemService $itemService
@@ -80,8 +79,9 @@ class ItemController extends Controller
     public function destroy(Request $request, int $id)
     {
         $item = Item::withTrashed()->findOrFail($id);
-        
+
         $this->itemService->delete($item, $request->boolean('force'));
+
         return ApiResponse::success($request->boolean('force') ? 'Item permanently deleted.' : 'Item deleted successfully.');
     }
 
@@ -110,7 +110,8 @@ class ItemController extends Controller
         // Actually, it's better to create a specific Sample export or just use ItemExport with a single dummy item
         // But since we want "how it should be added", a static collection is best.
 
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
+        {
             public function collection()
             {
                 return collect([

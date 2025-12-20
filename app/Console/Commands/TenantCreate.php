@@ -36,7 +36,7 @@ class TenantCreate extends Command
 
             $this->info("Tenant '{$tenant->name}' created successfully with domain '{$this->argument('domain')}'");
             $this->info("Plan: {$tenant->plan->name}");
-            
+
             if ($tenant->currentSubscription) {
                 $this->info("Subscription created: {$tenant->currentSubscription->stripe_id}");
             }
@@ -44,6 +44,7 @@ class TenantCreate extends Command
             return Command::SUCCESS;
         } catch (\Exception $e) {
             $this->error("Failed to create tenant: {$e->getMessage()}");
+
             return Command::FAILURE;
         }
     }
