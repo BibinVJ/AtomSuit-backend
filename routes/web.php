@@ -4,7 +4,7 @@ use App\Helpers\ApiResponse;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return ApiResponse::success('Ping successful - '.config('app.name'));
+    return ApiResponse::success('Ping successful testing - '.config('app.name'));
 });
 
 Route::get('login', [App\Http\Controllers\Auth\SystemMonitoringAuthController::class, 'showLoginForm'])->name('login');
