@@ -11,7 +11,7 @@ class Subscription extends CashierSubscription
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var list<string>
      */
     protected $fillable = [
         'user_id',

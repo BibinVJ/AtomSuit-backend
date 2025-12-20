@@ -15,9 +15,6 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
 {
     public static string $header = 'X-Tenant';
 
-    /** @var callable|null */
-    public static $onFail;
-
     /** @var Tenancy */
     protected $tenancy;
 
@@ -55,6 +52,7 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
             return $this->initializeTenancy($request, $next, $fullDomain);
         } catch (TenantCouldNotBeIdentifiedException $e) {
             // Case 3: Wrong tenant value
+            // @phpstan-ignore-next-line
             $onFail = static::$onFail ?? function ($e) {
                 throw $e;
             };

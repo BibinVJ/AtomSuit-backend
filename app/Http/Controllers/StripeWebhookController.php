@@ -73,7 +73,7 @@ class StripeWebhookController extends CashierController
     /**
      * Override Cashier's getUserByStripeId to use Tenant model.
      */
-    protected function getUserByStripeId($stripeId)
+    protected function getUserByStripeId($stripeId): ?\Illuminate\Database\Eloquent\Model
     {
         return $this->webhookService->getTenantByCustomerId($stripeId);
     }

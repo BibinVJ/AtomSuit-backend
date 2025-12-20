@@ -60,7 +60,7 @@ class TenantService
         $subscriptionPlans = Subscription::whereIn('stripe_status', ['active', 'trialing'])
             ->with('plan:id,name')
             ->get()
-            ->groupBy(fn ($sub) => $sub->plan?->name ?? 'Unknown')
+            ->groupBy(fn ($sub) => $sub->plan->name ?? 'Unknown')
             ->map(fn ($subs) => $subs->count())
             ->toArray();
 
@@ -70,7 +70,7 @@ class TenantService
                 $query->whereIn('stripe_status', ['active', 'trialing']);
             })
             ->get()
-            ->groupBy(fn ($tenant) => $tenant->plan?->name ?? 'No Plan')
+            ->groupBy(fn ($tenant) => $tenant->plan->name ?? 'No Plan')
             ->map(fn ($tenants) => $tenants->count())
             ->toArray();
 
@@ -241,7 +241,7 @@ class TenantService
             'name' => $tenant->name,
             'email' => $tenant->email,
             'phone' => $tenant->phone,
-            'domain' => $domain?->domain ?? 'N/A',
+            'domain' => $domain->domain ?? 'N/A',
             'plan_name' => $plan?->name,
             'plan_price' => $plan?->price,
             'stripe_id' => $tenant->stripe_id,

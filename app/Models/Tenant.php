@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\TenantStatusEnum;
 use App\Traits\AppAudit;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Cashier\Billable;
@@ -13,6 +14,9 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Domain;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
+/**
+ * @method \Illuminate\Database\Eloquent\Relations\HasMany domains()
+ */
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
     use AppAudit, Billable, HasDatabase, HasDomains;
@@ -70,10 +74,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->hasOne(Domain::class);
     }
 
-    public function plan()
+    public function plan(): BelongsTo
     {
-        // Direct plan relationship (used for trial/lifetime plans)
-        return $this->currentSubscription?->plan ?? $this->belongsTo(Plan::class);
+        return $this->belongsTo(Plan::class);
     }
 
     public function subscriptions(): HasMany
@@ -103,7 +106,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      */
     public function isActive(): bool
     {
-        return $this->status === TenantStatusEnum::ACTIVE->value
+        return $this->status === TenantStatusEnum::ACTIVE
             && optional($this->currentSubscription)->stripe_status === 'active';
     }
 

@@ -27,7 +27,7 @@ class TenantResource extends BaseResource
             'domain_name' => new DomainResource($this->whenLoaded('domain')),
             // Use currentSubscription plan if available, otherwise fall back to direct plan relationship
             'current_plan' => new PlanResource(
-                $this->currentSubscription?->plan ?? $this->whenLoaded('plan')
+                $this->currentSubscription->plan ?? $this->whenLoaded('plan')
             ),
             'created_at' => $this->created_at,
         ];

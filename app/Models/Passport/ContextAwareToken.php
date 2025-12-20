@@ -20,6 +20,7 @@ class ContextAwareToken extends Token
      */
     public static function forCurrentContext()
     {
+        // @phpstan-ignore-next-line
         $instance = new static;
 
         return $instance->setConnection(tenant() ? 'tenant' : null);

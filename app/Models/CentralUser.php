@@ -9,11 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\Contracts\OAuthenticatable;
 use Laravel\Passport\HasApiTokens;
 use MeShaon\RequestAnalytics\Contracts\CanAccessAnalyticsDashboard;
 use Spatie\Permission\Traits\HasRoles;
 
-class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
+class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard, OAuthenticatable
 {
     use AppAudit, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
 

@@ -7,6 +7,7 @@ use App\Models\Passport\ContextAwareToken;
 use App\Models\User;
 use Illuminate\Auth\EloquentUserProvider;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Support\Arrayable;
 
 class DynamicUserProvider extends EloquentUserProvider
 {
@@ -120,7 +121,7 @@ class DynamicUserProvider extends EloquentUserProvider
                 continue;
             }
 
-            if (is_array($value) || $value instanceof \Arrayable) {
+            if (is_array($value) || $value instanceof Arrayable) {
                 $query->whereIn($key, $value);
             } else {
                 $query->where($key, $value);

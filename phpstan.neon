@@ -26,9 +26,9 @@ parameters:
         - '#Method .* should return .* but returns .*#'
         - '#Access to an undefined property .*#'
         - '#Call to function method_exists.* will always evaluate to true.#'
-        - '#Cannot access property .* on string.#'
+
         - '#Call to an undefined method .*#'
         - '#Variable .* in PHPDoc tag .* does not match any variable in the foreach loop.*#'
         - '#Ternary operator condition is always true.#'
         - '#Negated boolean expression is always false.#'
-        - '#Generic type .* in PHPDoc tag .* does not specify all template types of class .*#'
+

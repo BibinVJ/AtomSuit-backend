@@ -3,7 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property \App\Models\DashboardCard|null $card
+ */
 class DashboardLayout extends Model
 {
     protected $fillable = [
@@ -33,12 +37,12 @@ class DashboardLayout extends Model
         'config' => 'array',
     ];
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function card()
+    public function card(): BelongsTo
     {
         return $this->belongsTo(DashboardCard::class, 'dashboard_card_id');
     }

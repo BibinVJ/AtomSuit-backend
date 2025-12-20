@@ -93,23 +93,21 @@ class PlanSeeder extends Seeder
             ],
         ];
 
-        $secret = env('STRIPE_SECRET');
+        $secret = config('services.stripe.secret');
         if (! $secret) {
             Log::info('PlanSeeder: STRIPE_SECRET missing; skipping Stripe product/price creation.');
         }
 
         foreach ($plans as $payload) {
             // Extract features before creating plan
-            $features = $payload['features'] ?? [];
+            $features = $payload['features'];
             unset($payload['features']);
 
             /** @var Plan $plan */
             $plan = Plan::updateOrCreate(['name' => $payload['name']], $payload);
 
             // Prepare interval value (handle Enum cast)
-            $intervalValue = is_object($plan->interval) && property_exists($plan->interval, 'value')
-                ? $plan->interval->value
-                : (string) $plan->interval;
+            $intervalValue = $plan->interval->value;
 
             // Link to Stripe for paid recurring plans (not lifetime/free/trial)
             $isRecurring = $intervalValue !== 'lifetime' && (float) $plan->price > 0;

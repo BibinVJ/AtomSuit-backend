@@ -74,7 +74,7 @@ class DashboardService extends ContextAwareService
                 ->get();
         }
 
-        return $existingLayouts ?? collect();
+        return $existingLayouts;
     }
 
     /**
