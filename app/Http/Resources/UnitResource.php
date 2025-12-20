@@ -21,7 +21,7 @@ class UnitResource extends BaseResource
             'name' => $this->name,
             'code' => $this->code,
             'description' => $this->description,
-            'is_active' => $this->is_active,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

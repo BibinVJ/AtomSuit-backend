@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('manufacture_date')->nullable();
             $table->date('expiry_date')->nullable();
             $table->decimal('cost_price', 10, 2)->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

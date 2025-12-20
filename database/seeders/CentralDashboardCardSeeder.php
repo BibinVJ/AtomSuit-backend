@@ -15,7 +15,7 @@ class CentralDashboardCardSeeder extends Seeder
     {
         $cards = [
             [
-                'card_id' => 'total-tenants',
+                'slug' => 'total-tenants',
                 'title' => 'Total Tenants',
                 'component' => 'TotalTenantsCard',
                 'description' => 'Total number of tenants',
@@ -27,7 +27,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 1,
             ],
             [
-                'card_id' => 'active-tenants',
+                'slug' => 'active-tenants',
                 'title' => 'Active Tenants',
                 'component' => 'ActiveTenantsCard',
                 'description' => 'Number of active tenants',
@@ -39,7 +39,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 2,
             ],
             [
-                'card_id' => 'paid-subscribers',
+                'slug' => 'paid-subscribers',
                 'title' => 'Paid Subscribers',
                 'component' => 'PaidSubscribersCard',
                 'description' => 'Number of paid subscribers',
@@ -51,7 +51,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 3,
             ],
             [
-                'card_id' => 'total-revenue',
+                'slug' => 'total-revenue',
                 'title' => 'Total Revenue',
                 'component' => 'TotalRevenueCard',
                 'description' => 'Total revenue from subscriptions',
@@ -63,7 +63,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 4,
             ],
             [
-                'card_id' => 'trial-tenants',
+                'slug' => 'trial-tenants',
                 'title' => 'Trial Tenants',
                 'component' => 'TrialTenantsCard',
                 'description' => 'Number of tenants on trial',
@@ -75,7 +75,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 5,
             ],
             [
-                'card_id' => 'monthly-revenue',
+                'slug' => 'monthly-revenue',
                 'title' => 'Monthly Revenue',
                 'component' => 'MonthlyRevenueCard',
                 'description' => 'Revenue for current month',
@@ -87,7 +87,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 6,
             ],
             [
-                'card_id' => 'plan-distribution',
+                'slug' => 'plan-distribution',
                 'title' => 'Plan Distribution',
                 'component' => 'PlanDistributionCard',
                 'description' => 'Breakdown of tenants by plan',
@@ -99,7 +99,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 7,
             ],
             [
-                'card_id' => 'recent-registrations',
+                'slug' => 'recent-registrations',
                 'title' => 'Recent Registrations',
                 'component' => 'RecentRegistrationsCard',
                 'description' => 'New tenant registrations (last 30 days)',
@@ -111,7 +111,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 8,
             ],
             [
-                'card_id' => 'conversion-rate',
+                'slug' => 'conversion-rate',
                 'title' => 'Conversion Rate',
                 'component' => 'ConversionRateCard',
                 'description' => 'Trial to paid conversion rate',
@@ -123,7 +123,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 9,
             ],
             [
-                'card_id' => 'tenant-overview',
+                'slug' => 'tenant-overview',
                 'title' => 'Tenant Overview',
                 'component' => 'TenantOverviewCard',
                 'description' => 'Comprehensive tenant statistics breakdown',
@@ -135,7 +135,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 10,
             ],
             [
-                'card_id' => 'revenue-overview',
+                'slug' => 'revenue-overview',
                 'title' => 'Revenue Overview',
                 'component' => 'RevenueOverviewCard',
                 'description' => 'Total and monthly revenue breakdown',
@@ -147,7 +147,7 @@ class CentralDashboardCardSeeder extends Seeder
                 'default_order' => 11,
             ],
             [
-                'card_id' => 'growth-metrics',
+                'slug' => 'growth-metrics',
                 'title' => 'Growth Metrics',
                 'component' => 'GrowthMetricsCard',
                 'description' => 'Growth and conversion metrics',
@@ -162,7 +162,7 @@ class CentralDashboardCardSeeder extends Seeder
 
         foreach ($cards as $card) {
             DashboardCard::updateOrCreate(
-                ['card_id' => $card['card_id']],
+                ['slug' => $card['slug']],
                 $card
             );
         }

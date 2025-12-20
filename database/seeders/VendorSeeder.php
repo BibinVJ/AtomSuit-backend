@@ -18,14 +18,12 @@ class VendorSeeder extends Seeder
                 'email' => 'vendor.one@example.com',
                 'phone' => '1234567890',
                 'address' => '123 Vendor St',
-                'is_active' => true,
             ],
             [
                 'name' => 'Vendor Two',
                 'email' => 'vendor.two@example.com',
                 'phone' => '9876543210',
                 'address' => '456 Vendor Ave',
-                'is_active' => true,
             ],
         ];
 

@@ -27,29 +27,23 @@ class SaleController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $sales = $this->saleRepo->all($paginate, $perPage, $filters, ['items.item', 'customer']);
 
-        if ($paginate) {
-            $paginated = SaleResource::paginated($sales);
-
-            return ApiResponse::success(
-                'Sales fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = SaleResource::collectionWithMeta($sales, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Sales fetched successfully.',
-            SaleResource::collection($sales),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($sales)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 

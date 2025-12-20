@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('payment_status')->default(PaymentStatusEnum::PENDING->value);
             $table->string('payment_method')->default(PaymentMethod::CASH->value);
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

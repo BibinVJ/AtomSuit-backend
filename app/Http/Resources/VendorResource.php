@@ -22,7 +22,7 @@ class VendorResource extends BaseResource
             'email' => $this->email,
             'phone' => $this->phone,
             'address' => $this->address,
-            'is_active' => $this->is_active,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

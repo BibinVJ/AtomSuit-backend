@@ -16,7 +16,7 @@ class DashboardCardSeeder extends Seeder
     {
         $cards = [
             [
-                'card_id' => 'total-sales',
+                'slug' => 'total-sales',
                 'title' => 'Total Sales',
                 'component' => 'TotalSalesCard',
                 'description' => 'Total sales amount',
@@ -28,7 +28,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 1,
             ],
             [
-                'card_id' => 'total-purchase',
+                'slug' => 'total-purchase',
                 'title' => 'Total Purchase',
                 'component' => 'TotalPurchaseCard',
                 'description' => 'Total purchase amount',
@@ -40,7 +40,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 2,
             ],
             [
-                'card_id' => 'total-customers',
+                'slug' => 'total-customers',
                 'title' => 'Total Customers',
                 'component' => 'TotalCustomersCard',
                 'description' => 'Total number of customers',
@@ -52,7 +52,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 3,
             ],
             [
-                'card_id' => 'total-items',
+                'slug' => 'total-items',
                 'title' => 'Total Items',
                 'component' => 'TotalItemsCard',
                 'description' => 'Total number of items',
@@ -64,7 +64,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 4,
             ],
             [
-                'card_id' => 'monthly-sales',
+                'slug' => 'monthly-sales',
                 'title' => 'Monthly Sales Chart',
                 'component' => 'MonthlySalesChart',
                 'description' => 'Sales trend over time',
@@ -76,7 +76,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 5,
             ],
             [
-                'card_id' => 'statistics',
+                'slug' => 'statistics',
                 'title' => 'Statistics',
                 'component' => 'StatisticsCard',
                 'description' => 'Overall statistics',
@@ -88,7 +88,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 6,
             ],
             [
-                'card_id' => 'top-customers',
+                'slug' => 'top-customers',
                 'title' => 'Top Customers',
                 'component' => 'TopCustomersCard',
                 'description' => 'Best customers by revenue',
@@ -100,7 +100,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 7,
             ],
             [
-                'card_id' => 'out-of-stock',
+                'slug' => 'out-of-stock',
                 'title' => 'Out of Stock',
                 'component' => 'OutOfStockCard',
                 'description' => 'Items that are out of stock',
@@ -112,7 +112,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 8,
             ],
             [
-                'card_id' => 'low-stock',
+                'slug' => 'low-stock',
                 'title' => 'Low Stock',
                 'component' => 'LowStockCard',
                 'description' => 'Items with low stock levels',
@@ -124,7 +124,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 9,
             ],
             [
-                'card_id' => 'expiry-items',
+                'slug' => 'expiry-items',
                 'title' => 'Expiring Items',
                 'component' => 'ExpiringItemsCard',
                 'description' => 'Items nearing expiry date',
@@ -136,7 +136,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 10,
             ],
             [
-                'card_id' => 'top-sold',
+                'slug' => 'top-sold',
                 'title' => 'Top Selling Items',
                 'component' => 'TopSoldCard',
                 'description' => 'Best selling items',
@@ -148,7 +148,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 11,
             ],
             [
-                'card_id' => 'top-purchased',
+                'slug' => 'top-purchased',
                 'title' => 'Top Purchased Items',
                 'component' => 'TopPurchasedCard',
                 'description' => 'Most purchased items',
@@ -160,7 +160,7 @@ class DashboardCardSeeder extends Seeder
                 'default_order' => 12,
             ],
             [
-                'card_id' => 'dead-stock',
+                'slug' => 'dead-stock',
                 'title' => 'Dead Stock',
                 'component' => 'DeadStockCard',
                 'description' => 'Items with no movement',
@@ -175,7 +175,7 @@ class DashboardCardSeeder extends Seeder
 
         foreach ($cards as $card) {
             DashboardCard::updateOrCreate(
-                ['card_id' => $card['card_id']],
+                ['slug' => $card['slug']],
                 $card
             );
         }

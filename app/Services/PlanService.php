@@ -241,12 +241,9 @@ class PlanService
      */
     public function delete(Plan $plan): Plan
     {
-        if ($plan->subscribedTenants()->exists()) {
-            throw new Exception('Plan has active subscribers and cannot be deactivated.');
-        }
-
-        // Mark as inactive instead of deleting
-        return $this->planRepository->update($plan, ['is_active' => false]);
+        // Soft delete the plan
+        $plan->delete();
+        return $plan;
     }
 
     /**

@@ -36,6 +36,10 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'central_users',
+        ],
         'api' => [
             'driver' => 'passport',
             'provider' => 'dynamic_users',
@@ -63,6 +67,10 @@ return [
         'dynamic_users' => [
             'driver' => 'dynamic',
             'model' => App\Models\User::class, // Default model, will be overridden by provider
+        ],
+        'central_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\CentralUser::class,
         ],
     ],
 

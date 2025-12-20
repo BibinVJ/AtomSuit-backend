@@ -31,7 +31,6 @@ class PlanRequest extends FormRequest
             'is_trial_plan' => 'boolean',
             'trial_duration_in_days' => 'required_if:is_trial_plan,true|integer|min:1',
             'is_expired_user_plan' => 'boolean',
-            'is_active' => 'boolean',
             'features' => 'sometimes|array',
             'features.*.id' => 'sometimes|integer|exists:plan_features,id',
             'features.*.key' => 'required_with:features|string|max:255',

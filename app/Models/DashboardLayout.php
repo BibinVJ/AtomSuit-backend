@@ -8,7 +8,7 @@ class DashboardLayout extends Model
 {
     protected $fillable = [
         'user_id',
-        'card_id',
+        'dashboard_card_id',
         'area',
         'x',
         'y',
@@ -40,6 +40,6 @@ class DashboardLayout extends Model
 
     public function card()
     {
-        return $this->belongsTo(DashboardCard::class, 'card_id', 'card_id');
+        return $this->belongsTo(DashboardCard::class, 'dashboard_card_id');
     }
 }

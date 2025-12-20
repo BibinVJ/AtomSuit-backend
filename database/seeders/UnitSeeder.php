@@ -13,9 +13,9 @@ class UnitSeeder extends Seeder
     public function run(): void
     {
         $units = [
-            ['name' => 'Milligram', 'code' => 'mg', 'description' => 'Weight unit', 'is_active' => true],
-            ['name' => 'Millilitre', 'code' => 'ml', 'description' => 'Volume unit', 'is_active' => true],
-            ['name' => 'Piece', 'code' => 'pcs', 'description' => 'General unit', 'is_active' => true],
+            ['name' => 'Milligram', 'code' => 'mg', 'description' => 'Weight unit'],
+            ['name' => 'Millilitre', 'code' => 'ml', 'description' => 'Volume unit'],
+            ['name' => 'Piece', 'code' => 'pcs', 'description' => 'General unit'],
         ];
 
         foreach ($units as $unit) {

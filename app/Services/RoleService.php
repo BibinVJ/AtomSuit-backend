@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\RoleRepository;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleService
 {
@@ -16,7 +16,6 @@ class RoleService
         /** @var Role $role */
         $role = $this->roleRepository->create([
             'name' => $data['name'],
-            'is_active' => $data['is_active'] ?? true,
         ]);
 
         if (isset($data['permissions'])) {
@@ -30,7 +29,6 @@ class RoleService
     {
         $role->update([
             'name' => $data['name'],
-            'is_active' => $data['is_active'] ?? true,
         ]);
 
         if (isset($data['permissions'])) {
@@ -40,8 +38,23 @@ class RoleService
         return $role;
     }
 
-    public function delete(Role $role)
+    public function delete(Role $role, bool $force = false)
     {
-        $this->roleRepository->delete($role);
+        if ($force) {
+            if ($role->users()->exists()) {
+                throw new \Exception('Role is assigned to users and cannot be hard deleted.');
+            }
+            return $this->roleRepository->forceDelete($role);
+        }
+
+        return $this->roleRepository->delete($role);
+    }
+
+    public function restore(int $id): Role
+    {
+        $role = Role::onlyTrashed()->findOrFail($id);
+        $this->roleRepository->restore($role);
+
+        return $role;
     }
 }

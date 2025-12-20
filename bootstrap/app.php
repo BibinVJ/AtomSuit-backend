@@ -23,12 +23,16 @@ return Application::configure(basePath: dirname(__DIR__))
             'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'log.webhook' => \App\Http\Middleware\LogWebhookRequests::class,
+            'admin.tenant.context' => \App\Http\Middleware\IdentifyAdminTenantContext::class,
+        ]);
+
+        $middleware->append([
+            \App\Http\Middleware\InitializeTenancyBySubdomainHeader::class,
         ]);
 
         // Force all API responses to be JSON
-        $middleware->append([
+        $middleware->group('api', [
             \App\Http\Middleware\ForceJsonResponse::class,
-            \App\Http\Middleware\InitializeTenancyBySubdomainHeader::class,
         ]);
     })
 

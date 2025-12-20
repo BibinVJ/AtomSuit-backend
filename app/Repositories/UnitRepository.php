@@ -18,21 +18,20 @@ class UnitRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        if (isset($filters['is_active'])) {
-            $query->where('is_active', filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN));
+        if (isset($filters['trashed'])) {
+            if ($filters['trashed'] === 'only') {
+                $query->onlyTrashed();
+            } elseif ($filters['trashed'] === 'with') {
+                $query->withTrashed();
+            }
         }
+
 
         if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('name', 'like', '%'.$filters['search'].'%')
                     ->orWhere('code', 'like', '%'.$filters['search'].'%')
                     ->orWhere('description', 'like', '%'.$filters['search'].'%');
-            });
-        }
-
-        if (! empty($filters['is_not_admin'])) {
-            $query->whereDoesntHave('roles', function ($q) {
-                $q->where('name', RolesEnum::ADMIN->value);
             });
         }
 

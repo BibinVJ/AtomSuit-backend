@@ -40,10 +40,6 @@ class SubscriptionRepository
             });
         }
 
-        // Filter by active subscriptions
-        if (isset($filters['is_active']) && filter_var($filters['is_active'], FILTER_VALIDATE_BOOLEAN)) {
-            $query->whereIn('stripe_status', ['active', 'trialing']);
-        }
 
         // Filter by canceled subscriptions
         if (isset($filters['is_canceled']) && filter_var($filters['is_canceled'], FILTER_VALIDATE_BOOLEAN)) {

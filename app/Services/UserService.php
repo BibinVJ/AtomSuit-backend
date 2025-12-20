@@ -44,10 +44,21 @@ class UserService
         return $user;
     }
 
-    public function delete(User $user)
+    public function delete(User $user, bool $force = false)
     {
-        // add check for if user is deletable
+        if ($force) {
+            // Add checks if needed
+            return $this->userRepository->forceDelete($user);
+        }
 
-        $this->userRepository->delete($user);
+        return $this->userRepository->delete($user);
+    }
+
+    public function restore(int $id): User
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+        $this->userRepository->restore($user);
+
+        return $user;
     }
 }

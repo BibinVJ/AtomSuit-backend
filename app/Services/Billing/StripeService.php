@@ -129,8 +129,8 @@ class StripeService
         $priceId = $subscription->items->data[0]->price->id ?? null;
         $plan = $priceId ? Plan::where('stripe_price_id', $priceId)->first() : null;
 
-        // Deactivate existing active subscription
-        $tenant->subscriptions()->where('is_active', true)->update(['is_active' => false, 'end_date' => now()]);
+        // Deactivate existing subscriptions (mark as ended)
+        $tenant->subscriptions()->whereNotIn('stripe_status', ['canceled'])->update(['ends_at' => now(), 'stripe_status' => 'canceled']);
 
         // Upsert subscription row
         Subscription::updateOrCreate(
@@ -140,7 +140,7 @@ class StripeService
                 'start_date' => now(),
                 'end_date' => null,
                 'trial_ends_at' => $status === 'trialing' ? $currentPeriodEnd : null,
-                'is_active' => in_array($status, ['trialing','active'], true),
+                'stripe_status' => $status,
                 'payment_gateway' => 'stripe',
                 'gateway_subscription_id' => $stripeSubId,
                 'renewal_type' => 'auto',

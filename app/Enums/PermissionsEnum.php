@@ -90,6 +90,11 @@ enum PermissionsEnum: string
     case UPDATE_SALE = 'update-sale';
     case DELETE_SALE = 'delete-sale';
 
+    // Audit
+    case VIEW_AUDIT = 'view-audit';
+
+    // System Monitoring / Analytics
+    case VIEW_SYSTEM_ANALYTICS = 'view-system-analytics';
 
     public static function centralPermissions(): array
     {
@@ -97,6 +102,10 @@ enum PermissionsEnum: string
             // Dashboard
             self::VIEW_DASHBOARD->value,
             self::MANAGE_NOTIFICATIONS->value,
+            self::VIEW_AUDIT->value,
+
+            // System Monitoring
+            self::VIEW_SYSTEM_ANALYTICS->value,
 
             // Plan
             self::CREATE_PLAN->value,
@@ -151,6 +160,8 @@ enum PermissionsEnum: string
             self::VIEW_DOMAIN->value,
 
             self::VIEW_SUBSCRIPTION->value,
+
+            self::VIEW_SYSTEM_ANALYTICS->value,
         ];
 
         return collect(self::cases())

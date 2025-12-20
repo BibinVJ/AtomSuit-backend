@@ -21,6 +21,7 @@ use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantSubscriptionController;
+use App\Http\Controllers\AuditController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
@@ -152,9 +153,27 @@ Route::middleware(['auth:api'])->group(function () {
     | Inventory
     |--------------------------------------------------------------------------
     */
+    /* Category */
+    Route::get('category/export', [CategoryController::class, 'export']);
+    Route::get('category/sample-excel', [CategoryController::class, 'downloadSample']);
+    Route::post('category/import', [CategoryController::class, 'import']);
+    Route::post('category/{id}/restore', [CategoryController::class, 'restore']);
     Route::apiResource('category', CategoryController::class);
+
+    /* Unit */
+    Route::get('unit/export', [UnitController::class, 'export']);
+    Route::get('unit/sample-excel', [UnitController::class, 'downloadSample']);
+    Route::post('unit/import', [UnitController::class, 'import']);
+    Route::post('unit/{id}/restore', [UnitController::class, 'restore']);
     Route::apiResource('unit', UnitController::class);
+
+    /* Item */
+    Route::get('item/export', [ItemController::class, 'export']);
+    Route::get('item/sample-excel', [ItemController::class, 'downloadSample']);
+    Route::post('item/import', [ItemController::class, 'import']);
+    Route::post('item/{id}/restore', [ItemController::class, 'restore']);
     Route::apiResource('item', ItemController::class);
+
     Route::apiResource('batch', BatchController::class);
     // warehouse
 
@@ -164,7 +183,14 @@ Route::middleware(['auth:api'])->group(function () {
     | Customer & Sales
     |--------------------------------------------------------------------------
     */
+    /* Customer */
+    Route::get('customer/export', [CustomerController::class, 'export']);
+    Route::get('customer/sample-excel', [CustomerController::class, 'downloadSample']);
+    Route::post('customer/import', [CustomerController::class, 'import']);
+    Route::post('customer/{id}/restore', [CustomerController::class, 'restore']);
     Route::apiResource('customer', CustomerController::class);
+
+    /* Sale */
     Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
     Route::apiResource('sale', SaleController::class);
 
@@ -174,7 +200,14 @@ Route::middleware(['auth:api'])->group(function () {
     | Vendor & Purchases
     |--------------------------------------------------------------------------
     */
+    /* Vendor */
+    Route::get('vendor/export', [VendorController::class, 'export']);
+    Route::get('vendor/sample-excel', [VendorController::class, 'downloadSample']);
+    Route::post('vendor/import', [VendorController::class, 'import']);
+    Route::post('vendor/{id}/restore', [VendorController::class, 'restore']);
     Route::apiResource('vendor', VendorController::class);
+
+    /* Purchase */
     Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
     Route::apiResource('purchase', PurchaseController::class);
 
@@ -191,11 +224,17 @@ Route::middleware(['auth:api'])->group(function () {
     | Others
     |--------------------------------------------------------------------------
     */
+    /* Audit Logs */
+    Route::get('audit', [AuditController::class, 'index']);
+    Route::get('audit/{activity}', [AuditController::class, 'show']);
+
     /* User Management */
     Route::post('user/{user}/send-mail', [UserController::class, 'sendMail']);
+    Route::post('user/{id}/restore', [UserController::class, 'restore']);
     Route::apiResource('user', UserController::class);
 
     /* Role Management */
+    Route::post('role/{id}/restore', [RoleController::class, 'restore']);
     Route::apiResource('role', RoleController::class);
     Route::get('permissions', [PermissionController::class, 'index']);
 

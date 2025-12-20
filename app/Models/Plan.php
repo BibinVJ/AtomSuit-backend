@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Enums\PlanIntervalEnum;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Plan extends Model
 {
+    use SoftDeletes, AppAudit;
     protected $fillable = [
         'name',
         'price',
@@ -17,7 +20,6 @@ class Plan extends Model
         'is_trial_plan',
         'trial_duration_in_days',
         'is_expired_user_plan',
-        'is_active',
         'stripe_product_id',
         'stripe_price_id',
     ];
@@ -27,7 +29,6 @@ class Plan extends Model
         'interval' => PlanIntervalEnum::class,
         'is_trial_plan' => 'boolean',
         'is_expired_user_plan' => 'boolean',
-        'is_active' => 'boolean',
     ];
 
     public function subscriptions(): HasMany

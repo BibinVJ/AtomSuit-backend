@@ -41,8 +41,7 @@ class SettingRepository
      */
     public function getAllGrouped(): array
     {
-        return Setting::orderBy('group')
-            ->orderBy('key')
+        return Setting::orderBy('id')
             ->get()
             ->groupBy('group')
             ->map(fn($settings) => SettingResource::collection($settings))

@@ -26,7 +26,6 @@ class VendorRequest extends FormRequest
             'email' => 'nullable|email|max:255|unique:vendors,email,'.$this->route('vendor')?->id,
             'phone' => 'nullable|string|max:20|unique:vendors,phone,'.$this->route('vendor')?->id,
             'address' => 'nullable|string|max:500',
-            'is_active' => 'boolean',
         ];
     }
 }

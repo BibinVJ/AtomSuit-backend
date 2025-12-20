@@ -174,7 +174,6 @@ class SettingService
     {
         return Setting::select('group')
             ->distinct()
-            ->orderBy('group')
             ->pluck('group')
             ->toArray();
     }

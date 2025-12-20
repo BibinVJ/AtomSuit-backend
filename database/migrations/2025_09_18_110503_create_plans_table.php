@@ -21,9 +21,9 @@ return new class extends Migration
             $table->boolean('is_trial_plan')->default(false);
             $table->integer('trial_duration_in_days')->nullable();
             $table->boolean('is_expired_user_plan')->default(false);
-            $table->boolean('is_active')->default(true);
             $table->string('stripe_product_id')->nullable();
             $table->string('stripe_price_id')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

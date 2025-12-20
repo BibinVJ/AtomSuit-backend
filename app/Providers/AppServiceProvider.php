@@ -26,5 +26,15 @@ class AppServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Sale::observe(SaleObserver::class);
         Purchase::observe(PurchaseObserver::class);
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Laravel\Passport\Events\AccessTokenCreated::class,
+            \App\Listeners\LogUserLogin::class
+        );
+
+        \Illuminate\Support\Facades\Event::listen(
+            \Illuminate\Auth\Events\Login::class,
+            \App\Listeners\LogUserLogin::class
+        );
     }
 }

@@ -10,7 +10,7 @@ use App\Http\Resources\RoleResource;
 use App\Repositories\RoleRepository;
 use App\Services\RoleService;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
@@ -21,14 +21,14 @@ class RoleController extends Controller
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_ROLE->value)->only(['index']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_ROLE->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_ROLE->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_ROLE->value)->only(['update', 'restore']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_ROLE->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
-        $filters = $request->only(['search']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'trashed']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $filters['exclude_roles'] = [
@@ -37,23 +37,17 @@ class RoleController extends Controller
 
         $roles = $this->roleRepository->all($paginate, $perPage, $filters, ['permissions']);
 
-        if ($paginate) {
-            $paginated = RoleResource::paginated($roles);
-
-            return ApiResponse::success(
-                'Roles fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = RoleResource::collectionWithMeta($roles, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Roles fetched successfully.',
-            RoleResource::collection($roles),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($roles)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 
@@ -86,14 +80,26 @@ class RoleController extends Controller
         return ApiResponse::success('Role updated successfully.', RoleResource::make($updatedRole));
     }
 
-    public function destroy(Role $role)
+    public function destroy(Request $request, int $id)
     {
+        $role = Role::withTrashed()->findOrFail($id);
+
         if (in_array($role->name, [RolesEnum::SUPER_ADMIN->value, RolesEnum::ADMIN->value])) {
             return ApiResponse::error('Cannot delete a protected role.', code: Response::HTTP_FORBIDDEN);
         }
 
-        $this->roleService->delete($role);
+        try {
+            $this->roleService->delete($role, $request->boolean('force'));
+            return ApiResponse::success($request->boolean('force') ? 'Role permanently deleted.' : 'Role deleted successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
 
-        return ApiResponse::success('Role deleted successfully.');
+    public function restore(int $id)
+    {
+        $role = $this->roleService->restore($id);
+
+        return ApiResponse::success('Role restored successfully.', RoleResource::make($role));
     }
 }

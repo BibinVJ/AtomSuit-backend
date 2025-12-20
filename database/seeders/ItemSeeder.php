@@ -52,12 +52,11 @@ class ItemSeeder extends Seeder
             Item::firstOrCreate(
                 ['name' => $item['name']],
                 [
-                    'sku' => Str::uuid(),
+                    'sku' => (string) mt_rand(10000000, 99999999),
                     'category_id' => $item['category_id'],
                     'unit_id' => $item['unit_id'],
                     'description' => $item['description'],
                     'selling_price' => $item['selling_price'],
-                    'is_active' => true,
                 ]
             );
         }

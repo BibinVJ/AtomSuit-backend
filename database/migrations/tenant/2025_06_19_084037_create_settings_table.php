@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('group')->default('system')->comment('Group of settings, e.g., system, user, app');
             $table->string('type')->default('text')->comment('e.g., text, number, select, file, boolean');
             $table->string('description')->nullable();
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

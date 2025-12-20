@@ -23,7 +23,7 @@ class Setting extends Model
         return match ($this->type) {
             'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN),
             'integer' => (int) $value,
-            'json' => json_decode($value, true),
+            'json' => json_decode($value, true) ?? $value,
             'file' => $value, // Return path as-is
             default => $value, // string
         };
@@ -36,7 +36,7 @@ class Setting extends Model
     {
         $this->attributes['value'] = match ($this->type ?? 'string') {
             'boolean' => $value ? '1' : '0',
-            'json' => is_array($value) ? json_encode($value) : $value,
+            'json' => is_array($value) || is_object($value) ? json_encode($value) : $value,
             default => $value,
         };
     }
@@ -63,7 +63,7 @@ class Setting extends Model
                 'value' => $value,
                 'type' => $type,
                 'group' => $group,
-            ])
+            ], fn($v) => !is_null($v))
         );
         
         Cache::forget("setting.{$key}");

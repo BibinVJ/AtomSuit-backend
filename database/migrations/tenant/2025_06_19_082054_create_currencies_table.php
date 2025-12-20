@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('code', 3)->unique()->comment('ISO 4217 currency code, e.g., USD, EUR');
             $table->string('name');
             $table->string('symbol', 10)->nullable()->comment('$, ₹');
-            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

@@ -29,29 +29,23 @@ class TenantController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction', 'plan_id']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'currentSubscription.plan', 'plan']);
 
-        if ($paginate) {
-            $paginated = TenantResource::paginated($tenants);
-
-            return ApiResponse::success(
-                'Tenants fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = TenantResource::collectionWithMeta($tenants, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Tenants fetched successfully.',
-            TenantResource::collection($tenants),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($tenants)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 

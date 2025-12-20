@@ -2,17 +2,19 @@
 
 namespace App\Models;
 use App\Enums\UserStatus;
+use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use MeShaon\RequestAnalytics\Contracts\CanAccessAnalyticsDashboard;
 use Spatie\Permission\Traits\HasRoles;
 
-class CentralUser extends Authenticatable
+class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
 {
-    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes, AppAudit;
 
     protected $table = 'users';
     protected $guard_name = 'api';
@@ -71,5 +73,10 @@ class CentralUser extends Authenticatable
     public function getProviderName(): string
     {
         return 'dynamic_users';
+    }
+
+    public function canAccessAnalyticsDashboard(): bool
+    {
+        return $this->hasRole(\App\Enums\RolesEnum::SUPER_ADMIN->value);
     }
 }

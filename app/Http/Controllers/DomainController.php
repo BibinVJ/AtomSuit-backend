@@ -19,29 +19,23 @@ class DomainController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $domains = $this->domainRepository->all($paginate, $perPage, $filters, ['tenant']);
 
-        if ($paginate) {
-            $paginated = DomainResource::paginated($domains);
-
-            return ApiResponse::success(
-                'Domains fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = DomainResource::collectionWithMeta($domains, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Domains fetched successfully.',
-            DomainResource::collection($domains),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($domains)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 }

@@ -11,6 +11,9 @@ use App\Repositories\CategoryRepository;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Exports\CategoryExport;
+use App\Imports\CategoryImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CategoryController extends Controller
 {
@@ -20,35 +23,29 @@ class CategoryController extends Controller
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_CATEGORY->value)->only(['index']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_CATEGORY->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_CATEGORY->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_CATEGORY->value)->only(['update', 'restore']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_CATEGORY->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction', 'trashed']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $categories = $this->categoryRepository->all($paginate, $perPage, $filters);
 
-        if ($paginate) {
-            $paginated = CategoryResource::paginated($categories);
-
-            return ApiResponse::success(
-                'Categories fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = CategoryResource::collectionWithMeta($categories, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Categories fetched successfully.',
-            CategoryResource::collection($categories),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($categories)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 
@@ -66,10 +63,63 @@ class CategoryController extends Controller
         return ApiResponse::success('Category updated successfully.', CategoryResource::make($updatedCategory));
     }
 
-    public function destroy(Category $category)
+    public function destroy(Request $request, int $id)
     {
-        $this->categoryService->delete($category);
+        $category = Category::withTrashed()->findOrFail($id);
+        
+        try {
+            $this->categoryService->delete($category, $request->boolean('force'));
+            return ApiResponse::success($request->boolean('force') ? 'Category permanently deleted.' : 'Category deleted successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
 
-        return ApiResponse::success('Category deleted successfully.');
+    public function restore(int $id)
+    {
+        $category = $this->categoryService->restore($id);
+
+        return ApiResponse::success('Category restored successfully.', CategoryResource::make($category));
+    }
+
+    public function export()
+    {
+        return Excel::download(new CategoryExport, 'categories_' . now()->format('Y-m-d_H-i-s') . '.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv',
+        ]);
+
+        Excel::import(new CategoryImport, $request->file('file'));
+
+        return ApiResponse::success('Categories imported successfully.');
+    }
+
+    public function downloadSample()
+    {
+        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings {
+            public function collection()
+            {
+                return collect([
+                    [
+                        'Sample Category',
+                        'This is a sample category description',
+                        'active',
+                    ],
+                ]);
+            }
+
+            public function headings(): array
+            {
+                return [
+                    'Name',
+                    'Description',
+                    'Status',
+                ];
+            }
+        }, 'sample_categories.xlsx');
     }
 }

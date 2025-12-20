@@ -21,11 +21,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('type')->default(ItemType::PRODUCT);
             $table->decimal('selling_price', 10, 2)->default(0);
-            // $table->foreignId('sales_account_id')->constrained('chart_of_accounts');
-            // $table->foreignId('cogs_account_id')->constrained('chart_of_accounts');
-            // $table->foreignId('inventory_account_id')->constrained('chart_of_accounts');
-            // $table->foreignId('inventory_adjustment_account_id')->constrained('chart_of_accounts');
-            $table->boolean('is_active')->default(true);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -19,29 +19,23 @@ class BatchController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('per_page', 15);
 
         $batches = $this->batchRepository->all($paginate, $perPage, $filters);
 
-        if ($paginate) {
-            $paginated = BatchResource::paginated($batches);
-
-            return ApiResponse::success(
-                'Batches fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = BatchResource::collectionWithMeta($batches, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Batches fetched successfully.',
-            BatchResource::collection($batches),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($batches)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 }

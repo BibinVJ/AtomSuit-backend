@@ -20,7 +20,8 @@ return [
     'middleware' => [
         'web' => [
             'web',
-            // 'auth', // Uncomment if using web authentication
+            'auth:web',
+            'admin.tenant.context',
             'request-analytics.access',
         ],
         'api' => [
@@ -37,6 +38,7 @@ return [
 
     'ignore-paths' => [
         env('REQUEST_ANALYTICS_PATHNAME', 'analytics'),
+        'telescope*',
         'broadcasting/auth',
         'livewire/*',
     ],

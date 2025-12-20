@@ -23,36 +23,30 @@ class UserController extends Controller
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_USER->value)->only(['index']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_USER->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_USER->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_USER->value)->only(['update', 'restore']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_USER->value)->only(['destroy']);
     }
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'is_not_admin', 'role', 'sort_by', 'sort_direction']);
+        $filters = $request->only(['status', 'search', 'is_not_admin', 'role', 'from', 'to', 'sort_by', 'sort_direction', 'trashed']);
         $filters['exclude_current'] = true;
-        $paginate = ! $request->boolean('unpaginated');
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $users = $this->userRepository->all($paginate, $perPage, $filters);
 
-        if ($paginate) {
-            $paginated = UserResource::paginated($users);
-
-            return ApiResponse::success(
-                'Users fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = UserResource::collectionWithMeta($users, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Users fetched successfully.',
-            UserResource::collection($users),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($users)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 
@@ -70,11 +64,27 @@ class UserController extends Controller
         return ApiResponse::success('User updated successfully.', UserResource::make($updatedUser));
     }
 
-    public function destroy(User $user)
+    public function destroy(Request $request, int $id)
     {
-        $this->userService->delete($user);
+        $user = User::withTrashed()->findOrFail($id);
 
-        return ApiResponse::success('User deleted successfully.');
+        if ($user->id === auth()->id()) {
+            return ApiResponse::error('You cannot delete your own account.', Response::HTTP_FORBIDDEN);
+        }
+
+        try {
+            $this->userService->delete($user, $request->boolean('force'));
+            return ApiResponse::success($request->boolean('force') ? 'User permanently deleted.' : 'User deleted successfully.');
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+    }
+
+    public function restore(int $id)
+    {
+        $user = $this->userService->restore($id);
+
+        return ApiResponse::success('User restored successfully.', UserResource::make($user));
     }
 
     public function sendMail(UserSendMailRequest $request, User $user)

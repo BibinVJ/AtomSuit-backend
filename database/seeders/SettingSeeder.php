@@ -231,29 +231,6 @@ class SettingSeeder extends Seeder
                 'description' => 'Default invoice footer text',
             ],
 
-            // Email Settings
-            [
-                'key' => 'email_from_name',
-                'value' => config('app.name', 'Atomsuit'),
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender name for emails',
-            ],
-            [
-                'key' => 'email_from_address',
-                'value' => 'noreply@yourcompany.com',
-                'type' => 'string',
-                'group' => 'email',
-                'description' => 'Default sender email address',
-            ],
-            [
-                'key' => 'email_signature',
-                'value' => 'Best regards,\nYour Company Team',
-                'type' => 'text',
-                'group' => 'email',
-                'description' => 'Default email signature',
-            ],
-
             // Appearance Settings
             [
                 'key' => 'theme',
@@ -275,6 +252,34 @@ class SettingSeeder extends Seeder
                 'type' => 'string',
                 'group' => 'appearance',
                 'description' => 'Secondary brand color (hex)',
+            ],
+            [
+                'key' => 'success_color',
+                'value' => '#10b981',
+                'type' => 'string',
+                'group' => 'appearance',
+                'description' => 'Success semantic color (hex)',
+            ],
+            [
+                'key' => 'error_color',
+                'value' => '#ef4444',
+                'type' => 'string',
+                'group' => 'appearance',
+                'description' => 'Error/Danger semantic color (hex)',
+            ],
+            [
+                'key' => 'warning_color',
+                'value' => '#f59e0b',
+                'type' => 'string',
+                'group' => 'appearance',
+                'description' => 'Warning semantic color (hex)',
+            ],
+            [
+                'key' => 'info_color',
+                'value' => '#3b82f6',
+                'type' => 'string',
+                'group' => 'appearance',
+                'description' => 'Information semantic color (hex)',
             ],
 
             // Notification Settings

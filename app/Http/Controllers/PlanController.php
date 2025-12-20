@@ -26,8 +26,8 @@ class PlanController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $with = ['features'];
@@ -40,23 +40,17 @@ class PlanController extends Controller
             return $this->planRepository->all($paginate, $perPage, $filters, $with);
         });
 
-        if ($paginate) {
-            $paginated = PlanResource::paginated($plans);
-
-            return ApiResponse::success(
-                'Plans fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = PlanResource::collectionWithMeta($plans, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Plans fetched successfully.',
-            PlanResource::collection($plans),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($plans)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 

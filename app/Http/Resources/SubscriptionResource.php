@@ -27,7 +27,6 @@ class SubscriptionResource extends BaseResource
             'trial_ends_at' => $this->trial_ends_at?->format('Y-m-d H:i:s'),
             'ends_at' => $this->ends_at?->format('Y-m-d H:i:s'),
             'plan' => new PlanResource($this->whenLoaded('plan')),
-            'is_active' => $this->active(),
             'is_canceled' => $this->canceled(),
             'is_on_trial' => $this->onTrial(),
             'is_on_grace_period' => $this->onGracePeriod(),

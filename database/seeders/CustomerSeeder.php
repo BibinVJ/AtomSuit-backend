@@ -18,14 +18,12 @@ class CustomerSeeder extends Seeder
                 'email' => 'john.doe@example.com',
                 'phone' => '000000000000',
                 'address' => '123 Main St',
-                'is_active' => true,
             ],
             [
                 'name' => 'Jane Smith',
                 'email' => 'jane.smith@example.com',
                 'phone' => '000000000000',
                 'address' => '456 Elm St',
-                'is_active' => true,
             ],
         ];
 

@@ -6,11 +6,16 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Traits\AppAudit;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
+    use HasFactory, SoftDeletes, AppAudit;
+
     protected $fillable = [
         'user_id',
         'vendor_id',

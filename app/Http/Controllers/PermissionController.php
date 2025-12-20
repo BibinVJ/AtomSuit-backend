@@ -21,6 +21,13 @@ class PermissionController extends Controller
         $filters = $request->only(['search']);
         $permissions = $this->permissionService->getAll($filters);
 
-        return ApiResponse::success('Permissions fetched successfully.', PermissionResource::collection($permissions));
+        $result = PermissionResource::collectionWithMeta($permissions);
+
+        return ApiResponse::success(
+            'Permissions fetched successfully.',
+            $result['data'],
+            200,
+            $result['meta'] ?? []
+        );
     }
 }

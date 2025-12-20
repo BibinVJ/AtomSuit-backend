@@ -18,7 +18,8 @@ class DashboardLayoutResource extends BaseResource
     {
         return [
             'id' => $this->id,
-            'card_id' => $this->card_id,
+            'dashboard_card_id' => $this->dashboard_card_id,
+            'slug' => $this->card?->slug,
             'area' => $this->area,
             'x' => $this->x,
             'y' => $this->y,
@@ -29,6 +30,7 @@ class DashboardLayoutResource extends BaseResource
             'draggable' => $this->draggable,
             'visible' => $this->visible,
             'config' => $this->config,
+            
             // Include card metadata for frontend rendering
             'component' => $this->card?->component,
             'title' => $this->card?->title,

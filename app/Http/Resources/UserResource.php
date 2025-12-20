@@ -45,6 +45,7 @@ class UserResource extends BaseResource
             'social_links' => SocialLinkResource::collection($this->whenLoaded('socialLinks')),
 
             'created_at' => $this->created_at,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

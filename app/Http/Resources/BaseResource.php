@@ -28,6 +28,33 @@ abstract class BaseResource extends JsonResource
         ];
     }
 
+    /**
+     * Helper to return collection with metadata, supporting both standard pagination
+     * and custom range-based results.
+     */
+    public static function collectionWithMeta(mixed $resource, array $customMeta = []): array
+    {
+        if ($resource instanceof LengthAwarePaginator) {
+            return self::paginated($resource);
+        }
+
+        if (is_array($resource) && isset($resource['data'])) {
+            return [
+                'data' => static::collection($resource['data']),
+                'meta' => array_merge([
+                    'total' => $resource['total'] ?? count($resource['data']),
+                ], $customMeta)
+            ];
+        }
+
+        return [
+            'data' => static::collection($resource),
+            'meta' => array_merge([
+                'total' => count($resource),
+            ], $customMeta)
+        ];
+    }
+
     protected static function formatPaginationLinks(LengthAwarePaginator $paginator): array
     {
         $links = [];

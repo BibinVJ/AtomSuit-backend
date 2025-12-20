@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('status')->default(TransactionStatus::DRAFT->value);
             $table->string('payment_status')->default(PaymentStatusEnum::PENDING->value);
             $table->text('note')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

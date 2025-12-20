@@ -20,7 +20,7 @@ class CategoryResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'is_active' => $this->is_active,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

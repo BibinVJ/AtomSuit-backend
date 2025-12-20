@@ -4,7 +4,7 @@ namespace App\Repositories;
 
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleRepository
 {
@@ -17,6 +17,14 @@ class RoleRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
+        if (isset($filters['trashed'])) {
+            if ($filters['trashed'] === 'only') {
+                $query->onlyTrashed();
+            } elseif ($filters['trashed'] === 'with') {
+                $query->withTrashed();
+            }
+        }
+
         if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('name', 'like', '%'.$filters['search'].'%')

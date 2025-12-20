@@ -26,8 +26,8 @@ class SubscriptionController extends Controller
     public function index(Request $request)
     {
         // Central context - show all subscriptions with pagination and filters
-        $filters = $request->only(['status', 'plan_id', 'tenant_id', 'search', 'is_active', 'is_canceled', 'sort_by', 'sort_direction']);
-        $paginate = !$request->boolean('unpaginated');
+        $filters = $request->only(['status', 'plan_id', 'tenant_id', 'search', 'is_canceled', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $subscriptions = $this->subscriptionRepository->all($paginate, $perPage, $filters, ['tenant', 'plan']);

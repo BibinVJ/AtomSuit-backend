@@ -14,7 +14,7 @@ trait HasCrudRepository
         int $perPage = 15,
         array $filters = [],
         array $with = [],
-    ): Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator {
+    ): Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator|array {
 
         $query = $this->model->newQuery();
 
@@ -32,6 +32,23 @@ trait HasCrudRepository
         $sortBy = $filters['sort_by'] ?? 'id';
         $sortDir = $filters['sort_direction'] ?? 'desc';
         $query->orderBy($sortBy, $sortDir);
+
+        // check for from and to for range based fetching
+        if (isset($filters['from']) && isset($filters['to'])) {
+            $from = (int) $filters['from'];
+            $to = (int) $filters['to'];
+            if ($to >= $from) {
+                $total = $query->count();
+                $skip = max(0, $from - 1);
+                $take = $to - $from + 1;
+                $data = $query->skip($skip)->take($take)->get();
+                
+                return [
+                    'data' => $data,
+                    'total' => $total
+                ];
+            }
+        }
 
         return $paginate ? $query->paginate($perPage) : $query->get();
     }
@@ -71,5 +88,15 @@ trait HasCrudRepository
     public function deleteMany(array $ids): void
     {
         $this->model->whereIn('id', $ids)->delete();
+    }
+
+    public function restore(Model $model): bool
+    {
+        return $model->restore();
+    }
+
+    public function forceDelete(Model $model): bool
+    {
+        return $model->forceDelete();
     }
 }

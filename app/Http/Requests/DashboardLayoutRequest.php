@@ -23,7 +23,7 @@ class DashboardLayoutRequest extends FormRequest
     {
         return [
             'layouts' => ['required', 'array'],
-            'layouts.*.card_id' => ['required', 'string'],
+            'layouts.*.dashboard_card_id' => ['required', 'integer'],
             'layouts.*.area' => ['nullable', 'string'],
             'layouts.*.x' => ['nullable', 'numeric'],
             'layouts.*.y' => ['nullable', 'numeric'],

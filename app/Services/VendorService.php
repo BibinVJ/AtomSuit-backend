@@ -11,12 +11,23 @@ class VendorService
 {
     public function __construct(protected VendorRepository $vendorRepository) {}
 
-    public function delete(Vendor $vendor)
+    public function delete(Vendor $vendor, bool $force = false)
     {
-        if ($vendor->purchases()->exists()) {
-            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'Vendor has active transactions.');
+        if ($force) {
+            if ($vendor->purchases()->exists()) {
+                throw new \Exception('Vendor has active transactions and cannot be hard deleted.');
+            }
+            return $this->vendorRepository->forceDelete($vendor);
         }
 
-        $this->vendorRepository->delete($vendor);
+        return $this->vendorRepository->delete($vendor);
+    }
+
+    public function restore(int $id): Vendor
+    {
+        $vendor = Vendor::onlyTrashed()->findOrFail($id);
+        $this->vendorRepository->restore($vendor);
+
+        return $vendor;
     }
 }

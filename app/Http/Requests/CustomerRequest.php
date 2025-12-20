@@ -38,7 +38,6 @@ class CustomerRequest extends FormRequest
                 'required_without:email',
             ],
             'address' => 'nullable|string|max:500',
-            'is_active' => 'boolean',
         ];
     }
 

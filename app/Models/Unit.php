@@ -2,20 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Unit extends Model
 {
+    use SoftDeletes, AppAudit;
     protected $fillable = [
         'name',
         'code',
         'description',
-        'is_active',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
     ];
 
     public function items(): HasMany

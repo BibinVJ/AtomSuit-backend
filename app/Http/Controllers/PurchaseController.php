@@ -26,8 +26,8 @@ class PurchaseController extends Controller
 
     public function index(Request $request)
     {
-        $filters = $request->only(['is_active', 'search', 'sort_by', 'sort_direction']);
-        $paginate = ! $request->boolean('unpaginated');
+        $filters = $request->only(['search', 'from', 'to', 'sort_by', 'sort_direction']);
+        $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
         $purchases = $this->purchaseRepo->all($paginate, $perPage, $filters, [
@@ -36,23 +36,17 @@ class PurchaseController extends Controller
             'vendor',
         ]);
 
-        if ($paginate) {
-            $paginated = PurchaseResource::paginated($purchases);
-
-            return ApiResponse::success(
-                'Purchases fetched successfully.',
-                $paginated['data'],
-                Response::HTTP_OK,
-                $paginated['meta'],
-                $paginated['links']
-            );
-        }
+        $result = PurchaseResource::collectionWithMeta($purchases, [
+            'from' => $filters['from'] ?? null,
+            'to' => $filters['to'] ?? null,
+        ]);
 
         return ApiResponse::success(
             'Purchases fetched successfully.',
-            PurchaseResource::collection($purchases),
+            $result['data'],
             Response::HTTP_OK,
-            ['total' => count($purchases)]
+            $result['meta'] ?? [],
+            $result['links'] ?? []
         );
     }
 

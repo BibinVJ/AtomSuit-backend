@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DashboardCard extends Model
 {
     protected $fillable = [
-        'card_id',
+        'slug',
         'title',
         'component',
         'description',
@@ -18,11 +18,9 @@ class DashboardCard extends Model
         'default_y',
         'default_order',
         'default_config',
-        'is_active',
     ];
 
     protected $casts = [
         'default_config' => 'array',
-        'is_active' => 'boolean',
     ];
 }

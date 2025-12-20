@@ -46,7 +46,7 @@ class UserRequest extends FormRequest
                 ? 'prohibited'
                 : 'required|string|min:6|max:255',
             'role_id' => 'required|exists:roles,id',
-            'is_active' => 'boolean',
+            'status' => 'nullable|string',
         ];
     }
 

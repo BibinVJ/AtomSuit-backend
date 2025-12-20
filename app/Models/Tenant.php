@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\TenantStatusEnum;
+use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -15,7 +16,7 @@ use Stancl\Tenancy\Database\Models\Domain;
 
 class Tenant extends BaseTenant implements TenantWithDatabase
 {
-    use HasDatabase, HasDomains, Billable;
+    use HasDatabase, HasDomains, Billable, AppAudit;
 
     protected $fillable = [
         'id',
@@ -103,7 +104,7 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     public function isActive(): bool
     {
         return $this->status === TenantStatusEnum::ACTIVE->value
-            && optional($this->currentSubscription)->is_active;
+            && optional($this->currentSubscription)->stripe_status === 'active';
     }
 
     /**

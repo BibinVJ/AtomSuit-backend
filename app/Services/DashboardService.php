@@ -83,8 +83,7 @@ class DashboardService extends ContextAwareService
      */
     protected function initializeUserLayouts($user): void
     {
-        $cards = DashboardCard::where('is_active', true)
-            ->orderBy('default_order')
+        $cards = DashboardCard::orderBy('default_order')
             ->get();
 
         foreach ($cards as $card) {
@@ -95,7 +94,7 @@ class DashboardService extends ContextAwareService
 
             DashboardLayout::create([
                 'user_id' => $user->id,
-                'card_id' => $card->card_id,
+                'dashboard_card_id' => $card->id,
                 'x' => $card->default_x ?? 0,
                 'y' => $card->default_y ?? $card->default_order,
                 'width' => $card->default_width,
@@ -119,8 +118,7 @@ class DashboardService extends ContextAwareService
 
         $user = Auth::user();
         
-        return DashboardCard::where('is_active', true)
-            ->orderBy('default_order')
+        return DashboardCard::orderBy('default_order')
             ->get()
             ->filter(function ($card) use ($user) {
                 // If card has permission requirement, check it
@@ -138,7 +136,7 @@ class DashboardService extends ContextAwareService
 
         foreach ($data['layouts'] as $layout) {
             DashboardLayout::updateOrCreate(
-                ['user_id' => Auth::id(), 'card_id' => $layout['card_id']],
+                ['user_id' => Auth::id(), 'dashboard_card_id' => $layout['dashboard_card_id']],
                 [
                     'area' => $layout['area'] ?? null,
                     'x' => $layout['x'] ?? null,

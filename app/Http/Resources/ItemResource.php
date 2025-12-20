@@ -21,7 +21,7 @@ class ItemResource extends BaseResource
             'sku' => $this->sku,
             'name' => $this->name,
             'description' => $this->description,
-            'is_active' => $this->is_active,
+            'deleted_at' => $this->deleted_at,
             'category' => new CategoryResource($this->whenLoaded('category')),
             'unit' => new UnitResource($this->whenLoaded('unit')),
             'type' => $this->type,

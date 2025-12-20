@@ -30,6 +30,10 @@ class TenantRepository
             $query->where('status', $filters['status']);
         }
 
+        if (! empty($filters['plan_id'])) {
+            $query->where('plan_id', $filters['plan_id']);
+        }
+
         return $query;
     }
 

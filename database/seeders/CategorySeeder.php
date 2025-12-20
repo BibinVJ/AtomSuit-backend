@@ -13,9 +13,9 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         $categories = [
-            ['name' => 'Tablet', 'description' => 'Solid dosage form', 'is_active' => true],
-            ['name' => 'Syrup', 'description' => 'Liquid medicine', 'is_active' => true],
-            ['name' => 'Ointment', 'description' => 'Topical treatment', 'is_active' => true],
+            ['name' => 'Tablet', 'description' => 'Solid dosage form'],
+            ['name' => 'Syrup', 'description' => 'Liquid medicine'],
+            ['name' => 'Ointment', 'description' => 'Topical treatment'],
         ];
 
         foreach ($categories as $category) {

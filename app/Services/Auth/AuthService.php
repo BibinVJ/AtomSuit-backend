@@ -39,7 +39,7 @@ class AuthService extends ContextAwareService
         }
 
         // Resolve trial plan for initial access
-        $trialPlan = Plan::where('is_trial_plan', true)->where('is_active', true)->first();
+        $trialPlan = Plan::where('is_trial_plan', true)->first();
         if (! $trialPlan) {
             throw new UnauthorizedHttpException('', 'Trial plan is not configured');
         }
