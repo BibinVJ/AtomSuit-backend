@@ -22,7 +22,7 @@ class RoleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:roles,name,'.$this->route('role')?->id,
+            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('roles', 'name', $this->route('role')?->id)],
             'permissions' => ['nullable', 'array'],
             'permissions.*' => ['integer', 'exists:permissions,id'],
         ];

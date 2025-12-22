@@ -33,7 +33,10 @@ class ExchangeRateController extends Controller
         $perPage = $request->integer('perPage', 15);
 
         // For Exchange Rates, we always eager load currencies
-        $exchangeRates = $this->exchangeRateRepository->all($paginate, $perPage, $filters, ['baseCurrency', 'targetCurrency']);
+        $exchangeRates = $this->exchangeRateRepository->all($paginate, $perPage, $filters, [
+            'baseCurrency' => fn ($q) => $q->withTrashed(),
+            'targetCurrency' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = ExchangeRateResource::collectionWithMeta($exchangeRates, [
             'from' => $filters['from'] ?? null,
@@ -58,7 +61,10 @@ class ExchangeRateController extends Controller
 
     public function show(ExchangeRate $exchangeRate)
     {
-        $exchangeRate->load(['baseCurrency', 'targetCurrency']);
+        $exchangeRate->load([
+            'baseCurrency' => fn ($q) => $q->withTrashed(),
+            'targetCurrency' => fn ($q) => $q->withTrashed(),
+        ]);
 
         return ApiResponse::success('Exchange rate fetched successfully.', ExchangeRateResource::make($exchangeRate));
     }

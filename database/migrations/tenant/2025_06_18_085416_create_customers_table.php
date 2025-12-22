@@ -16,8 +16,28 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable()->unique();
-            $table->text('address')->nullable();
             $table->foreignId('currency_id')->constrained('currencies')->restrictOnDelete();
+            $table->foreignId('sales_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('sales_discount_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('receivables_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('sales_return_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+
+            // Billing Address
+            $table->string('billing_address_line_1')->nullable();
+            $table->string('billing_address_line_2')->nullable();
+            $table->string('billing_city')->nullable();
+            $table->string('billing_state')->nullable();
+            $table->string('billing_country')->nullable();
+            $table->string('billing_zip_code')->nullable();
+
+            // Shipping Address
+            $table->string('shipping_address_line_1')->nullable();
+            $table->string('shipping_address_line_2')->nullable();
+            $table->string('shipping_city')->nullable();
+            $table->string('shipping_state')->nullable();
+            $table->string('shipping_country')->nullable();
+            $table->string('shipping_zip_code')->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });

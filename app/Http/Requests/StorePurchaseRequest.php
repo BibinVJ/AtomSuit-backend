@@ -26,7 +26,7 @@ class StorePurchaseRequest extends FormRequest
     {
         return [
             'vendor_id' => 'required|exists:vendors,id',
-            'invoice_number' => 'required|unique:purchases,invoice_number,'.$this->route('purchase')?->id,
+            'invoice_number' => ['required', new \App\Rules\UniqueInTrash('purchases', 'invoice_number', $this->route('purchase')?->id)],
             'purchase_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatusEnum::class)],

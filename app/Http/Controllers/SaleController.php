@@ -31,7 +31,10 @@ class SaleController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $sales = $this->saleRepo->all($paginate, $perPage, $filters, ['items.item', 'customer']);
+        $sales = $this->saleRepo->all($paginate, $perPage, $filters, [
+            'items.item' => fn ($q) => $q->withTrashed(),
+            'customer' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = SaleResource::collectionWithMeta($sales, [
             'from' => $filters['from'] ?? null,
@@ -50,8 +53,8 @@ class SaleController extends Controller
     public function show(Sale $sale)
     {
         $sale = $this->saleRepo->find($sale->id, with: [
-            'items.item',
-            'customer',
+            'items.item' => fn ($q) => $q->withTrashed(),
+            'customer' => fn ($q) => $q->withTrashed(),
         ]);
 
         return ApiResponse::success('Sale fetched successfully.', SaleResource::make($sale));

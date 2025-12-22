@@ -27,7 +27,7 @@ class StoreSaleRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'invoice_number' => 'required|unique:sales,invoice_number,'.$this->route('sale')?->id,
+            'invoice_number' => ['required', new \App\Rules\UniqueInTrash('sales', 'invoice_number', $this->route('sale')?->id)],
             'sale_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatusEnum::class)],

@@ -23,7 +23,7 @@ class TenantRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:tenants,email',
+            'email' => ['required', 'email', 'max:255', new \App\Rules\UniqueInTrash('tenants', 'email')],
             'phone' => 'required|string|max:20',
             'password' => 'required|string|min:6|max:255',
             'plan_id' => 'required|exists:plans,id',

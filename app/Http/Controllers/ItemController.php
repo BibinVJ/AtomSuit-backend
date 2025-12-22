@@ -34,7 +34,11 @@ class ItemController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $items = $this->itemRepository->all($paginate, $perPage, $filters, ['category', 'unit', 'stockMovements']);
+        $items = $this->itemRepository->all($paginate, $perPage, $filters, [
+            'category' => fn ($q) => $q->withTrashed(),
+            'unit' => fn ($q) => $q->withTrashed(),
+            'stockMovements',
+        ]);
 
         $result = ItemResource::collectionWithMeta($items, [
             'from' => $filters['from'] ?? null,
@@ -53,8 +57,8 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         $item = $this->itemRepository->find($item->id, with: [
-            'category',
-            'unit',
+            'category' => fn ($q) => $q->withTrashed(),
+            'unit' => fn ($q) => $q->withTrashed(),
             'stockMovements',
             'batches',
         ]);

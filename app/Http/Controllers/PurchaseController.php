@@ -32,8 +32,8 @@ class PurchaseController extends Controller
 
         $purchases = $this->purchaseRepo->all($paginate, $perPage, $filters, [
             'items.batch',
-            'items.item',
-            'vendor',
+            'items.item' => fn ($q) => $q->withTrashed(),
+            'vendor' => fn ($q) => $q->withTrashed(),
         ]);
 
         $result = PurchaseResource::collectionWithMeta($purchases, [
@@ -54,8 +54,8 @@ class PurchaseController extends Controller
     {
         $purchase = $this->purchaseRepo->find($purchase->id, with: [
             'items.batch',
-            'items.item',
-            'vendor',
+            'items.item' => fn ($q) => $q->withTrashed(),
+            'vendor' => fn ($q) => $q->withTrashed(),
         ]);
 
         return ApiResponse::success('Purchase fetched successfully.', PurchaseResource::make($purchase));

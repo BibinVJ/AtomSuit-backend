@@ -34,7 +34,9 @@ class UserController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $users = $this->userRepository->all($paginate, $perPage, $filters);
+        $users = $this->userRepository->all($paginate, $perPage, $filters, [
+            'roles' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = UserResource::collectionWithMeta($users, [
             'from' => $filters['from'] ?? null,

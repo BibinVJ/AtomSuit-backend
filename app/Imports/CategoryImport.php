@@ -23,7 +23,7 @@ class CategoryImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:categories,name',
+            'name' => ['required', 'string', new \App\Rules\UniqueInTrash('categories', 'name')],
             'description' => 'nullable|string',
         ];
     }

@@ -22,7 +22,7 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:categories,name,'.$this->route('category')?->id,
+            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('categories', 'name', $this->route('category'))],
             'description' => 'nullable|string',
         ];
     }

@@ -22,23 +22,38 @@ class CustomerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|unique:customers,name,'.$this->route('customer')?->id,
+            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('customers', 'name', $this->route('customer')?->id)],
             'email' => [
                 'nullable',
                 'email',
                 'max:255',
-                'unique:customers,email,'.$this->route('customer')?->id,
+                new \App\Rules\UniqueInTrash('customers', 'email', $this->route('customer')?->id),
                 'required_without:phone',
             ],
             'phone' => [
                 'nullable',
                 'string',
                 'max:20',
-                'unique:customers,phone,'.$this->route('customer')?->id,
+                new \App\Rules\UniqueInTrash('customers', 'phone', $this->route('customer')?->id),
                 'required_without:email',
             ],
-            'address' => 'nullable|string|max:500',
-            'currency_id' => 'required|exists:currencies,id',
+            'currency_id' => ['required', \Illuminate\Validation\Rule::exists('currencies', 'id')],
+            'sales_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'sales_discount_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'receivables_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'sales_return_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'billing_address_line_1' => 'nullable|string|max:255',
+            'billing_address_line_2' => 'nullable|string|max:255',
+            'billing_city' => 'nullable|string|max:255',
+            'billing_state' => 'nullable|string|max:255',
+            'billing_country' => 'nullable|string|max:255',
+            'billing_zip_code' => 'nullable|string|max:20',
+            'shipping_address_line_1' => 'nullable|string|max:255',
+            'shipping_address_line_2' => 'nullable|string|max:255',
+            'shipping_city' => 'nullable|string|max:255',
+            'shipping_state' => 'nullable|string|max:255',
+            'shipping_country' => 'nullable|string|max:255',
+            'shipping_zip_code' => 'nullable|string|max:20',
         ];
     }
 

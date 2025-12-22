@@ -26,6 +26,10 @@ class CustomerExport implements FromCollection, WithHeadings, WithMapping, WithS
             'Email',
             'Phone',
             'Address',
+            'Sales Account',
+            'Sales Discount Account',
+            'Receivables Account',
+            'Sales Return Account',
         ];
     }
 
@@ -36,6 +40,10 @@ class CustomerExport implements FromCollection, WithHeadings, WithMapping, WithS
             $customer->email,
             $customer->phone,
             $customer->address,
+            $customer->salesAccount?->name,
+            $customer->salesDiscountAccount?->name,
+            $customer->receivablesAccount?->name,
+            $customer->salesReturnAccount?->name,
         ];
     }
 

@@ -34,7 +34,13 @@ class CustomerController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $customers = $this->customerRepository->all($paginate, $perPage, $filters);
+        $customers = $this->customerRepository->all($paginate, $perPage, $filters, [
+            'currency' => fn ($q) => $q->withTrashed(),
+            'salesAccount' => fn ($q) => $q->withTrashed(),
+            'salesDiscountAccount' => fn ($q) => $q->withTrashed(),
+            'receivablesAccount' => fn ($q) => $q->withTrashed(),
+            'salesReturnAccount' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = CustomerResource::collectionWithMeta($customers, [
             'from' => $filters['from'] ?? null,
@@ -55,6 +61,19 @@ class CustomerController extends Controller
         $customer = $this->customerRepository->create($request->validated());
 
         return ApiResponse::success('Customer created successfully.', CustomerResource::make($customer));
+    }
+
+    public function show(Customer $customer)
+    {
+        $customer->load([
+            'currency' => fn ($q) => $q->withTrashed(),
+            'salesAccount' => fn ($q) => $q->withTrashed(),
+            'salesDiscountAccount' => fn ($q) => $q->withTrashed(),
+            'receivablesAccount' => fn ($q) => $q->withTrashed(),
+            'salesReturnAccount' => fn ($q) => $q->withTrashed(),
+        ]);
+
+        return ApiResponse::success('Customer fetched successfully.', CustomerResource::make($customer));
     }
 
     public function update(CustomerRequest $request, Customer $customer)
@@ -102,7 +121,10 @@ class CustomerController extends Controller
                         'john@example.com',
                         '1234567890',
                         '123 Main St, Springfield',
-                        'active',
+                        'Sales Revenue',
+                        'Sales Discounts',
+                        'Accounts Receivable',
+                        'Sales Returns',
                     ],
                 ]);
             }
@@ -114,7 +136,10 @@ class CustomerController extends Controller
                     'Email',
                     'Phone',
                     'Address',
-                    'Status',
+                    'Sales Account',
+                    'Sales Discount Account',
+                    'Receivables Account',
+                    'Sales Return Account',
                 ];
             }
         }, 'sample_customers.xlsx');

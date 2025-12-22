@@ -1,11 +1,14 @@
 <?php
 
 use App\Helpers\ApiResponse;
+use App\Http\Controllers\AccountGroupController;
+use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AuditController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -28,6 +31,7 @@ use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -132,16 +136,21 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('domain', [DomainController::class, 'index']);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Accounting
-    |--------------------------------------------------------------------------
-    */
-    // chart of account groups
-    // Route::apiResource('chart-of-account', ChartOfAccountController::class);
-    // taxes
-    // tax groups
-    // item tax types
+    /* Accounting */
+    /* Chart of Accounts */
+    Route::get('chart-of-accounts/export/excel', [ChartOfAccountController::class, 'export']);
+    Route::post('chart-of-accounts/import', [ChartOfAccountController::class, 'import']);
+    Route::post('chart-of-accounts/{chartOfAccount}/restore', [ChartOfAccountController::class, 'restore'])->withTrashed();
+    Route::apiResource('chart-of-accounts', ChartOfAccountController::class)->withTrashed(['show', 'destroy']);
+
+    /* Account Groups */
+    Route::get('account-groups/export/excel', [AccountGroupController::class, 'export']);
+    Route::post('account-groups/import', [AccountGroupController::class, 'import']);
+    Route::post('account-groups/{accountGroup}/restore', [AccountGroupController::class, 'restore'])->withTrashed();
+    Route::apiResource('account-groups', AccountGroupController::class)->withTrashed(['show', 'destroy']);
+
+    /* Account Types */
+    Route::get('account-types', [AccountTypeController::class, 'index']);
 
     /* Currency & Exchange Rate */
     Route::get('currency/export/excel', [CurrencyController::class, 'export']);
@@ -181,7 +190,13 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('item', ItemController::class)->withTrashed(['show', 'destroy']);
 
     Route::apiResource('batch', BatchController::class);
+
     // warehouse
+    Route::get('warehouse/export', [WarehouseController::class, 'export']);
+    Route::get('warehouse/sample-excel', [WarehouseController::class, 'downloadSample']);
+    Route::post('warehouse/import', [WarehouseController::class, 'import']);
+    Route::post('warehouse/{warehouse}/restore', [WarehouseController::class, 'restore'])->withTrashed();
+    Route::apiResource('warehouse', WarehouseController::class)->withTrashed(['show', 'destroy']);
 
     /*
     |--------------------------------------------------------------------------

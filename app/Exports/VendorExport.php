@@ -26,6 +26,10 @@ class VendorExport implements FromCollection, WithHeadings, WithMapping, WithSty
             'Email',
             'Phone',
             'Address',
+            'Payables Account',
+            'Purchase Account',
+            'Purchase Discount Account',
+            'Purchase Return Account',
         ];
     }
 
@@ -36,6 +40,10 @@ class VendorExport implements FromCollection, WithHeadings, WithMapping, WithSty
             $vendor->email,
             $vendor->phone,
             $vendor->address,
+            $vendor->payablesAccount?->name,
+            $vendor->purchaseAccount?->name,
+            $vendor->purchaseDiscountAccount?->name,
+            $vendor->purchaseReturnAccount?->name,
         ];
     }
 

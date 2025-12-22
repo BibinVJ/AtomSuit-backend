@@ -23,10 +23,10 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:tenants,email',
+            'email' => ['required', 'email', new \App\Rules\UniqueInTrash('tenants', 'email')],
             'phone' => 'nullable|string|max:20',
             'password' => 'required|string|min:6',
-            'domain_name' => 'required|unique:domains,domain',
+            'domain_name' => ['required', new \App\Rules\UniqueInTrash('domains', 'domain')],
             'load_sample_data' => 'required|boolean',
             'plan_id' => 'nullable|exists:plans,id',
         ];

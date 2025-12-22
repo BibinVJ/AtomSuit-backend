@@ -96,11 +96,29 @@ enum PermissionsEnum: string
     case UPDATE_CURRENCY = 'update-currency';
     case DELETE_CURRENCY = 'delete-currency';
 
+    // Account Groups
+    case VIEW_ACCOUNT_GROUP = 'view-account-group';
+    case CREATE_ACCOUNT_GROUP = 'create-account-group';
+    case UPDATE_ACCOUNT_GROUP = 'update-account-group';
+    case DELETE_ACCOUNT_GROUP = 'delete-account-group';
+
+    // Chart of Accounts
+    case VIEW_CHART_OF_ACCOUNT = 'view-chart-of-account';
+    case CREATE_CHART_OF_ACCOUNT = 'create-chart-of-account';
+    case UPDATE_CHART_OF_ACCOUNT = 'update-chart-of-account';
+    case DELETE_CHART_OF_ACCOUNT = 'delete-chart-of-account';
+
     // exchange rate management
     case VIEW_EXCHANGE_RATE = 'view-exchange-rate';
     case CREATE_EXCHANGE_RATE = 'create-exchange-rate';
     case UPDATE_EXCHANGE_RATE = 'update-exchange-rate';
     case DELETE_EXCHANGE_RATE = 'delete-exchange-rate';
+
+    // warehouse management
+    case VIEW_WAREHOUSE = 'view-warehouse';
+    case CREATE_WAREHOUSE = 'create-warehouse';
+    case UPDATE_WAREHOUSE = 'update-warehouse';
+    case DELETE_WAREHOUSE = 'delete-warehouse';
 
     // Audit
     case VIEW_AUDIT = 'view-audit';
@@ -154,6 +172,12 @@ enum PermissionsEnum: string
             self::UPDATE_SETTING->value,
             self::VIEW_COMPANY_INFO->value,
             self::UPDATE_COMPANY_INFO->value,
+
+            // Warehouse
+            self::VIEW_WAREHOUSE->value,
+            self::CREATE_WAREHOUSE->value,
+            self::UPDATE_WAREHOUSE->value,
+            self::DELETE_WAREHOUSE->value,
         ];
     }
 

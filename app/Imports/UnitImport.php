@@ -25,8 +25,8 @@ class UnitImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:units,name',
-            'code' => 'sometimes|nullable|string|unique:units,code',
+            'name' => ['required', 'string', new \App\Rules\UniqueInTrash('units', 'name')],
+            'code' => ['sometimes', 'nullable', 'string', new \App\Rules\UniqueInTrash('units', 'code')],
             'description' => 'nullable|string',
         ];
     }

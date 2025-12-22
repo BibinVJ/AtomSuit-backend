@@ -34,7 +34,13 @@ class VendorController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $vendors = $this->vendorRepository->all($paginate, $perPage, $filters);
+        $vendors = $this->vendorRepository->all($paginate, $perPage, $filters, [
+            'currency' => fn ($q) => $q->withTrashed(),
+            'payablesAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseDiscountAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseReturnAccount' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = VendorResource::collectionWithMeta($vendors, [
             'from' => $filters['from'] ?? null,
@@ -55,6 +61,19 @@ class VendorController extends Controller
         $vendor = $this->vendorRepository->create($request->validated());
 
         return ApiResponse::success('Vendor created successfully.', VendorResource::make($vendor));
+    }
+
+    public function show(Vendor $vendor)
+    {
+        $vendor->load([
+            'currency' => fn ($q) => $q->withTrashed(),
+            'payablesAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseDiscountAccount' => fn ($q) => $q->withTrashed(),
+            'purchaseReturnAccount' => fn ($q) => $q->withTrashed(),
+        ]);
+
+        return ApiResponse::success('Vendor fetched successfully.', VendorResource::make($vendor));
     }
 
     public function update(VendorRequest $request, Vendor $vendor)
@@ -102,7 +121,10 @@ class VendorController extends Controller
                         'jane@example.com',
                         '9876543210',
                         '456 Elm St, Metropolis',
-                        'active',
+                        'Accounts Payable',
+                        'Cost of Goods Sold',
+                        'Purchase Discounts',
+                        'Purchase Returns',
                     ],
                 ]);
             }
@@ -114,7 +136,10 @@ class VendorController extends Controller
                     'Email',
                     'Phone',
                     'Address',
-                    'Status',
+                    'Payables Account',
+                    'Purchase Account',
+                    'Purchase Discount Account',
+                    'Purchase Return Account',
                 ];
             }
         }, 'sample_vendors.xlsx');

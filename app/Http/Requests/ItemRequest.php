@@ -24,10 +24,10 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => 'required|string|max:255|unique:items,sku,'.$this->route('item')?->id,
+            'sku' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('items', 'sku', $this->route('item')?->id)],
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'unit_id' => 'required|exists:units,id',
+            'category_id' => ['required', \Illuminate\Validation\Rule::exists('categories', 'id')],
+            'unit_id' => ['required', \Illuminate\Validation\Rule::exists('units', 'id')],
             'description' => 'nullable|string',
             'type' => ['required', new Enum(ItemType::class)],
             'selling_price' => 'nullable|numeric|min:0',

@@ -47,7 +47,7 @@ class ItemImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'sku' => 'required|unique:items,sku',
+            'sku' => ['required', new \App\Rules\UniqueInTrash('items', 'sku')],
             'name' => 'required|string',
             'category' => 'required|string',
             'unit' => 'required|string',

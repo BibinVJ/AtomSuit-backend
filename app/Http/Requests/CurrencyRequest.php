@@ -14,7 +14,7 @@ class CurrencyRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|string|size:3|unique:currencies,code,'.$this->route('currency')?->id,
+            'code' => ['required', 'string', 'size:3', new \App\Rules\UniqueInTrash('currencies', 'code', $this->route('currency')?->id)],
             'name' => 'required|string|max:255',
             'symbol' => 'nullable|string|max:10',
             'is_default' => 'boolean',
