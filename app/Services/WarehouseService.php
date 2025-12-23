@@ -7,9 +7,9 @@ use App\Repositories\WarehouseRepository;
 
 class WarehouseService extends BaseService
 {
-    public function __construct(protected WarehouseRepository $repository)
+    public function __construct(WarehouseRepository $warehouseRepository)
     {
-        $this->repository = $repository;
+        $this->repository = $warehouseRepository;
     }
 
     public function create(array $data): Warehouse
