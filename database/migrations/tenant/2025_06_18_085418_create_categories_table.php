@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->text('description')->nullable();
+            $table->foreignId('sales_account_id')->constrained('chart_of_accounts');
+            $table->foreignId('cogs_account_id')->constrained('chart_of_accounts');
+            $table->foreignId('inventory_account_id')->constrained('chart_of_accounts');
+            $table->foreignId('inventory_adjustment_account_id')->constrained('chart_of_accounts');
+            $table->foreignId('purchase_account_id')->nullable()->constrained('chart_of_accounts');
             $table->softDeletes();
             $table->timestamps();
         });

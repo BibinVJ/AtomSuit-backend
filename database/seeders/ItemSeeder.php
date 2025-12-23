@@ -47,16 +47,30 @@ class ItemSeeder extends Seeder
             ['name' => 'Ambroxol Syrup', 'category_id' => $syrup->id, 'unit_id' => $ml->id, 'description' => 'Mucolytic for cough with phlegm', 'selling_price' => 100.00],
         ];
 
+        $salesAccount = \App\Models\ChartOfAccount::where('code', '4001')->first();
+        $cogsAccount = \App\Models\ChartOfAccount::where('code', '5001')->first();
+        $inventoryAccount = \App\Models\ChartOfAccount::where('code', '1004')->first();
+        $inventoryAdjAccount = \App\Models\ChartOfAccount::where('code', '6003')->first();
+        $purchaseAccount = \App\Models\ChartOfAccount::where('code', '5001')->first(); // Using COGS for purchase default for now
+
+        $defaults = [
+            'sales_account_id' => $salesAccount?->id,
+            'cogs_account_id' => $cogsAccount?->id,
+            'inventory_account_id' => $inventoryAccount?->id,
+            'inventory_adjustment_account_id' => $inventoryAdjAccount?->id,
+            'purchase_account_id' => $purchaseAccount?->id,
+        ];
+
         foreach ($items as $item) {
             Item::firstOrCreate(
                 ['name' => $item['name']],
-                [
+                array_merge([
                     'sku' => (string) mt_rand(10000000, 99999999),
                     'category_id' => $item['category_id'],
                     'unit_id' => $item['unit_id'],
                     'description' => $item['description'],
                     'selling_price' => $item['selling_price'],
-                ]
+                ], $defaults)
             );
         }
     }

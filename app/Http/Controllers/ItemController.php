@@ -38,6 +38,11 @@ class ItemController extends Controller
             'category' => fn ($q) => $q->withTrashed(),
             'unit' => fn ($q) => $q->withTrashed(),
             'stockMovements',
+            'salesAccount',
+            'cogsAccount',
+            'inventoryAccount',
+            'inventoryAdjustmentAccount',
+            'purchaseAccount',
         ]);
 
         $result = ItemResource::collectionWithMeta($items, [
@@ -61,6 +66,11 @@ class ItemController extends Controller
             'unit' => fn ($q) => $q->withTrashed(),
             'stockMovements',
             'batches',
+            'salesAccount',
+            'cogsAccount',
+            'inventoryAccount',
+            'inventoryAdjustmentAccount',
+            'purchaseAccount',
         ]);
 
         return ApiResponse::success('Item fetched successfully.', ItemResource::make($item));

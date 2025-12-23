@@ -14,6 +14,11 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+        'sales_account_id',
+        'cogs_account_id',
+        'inventory_account_id',
+        'inventory_adjustment_account_id',
+        'purchase_account_id',
     ];
 
     protected $casts = [
@@ -22,5 +27,30 @@ class Category extends Model
     public function items(): HasMany
     {
         return $this->hasMany(Item::class);
+    }
+
+    public function salesAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
+    }
+
+    public function cogsAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
+    }
+
+    public function inventoryAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
+    }
+
+    public function inventoryAdjustmentAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
+    }
+
+    public function purchaseAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
     }
 }

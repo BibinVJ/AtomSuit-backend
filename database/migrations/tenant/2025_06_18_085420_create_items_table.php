@@ -21,6 +21,14 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('type')->default(ItemType::PRODUCT);
             $table->decimal('selling_price', 10, 2)->default(0);
+
+            // Accounting Fields
+            $table->foreignId('sales_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('cogs_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('inventory_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('inventory_adjustment_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+            $table->foreignId('purchase_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
+
             $table->softDeletes();
             $table->timestamps();
         });

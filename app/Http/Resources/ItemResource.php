@@ -31,12 +31,16 @@ class ItemResource extends BaseResource
             'expired_stock' => $this->expiredStock(),
             'is_expired_sale_enabled' => false, // todo: change this later to getch from the settings
             'batches' => BatchResource::collection($this->whenLoaded('batches')),
-            // 'total_sold' => $this->totalSold(),
-            // 'total_purchased' => $this->totalPurchased(),
-            // 'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),
-            // 'cogs_account' => new ChartOfAccountResource($this->whenLoaded('cogsAccount')),
-            // 'inventory_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAccount')),
-            // 'inventory_adjustment_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAdjustmentAccount')),
+            'sales_account_id' => $this->sales_account_id,
+            'cogs_account_id' => $this->cogs_account_id,
+            'inventory_account_id' => $this->inventory_account_id,
+            'inventory_adjustment_account_id' => $this->inventory_adjustment_account_id,
+            'purchase_account_id' => $this->purchase_account_id,
+            'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),
+            'cogs_account' => new ChartOfAccountResource($this->whenLoaded('cogsAccount')),
+            'inventory_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAccount')),
+            'inventory_adjustment_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAdjustmentAccount')),
+            'purchase_account' => new ChartOfAccountResource($this->whenLoaded('purchaseAccount')),
         ];
     }
 }

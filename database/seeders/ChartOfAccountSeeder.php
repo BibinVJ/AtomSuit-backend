@@ -96,6 +96,7 @@ class ChartOfAccountSeeder extends Seeder
             // Expenses
             ['name' => 'Rent Expense', 'code' => '6001', 'account_group_id' => $getGroupId('600')],
             ['name' => 'Salaries Expense', 'code' => '6002', 'account_group_id' => $getGroupId('600')],
+            ['name' => 'Inventory Adjustment', 'code' => '6003', 'account_group_id' => $getGroupId('600')],
         ];
 
         foreach ($accounts as $account) {

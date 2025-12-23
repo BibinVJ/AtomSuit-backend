@@ -60,6 +60,24 @@ class ChartOfAccountService extends BaseService
             ->exists()) {
             throw new Exception('Cannot hard delete: Account is linked to one or more vendors.');
         }
+
+        if (\App\Models\Item::where('sales_account_id', $chartOfAccount->id)
+            ->orWhere('cogs_account_id', $chartOfAccount->id)
+            ->orWhere('inventory_account_id', $chartOfAccount->id)
+            ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)
+            ->orWhere('purchase_account_id', $chartOfAccount->id)
+            ->exists()) {
+            throw new Exception('Cannot hard delete: Account is linked to one or more items.');
+        }
+
+        if (\App\Models\Category::where('sales_account_id', $chartOfAccount->id)
+            ->orWhere('cogs_account_id', $chartOfAccount->id)
+            ->orWhere('inventory_account_id', $chartOfAccount->id)
+            ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)
+            ->orWhere('purchase_account_id', $chartOfAccount->id)
+            ->exists()) {
+            throw new Exception('Cannot hard delete: Account is linked to one or more categories.');
+        }
     }
 
     public function import(array $data)

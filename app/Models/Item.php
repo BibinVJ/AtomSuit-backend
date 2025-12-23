@@ -26,6 +26,7 @@ class Item extends Model
         'cogs_account_id',
         'inventory_account_id',
         'inventory_adjustment_account_id',
+        'purchase_account_id',
     ];
 
     protected $casts = [
@@ -50,25 +51,30 @@ class Item extends Model
         return $this->hasMany(Batch::class);
     }
 
-    // public function salesAccount(): BelongsTo
-    // {
-    //     return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
-    // }
+    public function salesAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
+    }
 
-    // public function cogsAccount(): BelongsTo
-    // {
-    //     return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
-    // }
+    public function cogsAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
+    }
 
-    // public function inventoryAccount(): BelongsTo
-    // {
-    //     return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
-    // }
+    public function inventoryAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
+    }
 
-    // public function inventoryAdjustmentAccount(): BelongsTo
-    // {
-    //     return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
-    // }
+    public function inventoryAdjustmentAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
+    }
+
+    public function purchaseAccount(): BelongsTo
+    {
+        return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
+    }
 
     public function saleItems(): HasMany
     {

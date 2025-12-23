@@ -34,7 +34,13 @@ class CategoryController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $categories = $this->categoryRepository->all($paginate, $perPage, $filters);
+        $categories = $this->categoryRepository->all($paginate, $perPage, $filters, [
+            'salesAccount',
+            'cogsAccount',
+            'inventoryAccount',
+            'inventoryAdjustmentAccount',
+            'purchaseAccount',
+        ]);
 
         $result = CategoryResource::collectionWithMeta($categories, [
             'from' => $filters['from'] ?? null,

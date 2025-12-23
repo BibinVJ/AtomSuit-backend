@@ -24,6 +24,11 @@ class CategoryRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('categories', 'name', $this->route('category'))],
             'description' => 'nullable|string',
+            'sales_account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'cogs_account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'inventory_account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'inventory_adjustment_account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'purchase_account_id' => ['nullable', 'exists:chart_of_accounts,id'],
         ];
     }
 }
