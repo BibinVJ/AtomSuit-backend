@@ -110,7 +110,8 @@ Route::middleware(['auth:api'])->group(function () {
     | Plan
     |--------------------------------------------------------------------------
     */
-    Route::prefix('plan')->group(function () {
+    Route::prefix('plans')->group(function () {
+        Route::get('/', [PlanController::class, 'index']);
         Route::get('/{plan}', [PlanController::class, 'show']);
         Route::post('/', [PlanController::class, 'store']);
         Route::post('/{plan}', [PlanController::class, 'update']);
@@ -123,10 +124,10 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     Route::get('tenant-stats', [TenantController::class, 'stats']);
-    Route::post('tenant/{tenant}/send-mail', [TenantController::class, 'sendMail']);
-    Route::apiResource('tenant', TenantController::class);
+    Route::post('tenants/{tenant}/send-mail', [TenantController::class, 'sendMail']);
+    Route::apiResource('tenants', TenantController::class);
 
-    Route::apiResource('subscription', SubscriptionController::class);
+    Route::apiResource('subscriptions', SubscriptionController::class);
 
     Route::prefix('tenant-subscription')->group(function () {
         Route::get('current', [TenantSubscriptionController::class, 'current']);
@@ -134,14 +135,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('cancel', [TenantSubscriptionController::class, 'cancel']);
     });
 
-    Route::get('domain', [DomainController::class, 'index']);
+    Route::get('domains', [DomainController::class, 'index']);
 
     /* Accounting */
-    /* Chart of Accounts */
-    Route::get('chart-of-accounts/export/excel', [ChartOfAccountController::class, 'export']);
-    Route::post('chart-of-accounts/import', [ChartOfAccountController::class, 'import']);
-    Route::post('chart-of-accounts/{chartOfAccount}/restore', [ChartOfAccountController::class, 'restore'])->withTrashed();
-    Route::apiResource('chart-of-accounts', ChartOfAccountController::class)->withTrashed(['show', 'destroy']);
+    /* Account Types */
+    Route::get('account-types', [AccountTypeController::class, 'index']);
 
     /* Account Groups */
     Route::get('account-groups/export/excel', [AccountGroupController::class, 'export']);
@@ -149,17 +147,20 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('account-groups/{accountGroup}/restore', [AccountGroupController::class, 'restore'])->withTrashed();
     Route::apiResource('account-groups', AccountGroupController::class)->withTrashed(['show', 'destroy']);
 
-    /* Account Types */
-    Route::get('account-types', [AccountTypeController::class, 'index']);
+    /* Chart of Accounts */
+    Route::get('chart-of-accounts/export/excel', [ChartOfAccountController::class, 'export']);
+    Route::post('chart-of-accounts/import', [ChartOfAccountController::class, 'import']);
+    Route::post('chart-of-accounts/{chartOfAccount}/restore', [ChartOfAccountController::class, 'restore'])->withTrashed();
+    Route::apiResource('chart-of-accounts', ChartOfAccountController::class)->withTrashed(['show', 'destroy']);
 
     /* Currency & Exchange Rate */
-    Route::get('currency/export/excel', [CurrencyController::class, 'export']);
-    Route::post('currency/{currency}/restore', [CurrencyController::class, 'restore'])->withTrashed();
-    Route::apiResource('currency', CurrencyController::class)->withTrashed(['show', 'destroy']);
+    Route::get('currencies/export/excel', [CurrencyController::class, 'export']);
+    Route::post('currencies/{currency}/restore', [CurrencyController::class, 'restore'])->withTrashed();
+    Route::apiResource('currencies', CurrencyController::class)->withTrashed(['show', 'destroy']);
 
-    Route::get('exchange-rate/export/excel', [ExchangeRateController::class, 'export']);
-    Route::post('exchange-rate/{exchange_rate}/restore', [ExchangeRateController::class, 'restore'])->withTrashed();
-    Route::apiResource('exchange-rate', ExchangeRateController::class)->withTrashed(['show', 'destroy']);
+    Route::get('exchange-rates/export/excel', [ExchangeRateController::class, 'export']);
+    Route::post('exchange-rates/{exchange_rate}/restore', [ExchangeRateController::class, 'restore'])->withTrashed();
+    Route::apiResource('exchange-rates', ExchangeRateController::class)->withTrashed(['show', 'destroy']);
 
     // gl settings
 
@@ -169,34 +170,38 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     /* Category */
-    Route::get('category/export', [CategoryController::class, 'export']);
-    Route::get('category/sample-excel', [CategoryController::class, 'downloadSample']);
-    Route::post('category/import', [CategoryController::class, 'import']);
-    Route::post('category/{category}/restore', [CategoryController::class, 'restore'])->withTrashed();
-    Route::apiResource('category', CategoryController::class)->withTrashed(['show', 'destroy']);
+    /* Category */
+    Route::get('categories/export', [CategoryController::class, 'export']);
+    Route::get('categories/sample-excel', [CategoryController::class, 'downloadSample']);
+    Route::post('categories/import', [CategoryController::class, 'import']);
+    Route::post('categories/{category}/restore', [CategoryController::class, 'restore'])->withTrashed();
+    Route::apiResource('categories', CategoryController::class)->withTrashed(['show', 'destroy']);
 
     /* Unit */
-    Route::get('unit/export', [UnitController::class, 'export']);
-    Route::get('unit/sample-excel', [UnitController::class, 'downloadSample']);
-    Route::post('unit/import', [UnitController::class, 'import']);
-    Route::post('unit/{unit}/restore', [UnitController::class, 'restore'])->withTrashed();
-    Route::apiResource('unit', UnitController::class)->withTrashed(['show', 'destroy']);
+    /* Unit */
+    Route::get('units/export', [UnitController::class, 'export']);
+    Route::get('units/sample-excel', [UnitController::class, 'downloadSample']);
+    Route::post('units/import', [UnitController::class, 'import']);
+    Route::post('units/{unit}/restore', [UnitController::class, 'restore'])->withTrashed();
+    Route::apiResource('units', UnitController::class)->withTrashed(['show', 'destroy']);
 
     /* Item */
-    Route::get('item/export', [ItemController::class, 'export']);
-    Route::get('item/sample-excel', [ItemController::class, 'downloadSample']);
-    Route::post('item/import', [ItemController::class, 'import']);
-    Route::post('item/{item}/restore', [ItemController::class, 'restore'])->withTrashed();
-    Route::apiResource('item', ItemController::class)->withTrashed(['show', 'destroy']);
+    /* Item */
+    Route::get('items/export', [ItemController::class, 'export']);
+    Route::get('items/sample-excel', [ItemController::class, 'downloadSample']);
+    Route::post('items/import', [ItemController::class, 'import']);
+    Route::post('items/{item}/restore', [ItemController::class, 'restore'])->withTrashed();
+    Route::apiResource('items', ItemController::class)->withTrashed(['show', 'destroy']);
 
-    Route::apiResource('batch', BatchController::class);
+    Route::apiResource('batches', BatchController::class);
 
     // warehouse
-    Route::get('warehouse/export', [WarehouseController::class, 'export']);
-    Route::get('warehouse/sample-excel', [WarehouseController::class, 'downloadSample']);
-    Route::post('warehouse/import', [WarehouseController::class, 'import']);
-    Route::post('warehouse/{warehouse}/restore', [WarehouseController::class, 'restore'])->withTrashed();
-    Route::apiResource('warehouse', WarehouseController::class)->withTrashed(['show', 'destroy']);
+    // warehouse
+    Route::get('warehouses/export', [WarehouseController::class, 'export']);
+    Route::get('warehouses/sample-excel', [WarehouseController::class, 'downloadSample']);
+    Route::post('warehouses/import', [WarehouseController::class, 'import']);
+    Route::post('warehouses/{warehouse}/restore', [WarehouseController::class, 'restore'])->withTrashed();
+    Route::apiResource('warehouses', WarehouseController::class)->withTrashed(['show', 'destroy']);
 
     /*
     |--------------------------------------------------------------------------
@@ -204,15 +209,16 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     /* Customer */
-    Route::get('customer/export', [CustomerController::class, 'export']);
-    Route::get('customer/sample-excel', [CustomerController::class, 'downloadSample']);
-    Route::post('customer/import', [CustomerController::class, 'import']);
-    Route::post('customer/{customer}/restore', [CustomerController::class, 'restore'])->withTrashed();
-    Route::apiResource('customer', CustomerController::class)->withTrashed(['show', 'destroy']);
+    /* Customer */
+    Route::get('customers/export', [CustomerController::class, 'export']);
+    Route::get('customers/sample-excel', [CustomerController::class, 'downloadSample']);
+    Route::post('customers/import', [CustomerController::class, 'import']);
+    Route::post('customers/{customer}/restore', [CustomerController::class, 'restore'])->withTrashed();
+    Route::apiResource('customers', CustomerController::class)->withTrashed(['show', 'destroy']);
 
     /* Sale */
-    Route::get('sale/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
-    Route::apiResource('sale', SaleController::class);
+    Route::get('sales/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
+    Route::apiResource('sales', SaleController::class);
 
     /*
     |--------------------------------------------------------------------------
@@ -220,15 +226,16 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     /* Vendor */
-    Route::get('vendor/export', [VendorController::class, 'export']);
-    Route::get('vendor/sample-excel', [VendorController::class, 'downloadSample']);
-    Route::post('vendor/import', [VendorController::class, 'import']);
-    Route::post('vendor/{vendor}/restore', [VendorController::class, 'restore'])->withTrashed();
-    Route::apiResource('vendor', VendorController::class)->withTrashed(['show', 'destroy']);
+    /* Vendor */
+    Route::get('vendors/export', [VendorController::class, 'export']);
+    Route::get('vendors/sample-excel', [VendorController::class, 'downloadSample']);
+    Route::post('vendors/import', [VendorController::class, 'import']);
+    Route::post('vendors/{vendor}/restore', [VendorController::class, 'restore'])->withTrashed();
+    Route::apiResource('vendors', VendorController::class)->withTrashed(['show', 'destroy']);
 
     /* Purchase */
-    Route::get('purchase/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
-    Route::apiResource('purchase', PurchaseController::class);
+    Route::get('purchases/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
+    Route::apiResource('purchases', PurchaseController::class);
 
     /*
     |--------------------------------------------------------------------------
@@ -242,17 +249,17 @@ Route::middleware(['auth:api'])->group(function () {
     |--------------------------------------------------------------------------
     */
     /* Audit Logs */
-    Route::get('audit', [AuditController::class, 'index']);
-    Route::get('audit/{activity}', [AuditController::class, 'show']);
+    Route::get('audits', [AuditController::class, 'index']);
+    Route::get('audits/{activity}', [AuditController::class, 'show']);
 
     /* User Management */
-    Route::post('user/{user}/send-mail', [UserController::class, 'sendMail']);
-    Route::post('user/{user}/restore', [UserController::class, 'restore'])->withTrashed();
-    Route::apiResource('user', UserController::class)->withTrashed(['show', 'destroy']);
+    Route::post('users/{user}/send-mail', [UserController::class, 'sendMail']);
+    Route::post('users/{user}/restore', [UserController::class, 'restore'])->withTrashed();
+    Route::apiResource('users', UserController::class)->withTrashed(['show', 'destroy']);
 
     /* Role Management */
-    Route::post('role/{role}/restore', [RoleController::class, 'restore'])->withTrashed();
-    Route::apiResource('role', RoleController::class)->withTrashed(['show', 'destroy']);
+    Route::post('roles/{role}/restore', [RoleController::class, 'restore'])->withTrashed();
+    Route::apiResource('roles', RoleController::class)->withTrashed(['show', 'destroy']);
     Route::get('permissions', [PermissionController::class, 'index']);
 
     /*
