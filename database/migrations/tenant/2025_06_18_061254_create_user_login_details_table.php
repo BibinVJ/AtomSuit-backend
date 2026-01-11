@@ -20,6 +20,12 @@ return new class extends Migration
             $table->ipAddress('ip_address')->nullable();
             $table->string('user_agent')->nullable()->comment('User agent string of the browser or device used for login');
             $table->string('login_method')->default('web')->comment('web, api, mobile, etc.');
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+            $table->string('iso_code', 2)->nullable();
+            $table->string('os')->nullable();
+            $table->string('browser')->nullable();
+            $table->string('device_type')->nullable()->comment('desktop, mobile, tablet');
             $table->timestamps();
         });
     }

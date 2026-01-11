@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,9 +20,7 @@ class Category extends Model
         'inventory_account_id',
         'inventory_adjustment_account_id',
         'purchase_account_id',
-    ];
-
-    protected $casts = [
+        'tax_group_id',
     ];
 
     public function items(): HasMany
@@ -29,27 +28,32 @@ class Category extends Model
         return $this->hasMany(Item::class);
     }
 
-    public function salesAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function taxGroup(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
+    }
+
+    public function salesAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
     }
 
-    public function cogsAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function cogsAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'cogs_account_id');
     }
 
-    public function inventoryAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function inventoryAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'inventory_account_id');
     }
 
-    public function inventoryAdjustmentAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function inventoryAdjustmentAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
     }
 
-    public function purchaseAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function purchaseAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
     }

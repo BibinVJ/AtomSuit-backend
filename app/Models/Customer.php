@@ -21,6 +21,7 @@ class Customer extends Model
         'sales_account_id',
         'sales_discount_account_id',
         'receivables_account_id',
+        'tax_group_id',
         'sales_return_account_id',
         'billing_address_line_1',
         'billing_address_line_2',
@@ -67,6 +68,11 @@ class Customer extends Model
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
+    }
+
+    public function taxGroup(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
     }
 
     public function totalSpent(): float

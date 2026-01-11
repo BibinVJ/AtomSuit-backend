@@ -29,6 +29,7 @@ use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantSubscriptionController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserLoginDetailController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
 use App\Http\Controllers\WarehouseController;
@@ -166,6 +167,17 @@ Route::middleware(['auth:api'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
+    | Tax Management
+    |--------------------------------------------------------------------------
+    */
+    Route::post('tax-rates/{tax_rate}/restore', [App\Http\Controllers\TaxRateController::class, 'restore'])->withTrashed();
+    Route::apiResource('tax-rates', App\Http\Controllers\TaxRateController::class)->withTrashed(['show', 'destroy']);
+
+    Route::post('tax-groups/{tax_group}/restore', [App\Http\Controllers\TaxGroupController::class, 'restore'])->withTrashed();
+    Route::apiResource('tax-groups', App\Http\Controllers\TaxGroupController::class)->withTrashed(['show', 'destroy']);
+
+    /*
+    |--------------------------------------------------------------------------
     | Inventory
     |--------------------------------------------------------------------------
     */
@@ -256,6 +268,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('users/{user}/send-mail', [UserController::class, 'sendMail']);
     Route::post('users/{user}/restore', [UserController::class, 'restore'])->withTrashed();
     Route::apiResource('users', UserController::class)->withTrashed(['show', 'destroy']);
+    Route::get('user-login-details', [UserLoginDetailController::class, 'index']);
 
     /* Role Management */
     Route::post('roles/{role}/restore', [RoleController::class, 'restore'])->withTrashed();

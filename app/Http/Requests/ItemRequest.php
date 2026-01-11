@@ -36,6 +36,7 @@ class ItemRequest extends FormRequest
             'inventory_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'inventory_adjustment_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'purchase_account_id' => ['nullable', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'tax_group_id' => ['required', \Illuminate\Validation\Rule::exists('tax_groups', 'id')],
         ];
     }
 }

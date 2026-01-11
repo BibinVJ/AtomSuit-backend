@@ -40,6 +40,7 @@ class CategoryController extends Controller
             'inventoryAccount',
             'inventoryAdjustmentAccount',
             'purchaseAccount',
+            'taxGroup',
         ]);
 
         $result = CategoryResource::collectionWithMeta($categories, [

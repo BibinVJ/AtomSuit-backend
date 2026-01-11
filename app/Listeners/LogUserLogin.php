@@ -59,7 +59,9 @@ class LogUserLogin
      */
     protected function logLogin($userId, $tokenId, $method): void
     {
-        UserLoginDetail::create([
+        $agent = $this->parseUserAgent(Request::userAgent());
+
+        $loginDetail = UserLoginDetail::create([
             'user_id' => $userId,
             'token_id' => $tokenId,
             'login_at' => now(),
@@ -67,6 +69,68 @@ class LogUserLogin
             'ip_address' => Request::ip(),
             'user_agent' => Request::userAgent(),
             'login_method' => $method,
+            'os' => $agent['os'],
+            'browser' => $agent['browser'],
+            'device_type' => $agent['device_type'],
         ]);
+
+        \App\Jobs\UpdateLoginLocation::dispatch($loginDetail);
+    }
+
+    /**
+     * Parse User Agent string.
+     */
+    protected function parseUserAgent(?string $userAgent): array
+    {
+        $os = 'Unknown';
+        $browser = 'Unknown';
+        $deviceType = 'desktop';
+
+        if (! $userAgent) {
+            return compact('os', 'browser', 'deviceType');
+        }
+
+        // OS Detection
+        if (preg_match('/windows/i', $userAgent)) {
+            $os = 'Windows';
+        } elseif (preg_match('/macintosh|mac os x/i', $userAgent)) {
+            $os = 'macOS';
+        } elseif (preg_match('/linux/i', $userAgent)) {
+            $os = 'Linux';
+        } elseif (preg_match('/android/i', $userAgent)) {
+            $os = 'Android';
+            $deviceType = 'mobile';
+        } elseif (preg_match('/iphone|ipad|ipod/i', $userAgent)) {
+            $os = 'iOS';
+            $deviceType = 'mobile';
+        }
+
+        // Browser Detection
+        if (preg_match('/MSIE/i', $userAgent) && ! preg_match('/Opera/i', $userAgent)) {
+            $browser = 'Internet Explorer';
+        } elseif (preg_match('/Firefox/i', $userAgent)) {
+            $browser = 'Firefox';
+        } elseif (preg_match('/Chrome/i', $userAgent)) {
+            $browser = 'Chrome';
+        } elseif (preg_match('/Safari/i', $userAgent)) {
+            $browser = 'Safari';
+        } elseif (preg_match('/Opera/i', $userAgent)) {
+            $browser = 'Opera';
+        } elseif (preg_match('/Edge/i', $userAgent)) {
+            $browser = 'Edge';
+        }
+
+        // Refine Device Type
+        if (preg_match('/tablet|ipad|playbook/i', $userAgent)) {
+            $deviceType = 'tablet';
+        } elseif (preg_match('/mobile|android|iphone|ipod/i', $userAgent)) {
+            $deviceType = 'mobile';
+        }
+
+        return [
+            'os' => $os,
+            'browser' => $browser,
+            'device_type' => $deviceType,
+        ];
     }
 }

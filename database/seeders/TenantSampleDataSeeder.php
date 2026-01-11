@@ -13,7 +13,7 @@ class TenantSampleDataSeeder extends Seeder
     {
         $this->call([
             UsersSeeder::class,
-
+            TaxSeeder::class,
             CategorySeeder::class,
             UnitSeeder::class,
             ItemSeeder::class,

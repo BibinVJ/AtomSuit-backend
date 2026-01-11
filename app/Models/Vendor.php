@@ -21,6 +21,7 @@ class Vendor extends Model
         'payables_account_id',
         'purchase_account_id',
         'purchase_discount_account_id',
+        'tax_group_id',
         'purchase_return_account_id',
         'billing_address_line_1',
         'billing_address_line_2',
@@ -67,5 +68,10 @@ class Vendor extends Model
     public function purchases(): HasMany
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function taxGroup(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
     }
 }

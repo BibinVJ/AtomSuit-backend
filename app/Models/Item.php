@@ -27,10 +27,13 @@ class Item extends Model
         'inventory_account_id',
         'inventory_adjustment_account_id',
         'purchase_account_id',
+        'tax_group_id',
+        'is_tax_inclusive',
     ];
 
     protected $casts = [
         'type' => ItemType::class,
+        'is_tax_inclusive' => 'boolean',
     ];
 
     public function category(): BelongsTo
@@ -41,6 +44,11 @@ class Item extends Model
     public function unit(): BelongsTo
     {
         return $this->belongsTo(Unit::class);
+    }
+
+    public function taxGroup(): BelongsTo
+    {
+        return $this->belongsTo(TaxGroup::class);
     }
 
     /**

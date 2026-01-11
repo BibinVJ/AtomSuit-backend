@@ -31,6 +31,7 @@ enum PermissionsEnum: string
     case CREATE_USER = 'create-user';
     case UPDATE_USER = 'update-user';
     case DELETE_USER = 'delete-user';
+    case VIEW_USER_LOGIN_DETAILS = 'view-user-login-details';
 
     // Role & Permission Management
     case VIEW_ROLE = 'view-role';
@@ -120,6 +121,17 @@ enum PermissionsEnum: string
     case UPDATE_WAREHOUSE = 'update-warehouse';
     case DELETE_WAREHOUSE = 'delete-warehouse';
 
+    // Tax Management
+    case VIEW_TAX_RATE = 'view-tax-rate';
+    case CREATE_TAX_RATE = 'create-tax-rate';
+    case UPDATE_TAX_RATE = 'update-tax-rate';
+    case DELETE_TAX_RATE = 'delete-tax-rate';
+
+    case VIEW_TAX_GROUP = 'view-tax-group';
+    case CREATE_TAX_GROUP = 'create-tax-group';
+    case UPDATE_TAX_GROUP = 'update-tax-group';
+    case DELETE_TAX_GROUP = 'delete-tax-group';
+
     // Audit
     case VIEW_AUDIT = 'view-audit';
 
@@ -159,6 +171,7 @@ enum PermissionsEnum: string
             self::CREATE_USER->value,
             self::UPDATE_USER->value,
             self::DELETE_USER->value,
+            self::VIEW_USER_LOGIN_DETAILS->value,
 
             // Role & Permission
             self::VIEW_ROLE->value,

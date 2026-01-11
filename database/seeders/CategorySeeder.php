@@ -18,6 +18,8 @@ class CategorySeeder extends Seeder
         $inventoryAccount = ChartOfAccount::where('name', 'Inventory')->first();
         $adjustmentAccount = ChartOfAccount::where('name', 'Inventory Adjustment')->first();
 
+        $taxGroup = \App\Models\TaxGroup::where('name', 'GST 18%')->first();
+
         $categories = [
             [
                 'name' => 'Tablet',
@@ -26,6 +28,7 @@ class CategorySeeder extends Seeder
                 'cogs_account_id' => $cogsAccount?->id,
                 'inventory_account_id' => $inventoryAccount?->id,
                 'inventory_adjustment_account_id' => $adjustmentAccount?->id,
+                'tax_group_id' => $taxGroup?->id,
             ],
             [
                 'name' => 'Syrup',
@@ -34,6 +37,7 @@ class CategorySeeder extends Seeder
                 'cogs_account_id' => $cogsAccount?->id,
                 'inventory_account_id' => $inventoryAccount?->id,
                 'inventory_adjustment_account_id' => $adjustmentAccount?->id,
+                'tax_group_id' => $taxGroup?->id,
             ],
             [
                 'name' => 'Ointment',
@@ -42,6 +46,7 @@ class CategorySeeder extends Seeder
                 'cogs_account_id' => $cogsAccount?->id,
                 'inventory_account_id' => $inventoryAccount?->id,
                 'inventory_adjustment_account_id' => $adjustmentAccount?->id,
+                'tax_group_id' => $taxGroup?->id,
             ],
         ];
 

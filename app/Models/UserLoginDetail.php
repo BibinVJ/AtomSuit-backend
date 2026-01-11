@@ -15,6 +15,12 @@ class UserLoginDetail extends Model
         'ip_address',
         'user_agent',
         'login_method',
+        'city',
+        'country',
+        'iso_code',
+        'os',
+        'browser',
+        'device_type',
     ];
 
     protected $casts = [

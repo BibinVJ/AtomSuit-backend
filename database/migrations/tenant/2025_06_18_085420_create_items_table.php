@@ -29,6 +29,10 @@ return new class extends Migration
             $table->foreignId('inventory_adjustment_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
             $table->foreignId('purchase_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
 
+            // Tax Fields
+            $table->foreignId('tax_group_id')->constrained()->restrictOnDelete();
+            $table->boolean('is_tax_inclusive')->default(false);
+
             $table->softDeletes();
             $table->timestamps();
         });
