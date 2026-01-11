@@ -15,47 +15,23 @@ class CurrencyService extends BaseService
 
     public function create(array $data)
     {
-        if (! empty($data['is_default'])) {
-            $this->handleDefaultCurrency();
-        }
-
         return $this->repository->create($data);
     }
 
     public function update(Currency $currency, array $data)
     {
-        if (isset($data['is_default'])) {
-            if ($data['is_default']) {
-                $this->handleDefaultCurrency();
-            } elseif ($currency->is_default) {
-                // If it was default and being made non-default, ensure another default exists or throw error.
-                if ($this->isOnlyDefaultCurrency($currency)) {
-                    throw new \Exception('At least one default currency is required.');
-                }
-            }
-        }
-
         return $this->repository->update($currency, $data);
     }
 
     public function delete(Model $currency, bool $force = false)
     {
         /** @var \App\Models\Currency $currency */
-        if ($currency->is_default) {
-            throw new \Exception('Default currency cannot be deleted.');
+        $defaultCurrencyId = (int) setting('currency_id');
+        if ($currency->id === $defaultCurrencyId) {
+            throw new \Exception('The system default currency cannot be deleted.');
         }
 
         return parent::delete($currency, $force);
-    }
-
-    protected function handleDefaultCurrency(): void
-    {
-        $this->repository->getModel()->where('is_default', true)->update(['is_default' => false]);
-    }
-
-    protected function isOnlyDefaultCurrency(Currency $currency): bool
-    {
-        return $this->repository->getModel()->where('is_default', true)->where('id', '!=', $currency->id)->count() === 0;
     }
 
     protected function validateForceDelete(Model $currency): void

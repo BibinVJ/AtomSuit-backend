@@ -79,6 +79,7 @@ class ChartOfAccountSeeder extends Seeder
             // Current Liabilities
             ['name' => 'Accounts Payable', 'code' => '2001', 'account_group_id' => $getGroupId('200')],
             ['name' => 'Sales Tax Payable', 'code' => '2002', 'account_group_id' => $getGroupId('200')],
+            ['name' => 'GRN Clearing Account', 'code' => '2003', 'account_group_id' => $getGroupId('200')],
 
             // Equity
             ['name' => 'Retained Earnings', 'code' => '3001', 'account_group_id' => $getGroupId('300')],
@@ -97,6 +98,9 @@ class ChartOfAccountSeeder extends Seeder
             ['name' => 'Rent Expense', 'code' => '6001', 'account_group_id' => $getGroupId('600')],
             ['name' => 'Salaries Expense', 'code' => '6002', 'account_group_id' => $getGroupId('600')],
             ['name' => 'Inventory Adjustment', 'code' => '6003', 'account_group_id' => $getGroupId('600')],
+            ['name' => 'Exchange Gain/Loss', 'code' => '6004', 'account_group_id' => $getGroupId('600')],
+            ['name' => 'Bank Charges', 'code' => '6005', 'account_group_id' => $getGroupId('600')],
+            ['name' => 'Round Off', 'code' => '6006', 'account_group_id' => $getGroupId('600')],
         ];
 
         foreach ($accounts as $account) {

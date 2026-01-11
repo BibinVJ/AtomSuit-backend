@@ -12,6 +12,12 @@ class SettingSeeder extends Seeder
      */
     public function run(): void
     {
+        // Helper to get Account ID by Code
+        $getAccountId = fn ($code) => \App\Models\ChartOfAccount::where('code', $code)->first()->id ?? null;
+
+        // Helper to get Currency ID by Code
+        $getCurrencyId = fn ($code) => \App\Models\Currency::where('code', $code)->first()->id ?? null;
+
         $settings = [
             // Company Information
             [
@@ -142,21 +148,42 @@ class SettingSeeder extends Seeder
                 'group' => 'general',
                 'description' => 'First day of week (0=Sunday, 1=Monday)',
             ],
+            [
+                'key' => 'quantity_decimal_places',
+                'value' => '3',
+                'type' => 'integer',
+                'group' => 'general',
+                'description' => 'Number of decimal places for quantity fields',
+            ],
+            [
+                'key' => 'quantity_decimal_separator',
+                'value' => '.',
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Decimal separator for quantity display',
+            ],
+            [
+                'key' => 'quantity_thousand_separator',
+                'value' => ',',
+                'type' => 'string',
+                'group' => 'general',
+                'description' => 'Thousand separator for quantity display',
+            ],
+            [
+                'key' => 'general_number_decimal_places',
+                'value' => '2',
+                'type' => 'integer',
+                'group' => 'general',
+                'description' => 'Decimal places for general numeric fields',
+            ],
 
             // Financial Settings
             [
                 'key' => 'currency',
-                'value' => 'USD',
-                'type' => 'string',
+                'value' => $getCurrencyId('INR'),
+                'type' => 'integer',
                 'group' => 'financial',
-                'description' => 'Default currency code (ISO 4217)',
-            ],
-            [
-                'key' => 'currency_symbol',
-                'value' => '$',
-                'type' => 'string',
-                'group' => 'financial',
-                'description' => 'Currency symbol to display',
+                'description' => 'Default currency',
             ],
             [
                 'key' => 'currency_position',
@@ -188,7 +215,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'fiscal_year_start',
-                'value' => '01-01',
+                'value' => '04-01',
                 'type' => 'string',
                 'group' => 'financial',
                 'description' => 'Fiscal year start date (MM-DD format)',
@@ -303,6 +330,135 @@ class SettingSeeder extends Seeder
                 'type' => 'boolean',
                 'group' => 'notifications',
                 'description' => 'Enable SMS notifications',
+            ],
+
+            // General GL Defaults
+            [
+                'key' => 'retained_earnings_account',
+                'value' => $getAccountId('3001'),
+                'type' => 'integer',
+                'group' => 'accounting',
+                'description' => 'Retained Earnings Account',
+            ],
+            [
+                'key' => 'profit_loss_year_account',
+                'value' => $getAccountId('3001'),
+                'type' => 'integer',
+                'group' => 'accounting',
+                'description' => 'Profit/Loss Year Account',
+            ],
+            [
+                'key' => 'exchange_variances_account',
+                'value' => $getAccountId('6004'),
+                'type' => 'integer',
+                'group' => 'accounting',
+                'description' => 'Exchange Variances Account',
+            ],
+            [
+                'key' => 'bank_charges_account',
+                'value' => $getAccountId('6005'),
+                'type' => 'integer',
+                'group' => 'accounting',
+                'description' => 'Bank Charges Account',
+            ],
+            [
+                'key' => 'tax_algorithm',
+                'value' => 'sum_per_line',
+                'type' => 'string',
+                'group' => 'accounting',
+                'description' => 'Tax Algorithm (sum_per_line / total_based)',
+            ],
+
+            // Customers and Sales Defaults
+            [
+                'key' => 'default_receivable_account',
+                'value' => $getAccountId('1003'),
+                'type' => 'integer',
+                'group' => 'sales',
+                'description' => 'Default Accounts Receivable',
+            ],
+            [
+                'key' => 'default_sales_account',
+                'value' => $getAccountId('4001'),
+                'type' => 'integer',
+                'group' => 'sales',
+                'description' => 'Default Sales/Income Account',
+            ],
+            [
+                'key' => 'default_sales_discount_account',
+                'value' => $getAccountId('4002'),
+                'type' => 'integer',
+                'group' => 'sales',
+                'description' => 'Default Sales Discount Account',
+            ],
+
+            // Suppliers and Purchasing Defaults
+            [
+                'key' => 'default_payable_account',
+                'value' => $getAccountId('2001'),
+                'type' => 'integer',
+                'group' => 'purchasing',
+                'description' => 'Default Accounts Payable',
+            ],
+            [
+                'key' => 'default_purchase_account',
+                'value' => $getAccountId('5001'),
+                'type' => 'integer',
+                'group' => 'purchasing',
+                'description' => 'Default Purchase/Expense Account',
+            ],
+            [
+                'key' => 'default_purchase_discount_account',
+                'value' => $getAccountId('5002'),
+                'type' => 'integer',
+                'group' => 'purchasing',
+                'description' => 'Default Purchase Discount Account',
+            ],
+            [
+                'key' => 'default_grn_clearing_account',
+                'value' => $getAccountId('2003'),
+                'type' => 'integer',
+                'group' => 'purchasing',
+                'description' => 'GRN Clearing Account',
+            ],
+
+            // Inventory Defaults
+            [
+                'key' => 'default_inventory_account',
+                'value' => $getAccountId('1004'),
+                'type' => 'integer',
+                'group' => 'inventory',
+                'description' => 'Default Inventory Asset Account',
+            ],
+            [
+                'key' => 'default_cogs_account',
+                'value' => $getAccountId('5001'),
+                'type' => 'integer',
+                'group' => 'inventory',
+                'description' => 'Default Cost of Goods Sold Account',
+            ],
+            [
+                'key' => 'default_inventory_adjustment_account',
+                'value' => $getAccountId('6003'),
+                'type' => 'integer',
+                'group' => 'inventory',
+                'description' => 'Default Inventory Adjustment Account',
+            ],
+
+            // Inventory Configuration
+            [
+                'key' => 'allow_negative_inventory',
+                'value' => '0',
+                'type' => 'boolean',
+                'group' => 'inventory',
+                'description' => 'Allow transactions that result in negative stock',
+            ],
+            [
+                'key' => 'allow_selling_expired_items',
+                'value' => '0',
+                'type' => 'boolean',
+                'group' => 'inventory',
+                'description' => 'Allow selling items that have passed their expiry date',
             ],
 
             // Business Settings

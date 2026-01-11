@@ -15,17 +15,9 @@ class Currency extends Model
         'code',
         'name',
         'symbol',
-        'is_default',
-        'thousand_separator',
-        'decimal_separator',
-        'precision',
-        'symbol_position',
     ];
 
-    protected $casts = [
-        'is_default' => 'boolean',
-        'precision' => 'integer',
-    ];
+    protected $casts = [];
 
     public function customers()
     {

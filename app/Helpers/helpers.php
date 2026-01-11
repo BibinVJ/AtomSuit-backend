@@ -31,19 +31,30 @@ if (! function_exists('format_currency')) {
     /**
      * Format a number as currency based on settings.
      */
-    function format_currency(float $amount, ?string $currency = null): string
+    function format_currency(float $amount): string
     {
-        $currency = $currency ?? setting('currency', 'USD');
-        $symbol = setting('currency_symbol', '$');
-        $position = setting('currency_position', 'before');
+        // 1. Get formatting rules from Settings (System-wide)
         $decimalPlaces = (int) setting('decimal_places', 2);
         $decimalSeparator = setting('decimal_separator', '.');
         $thousandSeparator = setting('thousand_separator', ',');
+        $position = setting('currency_position', 'before');
+
+        // 2. Get Symbol from Default Currency (via ID)
+        static $currencySymbol = null;
+        if ($currencySymbol === null) {
+            $currencyId = setting('currency_id');
+            if ($currencyId) {
+                // Optimization: You might want to cache this query object-wide or similar
+                $currencySymbol = \App\Models\Currency::find($currencyId)?->symbol ?? '$';
+            } else {
+                $currencySymbol = '$';
+            }
+        }
 
         $formatted = number_format($amount, $decimalPlaces, $decimalSeparator, $thousandSeparator);
 
         return $position === 'before'
-            ? $symbol.$formatted
-            : $formatted.$symbol;
+            ? $currencySymbol.$formatted
+            : $formatted.$currencySymbol;
     }
 }

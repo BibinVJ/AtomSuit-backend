@@ -22,8 +22,6 @@ class CurrencyExport implements FromCollection, WithHeadings, WithMapping, WithS
             'Code',
             'Name',
             'Symbol',
-            'Is Default',
-            'Active',
         ];
     }
 
@@ -33,8 +31,6 @@ class CurrencyExport implements FromCollection, WithHeadings, WithMapping, WithS
             $currency->code,
             $currency->name,
             $currency->symbol,
-            $currency->is_default ? 'Yes' : 'No',
-            $currency->active ? 'Yes' : 'No',
         ];
     }
 
