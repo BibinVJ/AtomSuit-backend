@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('unit_id')->constrained();
             $table->text('description')->nullable();
             $table->string('type')->default(ItemType::PRODUCT);
-            $table->decimal('selling_price', 10, 2)->default(0);
 
             // Accounting Fields
             $table->foreignId('sales_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
@@ -31,7 +30,6 @@ return new class extends Migration
 
             // Tax Fields
             $table->foreignId('tax_group_id')->constrained()->restrictOnDelete();
-            $table->boolean('is_tax_inclusive')->default(false);
 
             $table->softDeletes();
             $table->timestamps();

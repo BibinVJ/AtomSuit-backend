@@ -45,6 +45,4 @@ class UserService extends BaseService
 
         return $user;
     }
-
-    // delete and restore are now handled by BaseService
 }

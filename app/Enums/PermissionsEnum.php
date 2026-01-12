@@ -135,6 +135,18 @@ enum PermissionsEnum: string
     // Audit
     case VIEW_AUDIT = 'view-audit';
 
+    // Price List Management
+    case VIEW_PRICE_LIST = 'view-price-list';
+    case CREATE_PRICE_LIST = 'create-price-list';
+    case UPDATE_PRICE_LIST = 'update-price-list';
+    case DELETE_PRICE_LIST = 'delete-price-list';
+
+    // Item Price Management
+    case VIEW_ITEM_PRICE = 'view-item-price';
+    case CREATE_ITEM_PRICE = 'create-item-price';
+    case UPDATE_ITEM_PRICE = 'update-item-price';
+    case DELETE_ITEM_PRICE = 'delete-item-price';
+
     // System Monitoring / Analytics
     case VIEW_SYSTEM_ANALYTICS = 'view-system-analytics';
 

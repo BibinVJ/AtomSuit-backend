@@ -18,6 +18,7 @@ class Customer extends Model
         'email',
         'phone',
         'currency_id',
+        'price_list_id',
         'sales_account_id',
         'sales_discount_account_id',
         'receivables_account_id',
@@ -43,6 +44,11 @@ class Customer extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function priceList(): BelongsTo
+    {
+        return $this->belongsTo(PriceList::class);
     }
 
     public function salesAccount(): BelongsTo

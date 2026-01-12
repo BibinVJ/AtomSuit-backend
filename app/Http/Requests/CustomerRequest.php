@@ -42,6 +42,7 @@ class CustomerRequest extends FormRequest
             'sales_discount_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'receivables_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'sales_return_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
+            'price_list_id' => ['required', \Illuminate\Validation\Rule::exists('price_lists', 'id')],
             'billing_address_line_1' => 'nullable|string|max:255',
             'billing_address_line_2' => 'nullable|string|max:255',
             'billing_city' => 'nullable|string|max:255',

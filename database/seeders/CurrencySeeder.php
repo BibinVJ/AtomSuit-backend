@@ -14,11 +14,6 @@ class CurrencySeeder extends Seeder
     {
         $currencies = [
             [
-                'code' => 'INR',
-                'name' => 'Indian Rupee',
-                'symbol' => '₹',
-            ],
-            [
                 'code' => 'USD',
                 'name' => 'US Dollar',
                 'symbol' => '$',

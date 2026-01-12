@@ -13,10 +13,13 @@ class TenantDefaultDataSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,
-            CurrencySeeder::class,
+            DefaultCurrencySeeder::class,
             ChartOfAccountSeeder::class,
             DashboardCardSeeder::class,
             SettingSeeder::class,
+
+            DefaultPriceListSeeder::class,
+            WalkInCustomerSeeder::class,
         ]);
     }
 }

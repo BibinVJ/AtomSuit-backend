@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Currency;
+use App\Models\PriceList;
 use App\Models\Vendor;
 use Illuminate\Database\Seeder;
 
@@ -61,6 +62,11 @@ class VendorSeeder extends Seeder
         $purchaseDiscountAccount = \App\Models\ChartOfAccount::where('code', '5002')->first();
         $purchaseReturnAccount = \App\Models\ChartOfAccount::where('code', '5003')->first();
 
+        // Fetch all Purchase Price Lists
+        $priceLists = PriceList::where('type', 'purchase')->get();
+        // Fallback default
+        $defaultList = $priceLists->first();
+
         $defaults = [
             'payables_account_id' => $payablesAccount?->id,
             'purchase_account_id' => $purchaseAccount?->id,
@@ -69,9 +75,21 @@ class VendorSeeder extends Seeder
         ];
 
         foreach ($vendors as $vendor) {
+            // Determine Price List
+            $currencyId = $vendor['currency_id'] ?? $inr?->id;
+            $priceList = $priceLists->where('currency_id', $currencyId)->first() ?? $defaultList;
+
+            $data = array_merge($vendor, $defaults);
+            $data['price_list_id'] = $priceList?->id;
+
+            // Explicitly set currency_id if not in vendor array (though it is)
+            if (! isset($data['currency_id'])) {
+                $data['currency_id'] = $inr?->id;
+            }
+
             Vendor::firstOrCreate(
                 ['email' => $vendor['email']],
-                array_merge($vendor, $defaults)
+                $data
             );
         }
     }

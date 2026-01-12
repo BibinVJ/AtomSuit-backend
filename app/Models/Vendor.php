@@ -18,6 +18,7 @@ class Vendor extends Model
         'email',
         'phone',
         'currency_id',
+        'price_list_id',
         'payables_account_id',
         'purchase_account_id',
         'purchase_discount_account_id',
@@ -43,6 +44,11 @@ class Vendor extends Model
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);
+    }
+
+    public function priceList(): BelongsTo
+    {
+        return $this->belongsTo(PriceList::class);
     }
 
     public function payablesAccount(): BelongsTo

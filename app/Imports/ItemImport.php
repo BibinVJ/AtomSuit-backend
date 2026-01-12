@@ -40,7 +40,6 @@ class ItemImport implements ToModel, WithHeadingRow, WithValidation
             'unit_id' => $unit->id,
             'description' => $row['description'] ?? '',
             'type' => strtolower(trim($row['type'] ?? 'product')) === 'service' ? ItemType::SERVICE : ItemType::PRODUCT,
-            'selling_price' => $row['selling_price'] ?? 0,
         ]);
     }
 
@@ -52,7 +51,6 @@ class ItemImport implements ToModel, WithHeadingRow, WithValidation
             'category' => 'required|string',
             'unit' => 'required|string',
             'type' => 'nullable|string',
-            'selling_price' => 'nullable|numeric|min:0',
         ];
     }
 }

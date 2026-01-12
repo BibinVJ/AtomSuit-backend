@@ -12,6 +12,8 @@ class TenantSampleDataSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            CurrencySeeder::class,
+            PriceListSeeder::class,
             UsersSeeder::class,
             TaxSeeder::class,
             CategorySeeder::class,

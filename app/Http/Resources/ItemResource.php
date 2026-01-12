@@ -25,7 +25,6 @@ class ItemResource extends BaseResource
             'category' => new CategoryResource($this->whenLoaded('category')),
             'unit' => new UnitResource($this->whenLoaded('unit')),
             'type' => $this->type,
-            'selling_price' => $this->selling_price,
             'stock_on_hand' => $this->stockOnHand(),
             'non_expired_stock' => $this->nonExpiredStock(),
             'expired_stock' => $this->expiredStock(),

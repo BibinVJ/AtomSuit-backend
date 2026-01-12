@@ -21,19 +21,16 @@ class Item extends Model
         'unit_id',
         'description',
         'type',
-        'selling_price',
         'sales_account_id',
         'cogs_account_id',
         'inventory_account_id',
         'inventory_adjustment_account_id',
         'purchase_account_id',
         'tax_group_id',
-        'is_tax_inclusive',
     ];
 
     protected $casts = [
         'type' => ItemType::class,
-        'is_tax_inclusive' => 'boolean',
     ];
 
     public function category(): BelongsTo
@@ -82,6 +79,11 @@ class Item extends Model
     public function purchaseAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
+    }
+
+    public function itemPrices(): HasMany
+    {
+        return $this->hasMany(ItemPrice::class);
     }
 
     public function saleItems(): HasMany

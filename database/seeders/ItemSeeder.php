@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\ItemPrice;
+use App\Models\PriceList;
 use App\Models\Unit;
 use Illuminate\Database\Seeder;
 
@@ -55,6 +57,17 @@ class ItemSeeder extends Seeder
 
         $taxGroup = \App\Models\TaxGroup::where('name', 'GST 18%')->first();
 
+        // Fetch all relevant lists
+        $inr = \App\Models\Currency::where('code', 'INR')->first();
+        $usd = \App\Models\Currency::where('code', 'USD')->first();
+
+        // Lists should be created by DefaultPriceListSeeder (INR) and PriceListSeeder (USD)
+        $salesListInr = PriceList::where('type', 'sales')->where('currency_id', $inr?->id)->first();
+        $salesListUsd = PriceList::where('type', 'sales')->where('currency_id', $usd?->id)->first();
+
+        $purchaseListInr = PriceList::where('type', 'purchase')->where('currency_id', $inr?->id)->first();
+        $purchaseListUsd = PriceList::where('type', 'purchase')->where('currency_id', $usd?->id)->first();
+
         $defaults = [
             'sales_account_id' => $salesAccount?->id,
             'cogs_account_id' => $cogsAccount?->id,
@@ -64,17 +77,54 @@ class ItemSeeder extends Seeder
             'tax_group_id' => $taxGroup?->id,
         ];
 
-        foreach ($items as $item) {
-            Item::firstOrCreate(
-                ['name' => $item['name']],
+        foreach ($items as $index => $itemData) {
+            // Remove selling_price from item creation data
+            $sellingPrice = $itemData['selling_price'];
+            unset($itemData['selling_price']);
+
+            $item = Item::firstOrCreate(
+                ['name' => $itemData['name']],
                 array_merge([
                     'sku' => (string) mt_rand(10000000, 99999999),
-                    'category_id' => $item['category_id'],
-                    'unit_id' => $item['unit_id'],
-                    'description' => $item['description'],
-                    'selling_price' => $item['selling_price'],
-                ], $defaults)
+                ], $itemData, $defaults)
             );
+
+            // Selective Pricing: Only price even-indexed items (50% of items), or based on logic
+            // Let's price items if index is divisible by 2 or 3, leaving some unpriced
+            if ($index % 4 === 0) {
+                continue; // Skip 25% of items to test 'No Price' scenario
+            }
+
+            // --- INR PRICING ---
+            if ($salesListInr) {
+                ItemPrice::updateOrCreate(
+                    ['price_list_id' => $salesListInr->id, 'item_id' => $item->id, 'min_quantity' => 1],
+                    ['price' => $sellingPrice]
+                );
+            }
+            if ($purchaseListInr) {
+                ItemPrice::updateOrCreate(
+                    ['price_list_id' => $purchaseListInr->id, 'item_id' => $item->id, 'min_quantity' => 1],
+                    ['price' => $sellingPrice * 0.70]
+                );
+            }
+
+            // --- USD PRICING ---
+            // Approx Exchange Rate: 1 USD = 83 INR
+            $usdPrice = $sellingPrice / 83.0;
+
+            if ($salesListUsd) {
+                ItemPrice::updateOrCreate(
+                    ['price_list_id' => $salesListUsd->id, 'item_id' => $item->id, 'min_quantity' => 1],
+                    ['price' => $usdPrice]
+                );
+            }
+            if ($purchaseListUsd) {
+                ItemPrice::updateOrCreate(
+                    ['price_list_id' => $purchaseListUsd->id, 'item_id' => $item->id, 'min_quantity' => 1],
+                    ['price' => $usdPrice * 0.70]
+                );
+            }
         }
     }
 }

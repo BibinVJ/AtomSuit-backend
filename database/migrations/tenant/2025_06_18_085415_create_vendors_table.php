@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email')->nullable()->unique();
             $table->string('phone')->nullable()->unique();
             $table->foreignId('currency_id')->constrained('currencies')->restrictOnDelete();
+            $table->foreignId('price_list_id')->constrained('price_lists')->restrictOnDelete();
             $table->foreignId('tax_group_id')->nullable()->constrained()->nullOnDelete();
 
             // Accounting Fields

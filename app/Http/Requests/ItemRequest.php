@@ -30,7 +30,6 @@ class ItemRequest extends FormRequest
             'unit_id' => ['required', \Illuminate\Validation\Rule::exists('units', 'id')],
             'description' => 'nullable|string',
             'type' => ['required', new Enum(ItemType::class)],
-            'selling_price' => 'nullable|numeric|min:0',
             'sales_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'cogs_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
             'inventory_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],

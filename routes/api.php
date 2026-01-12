@@ -163,6 +163,15 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('exchange-rates/{exchange_rate}/restore', [ExchangeRateController::class, 'restore'])->withTrashed();
     Route::apiResource('exchange-rates', ExchangeRateController::class)->withTrashed(['show', 'destroy']);
 
+    /* Price Lists & Item Prices */
+    Route::get('price-lists/export/excel', [App\Http\Controllers\PriceListController::class, 'export']);
+    Route::post('price-lists/{price_list}/restore', [App\Http\Controllers\PriceListController::class, 'restore'])->withTrashed();
+    Route::apiResource('price-lists', App\Http\Controllers\PriceListController::class)->withTrashed(['show', 'destroy']);
+
+    Route::get('item-prices/export/excel', [App\Http\Controllers\ItemPriceController::class, 'export']);
+    Route::post('item-prices/{item_price}/restore', [App\Http\Controllers\ItemPriceController::class, 'restore'])->withTrashed();
+    Route::apiResource('item-prices', App\Http\Controllers\ItemPriceController::class)->withTrashed(['show', 'destroy']);
+
     // gl settings
 
     /*

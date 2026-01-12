@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Currency;
 use App\Models\Customer;
+use App\Models\PriceList;
 use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder
@@ -21,6 +22,11 @@ class CustomerSeeder extends Seeder
         $salesDiscountAccount = \App\Models\ChartOfAccount::where('code', '4002')->first();
         $salesReturnAccount = \App\Models\ChartOfAccount::where('code', '4003')->first();
         $receivablesAccount = \App\Models\ChartOfAccount::where('code', '1003')->first();
+
+        // Fetch all Sales Price Lists
+        $priceLists = PriceList::where('type', 'sales')->get();
+        // Fallback default (likely INR)
+        $defaultList = $priceLists->first();
 
         $defaults = [
             'sales_account_id' => $salesAccount?->id,
@@ -69,9 +75,16 @@ class CustomerSeeder extends Seeder
         ];
 
         foreach ($customers as $customer) {
+            // Determine Price List
+            $currencyId = $customer['currency_id'] ?? $inr?->id; // Use INR if null
+            $priceList = $priceLists->where('currency_id', $currencyId)->first() ?? $defaultList;
+
+            $data = array_merge($customer, $defaults);
+            $data['price_list_id'] = $priceList?->id;
+
             Customer::firstOrCreate(
                 ['email' => $customer['email']],
-                array_merge($customer, $defaults)
+                $data
             );
         }
     }
