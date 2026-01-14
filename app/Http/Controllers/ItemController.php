@@ -42,7 +42,8 @@ class ItemController extends Controller
             'cogsAccount',
             'inventoryAccount',
             'inventoryAdjustmentAccount',
-            'purchaseAccount',
+            'taxGroup',
+            'itemPrices.priceList',
         ]);
 
         $result = ItemResource::collectionWithMeta($items, [
@@ -70,7 +71,8 @@ class ItemController extends Controller
             'cogsAccount',
             'inventoryAccount',
             'inventoryAdjustmentAccount',
-            'purchaseAccount',
+            'taxGroup',
+            'itemPrices.priceList',
         ]);
 
         return ApiResponse::success('Item fetched successfully.', ItemResource::make($item));
@@ -78,14 +80,14 @@ class ItemController extends Controller
 
     public function store(ItemRequest $request)
     {
-        $item = $this->itemRepository->create($request->validated());
+        $item = $this->itemService->create($request->validated());
 
         return ApiResponse::success('Item created successfully.', ItemResource::make($item));
     }
 
     public function update(ItemRequest $request, Item $item)
     {
-        $updatedItem = $this->itemRepository->update($item, $request->validated());
+        $updatedItem = $this->itemService->update($item, $request->validated());
 
         return ApiResponse::success('Item updated successfully.', ItemResource::make($updatedItem));
     }

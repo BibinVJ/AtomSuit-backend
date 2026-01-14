@@ -65,7 +65,6 @@ class ChartOfAccountService extends BaseService
             ->orWhere('cogs_account_id', $chartOfAccount->id)
             ->orWhere('inventory_account_id', $chartOfAccount->id)
             ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)
-            ->orWhere('purchase_account_id', $chartOfAccount->id)
             ->exists()) {
             throw new Exception('Cannot hard delete: Account is linked to one or more items.');
         }
@@ -74,7 +73,6 @@ class ChartOfAccountService extends BaseService
             ->orWhere('cogs_account_id', $chartOfAccount->id)
             ->orWhere('inventory_account_id', $chartOfAccount->id)
             ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)
-            ->orWhere('purchase_account_id', $chartOfAccount->id)
             ->exists()) {
             throw new Exception('Cannot hard delete: Account is linked to one or more categories.');
         }

@@ -371,13 +371,6 @@ class SettingSeeder extends Seeder
 
             // Customers and Sales Defaults
             [
-                'key' => 'default_receivable_account',
-                'value' => $getAccountId('1003'),
-                'type' => 'integer',
-                'group' => 'sales',
-                'description' => 'Default Accounts Receivable',
-            ],
-            [
                 'key' => 'default_sales_account',
                 'value' => $getAccountId('4001'),
                 'type' => 'integer',
@@ -390,6 +383,20 @@ class SettingSeeder extends Seeder
                 'type' => 'integer',
                 'group' => 'sales',
                 'description' => 'Default Sales Discount Account',
+            ],
+            [
+                'key' => 'default_receivable_account',
+                'value' => $getAccountId('1003'),
+                'type' => 'integer',
+                'group' => 'sales',
+                'description' => 'Default Accounts Receivable',
+            ],
+            [
+                'key' => 'default_sales_return_account',
+                'value' => $getAccountId('4001'),
+                'type' => 'integer',
+                'group' => 'sales',
+                'description' => 'Default Sales Return Account',
             ],
 
             // Suppliers and Purchasing Defaults
@@ -415,20 +422,20 @@ class SettingSeeder extends Seeder
                 'description' => 'Default Purchase Discount Account',
             ],
             [
-                'key' => 'default_grn_clearing_account',
-                'value' => $getAccountId('2003'),
+                'key' => 'default_purchase_return_account',
+                'value' => $getAccountId('5001'),
                 'type' => 'integer',
                 'group' => 'purchasing',
-                'description' => 'GRN Clearing Account',
+                'description' => 'Default Purchase Return Account',
             ],
 
             // Inventory Defaults
             [
-                'key' => 'default_inventory_account',
-                'value' => $getAccountId('1004'),
+                'key' => 'default_sales_account',
+                'value' => $getAccountId('4001'),
                 'type' => 'integer',
                 'group' => 'inventory',
-                'description' => 'Default Inventory Asset Account',
+                'description' => 'Default Sales/Income Account',
             ],
             [
                 'key' => 'default_cogs_account',
@@ -436,6 +443,13 @@ class SettingSeeder extends Seeder
                 'type' => 'integer',
                 'group' => 'inventory',
                 'description' => 'Default Cost of Goods Sold Account',
+            ],
+            [
+                'key' => 'default_inventory_account',
+                'value' => $getAccountId('1004'),
+                'type' => 'integer',
+                'group' => 'inventory',
+                'description' => 'Default Inventory Asset Account',
             ],
             [
                 'key' => 'default_inventory_adjustment_account',

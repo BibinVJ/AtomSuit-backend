@@ -19,7 +19,6 @@ class Category extends Model
         'cogs_account_id',
         'inventory_account_id',
         'inventory_adjustment_account_id',
-        'purchase_account_id',
         'tax_group_id',
     ];
 
@@ -51,10 +50,5 @@ class Category extends Model
     public function inventoryAdjustmentAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'inventory_adjustment_account_id');
-    }
-
-    public function purchaseAccount(): BelongsTo
-    {
-        return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
     }
 }

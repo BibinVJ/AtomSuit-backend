@@ -53,7 +53,6 @@ class ItemSeeder extends Seeder
         $cogsAccount = \App\Models\ChartOfAccount::where('code', '5001')->first();
         $inventoryAccount = \App\Models\ChartOfAccount::where('code', '1004')->first();
         $inventoryAdjAccount = \App\Models\ChartOfAccount::where('code', '6003')->first();
-        $purchaseAccount = \App\Models\ChartOfAccount::where('code', '5001')->first(); // Using COGS for purchase default for now
 
         $taxGroup = \App\Models\TaxGroup::where('name', 'GST 18%')->first();
 
@@ -73,7 +72,6 @@ class ItemSeeder extends Seeder
             'cogs_account_id' => $cogsAccount?->id,
             'inventory_account_id' => $inventoryAccount?->id,
             'inventory_adjustment_account_id' => $inventoryAdjAccount?->id,
-            'purchase_account_id' => $purchaseAccount?->id,
             'tax_group_id' => $taxGroup?->id,
         ];
 

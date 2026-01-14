@@ -24,7 +24,6 @@ class CategoryResource extends BaseResource
             'cogs_account_id' => $this->cogs_account_id,
             'inventory_account_id' => $this->inventory_account_id,
             'inventory_adjustment_account_id' => $this->inventory_adjustment_account_id,
-            'purchase_account_id' => $this->purchase_account_id,
             'tax_group_id' => $this->tax_group_id,
             'deleted_at' => $this->deleted_at,
             'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),

@@ -20,7 +20,6 @@ return new class extends Migration
             $table->foreignId('cogs_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
             $table->foreignId('inventory_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
             $table->foreignId('inventory_adjustment_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
-            $table->foreignId('purchase_account_id')->nullable()->constrained('chart_of_accounts');
             $table->softDeletes();
             $table->timestamps();
         });
