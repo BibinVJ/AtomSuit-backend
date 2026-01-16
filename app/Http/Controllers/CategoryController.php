@@ -39,7 +39,6 @@ class CategoryController extends Controller
             'cogsAccount',
             'inventoryAccount',
             'inventoryAdjustmentAccount',
-            'purchaseAccount',
             'taxGroup',
         ]);
 
