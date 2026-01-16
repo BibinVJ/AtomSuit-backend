@@ -18,7 +18,6 @@ class PriceListResource extends BaseResource
             'name' => $this->name,
             'code' => $this->code,
             'type' => $this->type,
-            'currency_id' => $this->currency_id,
             'currency' => new \App\Http\Resources\CurrencyResource($this->whenLoaded('currency')), // Assuming CurrencyResource exists
             'is_tax_inclusive' => (bool) $this->is_tax_inclusive,
             'description' => $this->description,

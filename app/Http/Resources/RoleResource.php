@@ -22,6 +22,7 @@ class RoleResource extends BaseResource
             'guard_name' => $this->guard_name,
             'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
             'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
         ];
     }

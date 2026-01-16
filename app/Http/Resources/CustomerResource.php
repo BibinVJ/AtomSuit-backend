@@ -40,6 +40,8 @@ class CustomerResource extends BaseResource
             'shipping_country' => $this->shipping_country,
             'shipping_zip_code' => $this->shipping_zip_code,
             // 'total_spent' => $this->totalSpent(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
         ];
     }

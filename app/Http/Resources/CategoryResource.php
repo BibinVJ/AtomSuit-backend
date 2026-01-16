@@ -20,18 +20,15 @@ class CategoryResource extends BaseResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'sales_account_id' => $this->sales_account_id,
-            'cogs_account_id' => $this->cogs_account_id,
-            'inventory_account_id' => $this->inventory_account_id,
-            'inventory_adjustment_account_id' => $this->inventory_adjustment_account_id,
-            'tax_group_id' => $this->tax_group_id,
-            'deleted_at' => $this->deleted_at,
+            'tax_group' => new TaxGroupResource($this->whenLoaded('taxGroup')),
             'sales_account' => new ChartOfAccountResource($this->whenLoaded('salesAccount')),
             'cogs_account' => new ChartOfAccountResource($this->whenLoaded('cogsAccount')),
             'inventory_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAccount')),
             'inventory_adjustment_account' => new ChartOfAccountResource($this->whenLoaded('inventoryAdjustmentAccount')),
             'purchase_account' => new ChartOfAccountResource($this->whenLoaded('purchaseAccount')),
-            'tax_group' => new TaxGroupResource($this->whenLoaded('taxGroup')),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

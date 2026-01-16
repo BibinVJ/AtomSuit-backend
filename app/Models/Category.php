@@ -15,11 +15,11 @@ class Category extends Model
     protected $fillable = [
         'name',
         'description',
+        'tax_group_id',
         'sales_account_id',
         'cogs_account_id',
         'inventory_account_id',
         'inventory_adjustment_account_id',
-        'tax_group_id',
     ];
 
     public function items(): HasMany

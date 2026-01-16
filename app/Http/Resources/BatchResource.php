@@ -24,6 +24,9 @@ class BatchResource extends BaseResource
             'expiry_date' => $this->expiry_date,
             'cost_price' => $this->cost_price,
             'stock_on_hand' => $this->stockOnHand(),
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'deleted_at' => $this->deleted_at,
         ];
     }
 }

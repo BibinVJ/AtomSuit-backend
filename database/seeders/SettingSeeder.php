@@ -260,13 +260,6 @@ class SettingSeeder extends Seeder
 
             // Appearance Settings
             [
-                'key' => 'theme',
-                'value' => 'light',
-                'type' => 'string',
-                'group' => 'appearance',
-                'description' => 'Default theme (light/dark)',
-            ],
-            [
                 'key' => 'primary_color',
                 'value' => '#3b82f6',
                 'type' => 'string',

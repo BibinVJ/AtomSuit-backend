@@ -39,6 +39,8 @@ class VendorResource extends BaseResource
             'shipping_state' => $this->shipping_state,
             'shipping_country' => $this->shipping_country,
             'shipping_zip_code' => $this->shipping_zip_code,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
         ];
     }
