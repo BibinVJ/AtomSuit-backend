@@ -32,7 +32,9 @@ class PriceListController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $priceLists = $this->priceListRepository->all($paginate, $perPage, $filters, ['currency']);
+        $priceLists = $this->priceListRepository->all($paginate, $perPage, $filters, [
+            'currency' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = PriceListResource::collectionWithMeta($priceLists, [
             'from' => $filters['from'] ?? null,

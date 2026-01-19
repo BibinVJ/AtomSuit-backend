@@ -33,7 +33,11 @@ class TenantController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, ['domain', 'currentSubscription.plan', 'plan']);
+        $tenants = $this->tenantRepository->all($paginate, $perPage, $filters, [
+            'domain',
+            'currentSubscription.plan',
+            'plan' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = TenantResource::collectionWithMeta($tenants, [
             'from' => $filters['from'] ?? null,

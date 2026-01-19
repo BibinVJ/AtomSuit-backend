@@ -39,12 +39,12 @@ class ItemController extends Controller
             'category' => fn ($q) => $q->withTrashed(),
             'unit' => fn ($q) => $q->withTrashed(),
             'stockMovements',
-            'salesAccount',
-            'cogsAccount',
-            'inventoryAccount',
-            'inventoryAdjustmentAccount',
-            'taxGroup',
-            'itemPrices.priceList',
+            'salesAccount' => fn ($q) => $q->withTrashed(),
+            'cogsAccount' => fn ($q) => $q->withTrashed(),
+            'inventoryAccount' => fn ($q) => $q->withTrashed(),
+            'inventoryAdjustmentAccount' => fn ($q) => $q->withTrashed(),
+            'taxGroup' => fn ($q) => $q->withTrashed(),
+            'itemPrices.priceList' => fn ($q) => $q->withTrashed(),
         ]);
 
         $result = ItemResource::collectionWithMeta($items, [

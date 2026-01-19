@@ -26,6 +26,6 @@ class ChartOfAccount extends Model
 
     public function accountGroup(): BelongsTo
     {
-        return $this->belongsTo(AccountGroup::class)->withTrashed();
+        return $this->belongsTo(AccountGroup::class);
     }
 }

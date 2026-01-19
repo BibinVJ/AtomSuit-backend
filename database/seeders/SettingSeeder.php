@@ -456,6 +456,13 @@ class SettingSeeder extends Seeder
 
             // Inventory Configuration
             [
+                'key' => 'inventory_low_stock_threshold',
+                'value' => '30',
+                'type' => 'integer',
+                'group' => 'inventory',
+                'description' => 'Low stock warning threshold',
+            ],
+            [
                 'key' => 'allow_negative_inventory',
                 'value' => '0',
                 'type' => 'boolean',

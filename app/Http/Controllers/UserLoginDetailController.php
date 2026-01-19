@@ -23,7 +23,9 @@ class UserLoginDetailController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $logs = $this->repository->all($paginate, $perPage, $filters, ['user']);
+        $logs = $this->repository->all($paginate, $perPage, $filters, [
+            'user' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = UserLoginDetailResource::collectionWithMeta($logs, [
             'from' => $filters['from'] ?? null,

@@ -41,9 +41,9 @@ class SettingService
     /**
      * Get all settings for a specific group.
      */
-    public function getByGroup(string $group): array
+    public function getByGroup(string $group)
     {
-        return $this->settingRepository->list(['group' => $group]);
+        return $this->settingRepository->all(filters: ['group' => $group]);
     }
 
     /**

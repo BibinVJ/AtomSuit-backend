@@ -52,22 +52,22 @@ class Customer extends Model
 
     public function salesAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'sales_account_id');
     }
 
     public function salesDiscountAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'sales_discount_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'sales_discount_account_id');
     }
 
     public function receivablesAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'receivables_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'receivables_account_id');
     }
 
     public function salesReturnAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'sales_return_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'sales_return_account_id');
     }
 
     public function sales(): HasMany

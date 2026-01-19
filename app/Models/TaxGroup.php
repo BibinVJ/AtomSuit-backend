@@ -18,7 +18,7 @@ class TaxGroup extends Model
 
     public function taxRates(): BelongsToMany
     {
-        return $this->belongsToMany(TaxRate::class, 'tax_group_rates')->withTrashed();
+        return $this->belongsToMany(TaxRate::class, 'tax_group_rates');
     }
 
     public function items(): HasMany

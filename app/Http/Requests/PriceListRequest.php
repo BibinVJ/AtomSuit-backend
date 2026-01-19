@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,13 +30,13 @@ class PriceListRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                Rule::unique('price_lists', 'name')->ignore($priceList),
+                new UniqueInTrash('price_lists', 'name', $priceList?->id),
             ],
             'code' => [
                 'required',
                 'string',
                 'max:50',
-                Rule::unique('price_lists', 'code')->ignore($priceList),
+                new UniqueInTrash('price_lists', 'code', $priceList?->id),
             ],
             'currency_id' => 'required|exists:currencies,id',
             'type' => ['required', Rule::in(['sales', 'purchase'])],

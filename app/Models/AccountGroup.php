@@ -31,7 +31,7 @@ class AccountGroup extends Model
 
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(AccountGroup::class, 'parent_id')->withTrashed();
+        return $this->belongsTo(AccountGroup::class, 'parent_id');
     }
 
     public function children(): HasMany

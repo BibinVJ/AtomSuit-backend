@@ -30,7 +30,10 @@ class SubscriptionController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $subscriptions = $this->subscriptionRepository->all($paginate, $perPage, $filters, ['tenant', 'plan']);
+        $subscriptions = $this->subscriptionRepository->all($paginate, $perPage, $filters, [
+            'tenant',
+            'plan' => fn ($q) => $q->withTrashed(),
+        ]);
 
         if ($paginate) {
             $paginated = SubscriptionResource::paginated($subscriptions);

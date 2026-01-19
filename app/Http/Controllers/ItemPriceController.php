@@ -32,7 +32,10 @@ class ItemPriceController extends Controller
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);
 
-        $itemPrices = $this->itemPriceRepository->all($paginate, $perPage, $filters, ['item', 'priceList']);
+        $itemPrices = $this->itemPriceRepository->all($paginate, $perPage, $filters, [
+            'item' => fn ($q) => $q->withTrashed(),
+            'priceList' => fn ($q) => $q->withTrashed(),
+        ]);
 
         $result = ItemPriceResource::collectionWithMeta($itemPrices, [
             'from' => $filters['from'] ?? null,

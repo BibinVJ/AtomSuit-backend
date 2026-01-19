@@ -52,22 +52,22 @@ class Vendor extends Model
 
     public function payablesAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'payables_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'payables_account_id');
     }
 
     public function purchaseAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'purchase_account_id');
     }
 
     public function purchaseDiscountAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'purchase_discount_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'purchase_discount_account_id');
     }
 
     public function purchaseReturnAccount(): BelongsTo
     {
-        return $this->belongsTo(ChartOfAccount::class, 'purchase_return_account_id')->withTrashed();
+        return $this->belongsTo(ChartOfAccount::class, 'purchase_return_account_id');
     }
 
     public function purchases(): HasMany

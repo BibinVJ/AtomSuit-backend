@@ -102,7 +102,7 @@ class DashboardRepository
     {
         return StockMovement::selectRaw('item_id, SUM(quantity) as total_quantity')
             ->groupBy('item_id')
-            ->havingRaw('total_quantity <= '. 30) // TODO: later take this from settings
+            ->havingRaw('total_quantity <= '.setting('inventory_low_stock_threshold', 30))
             ->with('item:id,sku,name')
             ->get()
             ->map(fn ($row) => new DashboardStockItemDTO(

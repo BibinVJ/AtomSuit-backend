@@ -36,11 +36,11 @@ class CategoryController extends Controller
         $perPage = $request->integer('perPage', 15);
 
         $categories = $this->categoryRepository->all($paginate, $perPage, $filters, [
-            'salesAccount',
-            'cogsAccount',
-            'inventoryAccount',
-            'inventoryAdjustmentAccount',
-            'taxGroup',
+            'salesAccount' => fn ($q) => $q->withTrashed(),
+            'cogsAccount' => fn ($q) => $q->withTrashed(),
+            'inventoryAccount' => fn ($q) => $q->withTrashed(),
+            'inventoryAdjustmentAccount' => fn ($q) => $q->withTrashed(),
+            'taxGroup' => fn ($q) => $q->withTrashed(),
         ]);
 
         $result = CategoryResource::collectionWithMeta($categories, [
