@@ -13,7 +13,7 @@ class CreateSaleStockMovementsAction
 
     public function execute(Sale $sale): void
     {
-        $allowExpired = config('app.allow_expired_stock'); // todo: change this later to getch from the settings
+        $allowExpired = setting('allow_selling_expired_items');
 
         /** @var \App\Models\SaleItem $saleItem */
         foreach ($sale->items as $saleItem) {

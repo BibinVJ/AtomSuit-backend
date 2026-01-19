@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -14,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Purchase extends Model
 {
-    use AppAudit, HasFactory, SoftDeletes;
+    use AppAudit, SoftDeletes;
 
     protected $fillable = [
         'user_id',

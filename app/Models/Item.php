@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\ItemType;
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Item extends Model
 {
-    use AppAudit, HasFactory, SoftDeletes;
+    use AppAudit, SoftDeletes;
 
     protected $fillable = [
         'sku',
@@ -47,9 +46,6 @@ class Item extends Model
         return $this->belongsTo(TaxGroup::class);
     }
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Batch, \App\Models\Item>
-     */
     public function batches(): HasMany
     {
         return $this->hasMany(Batch::class);

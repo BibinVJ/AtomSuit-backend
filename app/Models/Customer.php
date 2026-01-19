@@ -3,15 +3,14 @@
 namespace App\Models;
 
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\SoftDeletes; // Added this line as SoftDeletes is used in the trait declaration
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
 {
-    use AppAudit, HasFactory, SoftDeletes;
+    use AppAudit, SoftDeletes;
 
     protected $fillable = [
         'name',

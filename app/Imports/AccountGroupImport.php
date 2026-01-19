@@ -27,7 +27,6 @@ class AccountGroupImport implements ToModel, WithHeadingRow, WithValidation
             'account_type_id' => $accountType?->id, // Consider validating existence
             'parent_id' => $parent?->id,
             'description' => $row['description'] ?? '',
-            'is_system' => false,
         ]);
     }
 

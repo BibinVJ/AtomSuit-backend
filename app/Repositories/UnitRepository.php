@@ -17,7 +17,6 @@ class UnitRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-
         if (! empty($filters['search'])) {
             $query->where(function ($q) use ($filters) {
                 $q->where('name', 'like', '%'.$filters['search'].'%')

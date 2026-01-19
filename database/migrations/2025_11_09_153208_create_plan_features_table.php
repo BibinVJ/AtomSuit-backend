@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('plan_features', function (Blueprint $table) {
             $table->id();
             $table->foreignId('plan_id')->constrained('plans')->onDelete('cascade');
-            $table->string('feature_key'); // device_limit, storage_gb, module_sales, module_crm, etc.
-            $table->string('feature_type')->default('boolean'); // boolean, integer, string
-            $table->text('feature_value'); // true/false, numeric value, or string
-            $table->string('display_name'); // "Devices Included", "Storage", "Sales Module"
+            $table->string('display_name')->comment('Devices Included, Storage, Sales Module, etc.');
+            $table->string('feature_key')->comment('device_limit, storage_gb, module_sales, module_crm, etc.');
+            $table->string('feature_type')->default('boolean')->comment('boolean, integer, string');
+            $table->text('feature_value')->comment('true/false, numeric value, or string');
             $table->text('description')->nullable();
             $table->integer('display_order')->default(0);
             $table->timestamps();

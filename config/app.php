@@ -2,7 +2,6 @@
 
 return [
 
-    'allow_expired_stock' => false, // remove this later
     /*
     |--------------------------------------------------------------------------
     | Application Name

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -27,7 +28,7 @@ class TaxRateRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                new \App\Rules\UniqueInTrash('tax_rates', 'name', $this->route('tax_rate')?->id),
+                new UniqueInTrash('tax_rates', 'name', $this->route('tax_rate')?->id),
             ],
             'rate' => 'required|numeric|min:0',
             'type' => ['required', Rule::in(['percentage', 'fixed'])],

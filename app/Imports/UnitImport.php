@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Unit;
+use App\Rules\UniqueInTrash;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -25,8 +26,8 @@ class UnitImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', new \App\Rules\UniqueInTrash('units', 'name')],
-            'code' => ['sometimes', 'nullable', 'string', new \App\Rules\UniqueInTrash('units', 'code')],
+            'name' => ['required', 'string', new UniqueInTrash('units', 'name')],
+            'code' => ['sometimes', 'nullable', 'string', new UniqueInTrash('units', 'code')],
             'description' => 'nullable|string',
         ];
     }

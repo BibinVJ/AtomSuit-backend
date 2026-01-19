@@ -30,7 +30,6 @@ class AccountGroupController extends Controller
 
     public function index(Request $request)
     {
-        // Standard filters and pagination logic matching CategoryController
         $filters = $request->only(['search', 'account_type_id', 'sort_by', 'sort_direction', 'trashed']);
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));
         $perPage = $request->integer('perPage', 15);

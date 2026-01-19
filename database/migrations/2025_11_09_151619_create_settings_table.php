@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('settings', function (Blueprint $table) {
             $table->id();
             $table->string('key')->unique();
-            $table->text('value')->nullable();
-            $table->string('type')->default('string'); // string, boolean, integer, json, file
-            $table->string('group')->default('general'); // general, payment, email, appearance, etc.
-            $table->text('description')->nullable();
+            $table->text('value')->nullable()->comment('Serialized value, can be JSON or plain text');
+            $table->string('group')->default('system')->comment('Group of settings, e.g., system, user, app');
+            $table->string('type')->default('text')->comment('e.g., text, number, select, file, boolean');
+            $table->string('description')->nullable();
             $table->timestamps();
         });
     }

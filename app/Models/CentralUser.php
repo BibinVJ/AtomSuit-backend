@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
+use App\Enums\PermissionsEnum;
 use App\Enums\UserStatus;
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard, OAuthenticatable
 {
-    use AppAudit, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use AppAudit, HasApiTokens, HasRoles, Notifiable, SoftDeletes;
 
     protected $table = 'users';
 
@@ -78,6 +78,6 @@ class CentralUser extends Authenticatable implements CanAccessAnalyticsDashboard
 
     public function canAccessAnalyticsDashboard(): bool
     {
-        return $this->hasPermissionTo(\App\Enums\PermissionsEnum::VIEW_SYSTEM_ANALYTICS->value);
+        return $this->hasPermissionTo(PermissionsEnum::VIEW_SYSTEM_ANALYTICS->value);
     }
 }

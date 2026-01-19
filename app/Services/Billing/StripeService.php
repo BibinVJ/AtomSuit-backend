@@ -126,7 +126,7 @@ class StripeService
         }
 
         $stripeSubId = $subscription->id;
-        $status = $subscription->status; // trialing, active, past_due, canceled, unpaid
+        $status = $subscription->status;
         $currentPeriodEnd = isset($subscription->current_period_end) ? \Carbon\Carbon::createFromTimestamp($subscription->current_period_end) : null;
         $cancelAtPeriodEnd = (bool) ($subscription->cancel_at_period_end ?? false);
 

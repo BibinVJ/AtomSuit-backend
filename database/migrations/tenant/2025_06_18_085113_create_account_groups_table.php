@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->nullable();
-            $table->foreignId('account_type_id')->constrained('account_types');
+            $table->foreignId('account_type_id')->constrained('account_types')->cascadeOnDelete();
             $table->foreignId('parent_id')->nullable()->constrained('account_groups')->nullOnDelete();
             $table->text('description')->nullable();
-            $table->boolean('is_system')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

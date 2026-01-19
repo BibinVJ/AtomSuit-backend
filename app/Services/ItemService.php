@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Repositories\ItemRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ItemService extends BaseService
 {
@@ -12,9 +14,9 @@ class ItemService extends BaseService
         $this->repository = $itemRepository;
     }
 
-    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    public function create(array $data): Model
     {
-        return \Illuminate\Support\Facades\DB::transaction(function () use ($data) {
+        return DB::transaction(function () use ($data) {
             $item = $this->repository->create($data);
 
             if (! empty($data['prices'])) {
@@ -35,9 +37,9 @@ class ItemService extends BaseService
         });
     }
 
-    public function update(\Illuminate\Database\Eloquent\Model $item, array $data): \Illuminate\Database\Eloquent\Model
+    public function update(Model $item, array $data): Model
     {
-        return \Illuminate\Support\Facades\DB::transaction(function () use ($item, $data) {
+        return DB::transaction(function () use ($item, $data) {
             $this->repository->update($item, $data);
 
             if (isset($data['prices'])) {
@@ -68,7 +70,7 @@ class ItemService extends BaseService
         });
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $item): void
+    protected function validateForceDelete(Model $item): void
     {
         /** @var \App\Models\Item $item */
         if ($item->batches()->exists()) {

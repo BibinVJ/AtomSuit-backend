@@ -37,9 +37,6 @@ class UniqueInTrash implements ValidationRule
         $record = $query->first();
 
         if ($record) {
-            // Check if the record is soft deleted (if deleted_at column exists)
-            // Note: DB::table includes trashed items by default (it's raw DB access)
-
             if (isset($record->deleted_at) && $record->deleted_at !== null) {
                 $fail("The {$column} is unavailable because it exists in the trash. Please restore it or permanently delete it.");
             } else {

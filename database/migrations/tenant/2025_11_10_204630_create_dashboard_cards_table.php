@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('dashboard_cards', function (Blueprint $table) {
             $table->id();
-            $table->string('slug')->unique(); // total-sales, total-purchase, etc.
-            $table->string('title'); // Display title
-            $table->string('component'); // Frontend component name
+            $table->string('slug')->unique()->comment('total-sales, total-purchase, etc.');
+            $table->string('title');
+            $table->string('component')->comment('Frontend component name');
             $table->text('description')->nullable();
-            $table->string('permission')->nullable(); // Required permission to view
-            $table->integer('default_width')->default(6);
-            $table->integer('default_height')->default(4);
-            $table->integer('default_x')->default(0); // Default X position
-            $table->integer('default_y')->default(0); // Default Y position
+            $table->string('permission')->nullable()->comment('permission name from Permission Enum');
+            $table->integer('default_width')->default(6)->comment('Default width while seeding the data');
+            $table->integer('default_height')->default(4)->comment('Default height while seeding the data');
+            $table->integer('default_x')->default(0)->comment('Default X position while seeding the data');
+            $table->integer('default_y')->default(0)->comment('Default Y position while seeding the data');
             $table->integer('default_order')->default(0);
-            $table->json('default_config')->nullable(); // Default configuration
+            $table->json('default_config')->nullable();
             $table->timestamps();
         });
     }

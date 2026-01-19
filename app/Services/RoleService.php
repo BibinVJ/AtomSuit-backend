@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Role;
 use App\Repositories\RoleRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class RoleService extends BaseService
 {
@@ -40,7 +41,7 @@ class RoleService extends BaseService
         return $role;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $role): void
+    protected function validateForceDelete(Model $role): void
     {
         /** @var \App\Models\Role $role */
         if ($role->users()->exists()) {

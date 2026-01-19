@@ -55,7 +55,6 @@ return [
          * prefix + tenant_id + suffix.
          */
         'prefix' => env('TENANT_DB_PREFIX', 'tenant_'),
-        // 'prefix' => 'tenant',
         'suffix' => '',
 
         /**

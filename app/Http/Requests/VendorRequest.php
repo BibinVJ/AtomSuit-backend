@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class VendorRequest extends FormRequest
 {
@@ -22,15 +24,15 @@ class VendorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('vendors', 'name', $this->route('vendor')?->id)],
-            'email' => ['nullable', 'email', 'max:255', new \App\Rules\UniqueInTrash('vendors', 'email', $this->route('vendor')?->id)],
-            'phone' => ['nullable', 'string', 'max:20', new \App\Rules\UniqueInTrash('vendors', 'phone', $this->route('vendor')?->id)],
-            'currency_id' => ['required', \Illuminate\Validation\Rule::exists('currencies', 'id')],
-            'payables_account_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'purchase_account_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'purchase_discount_account_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'purchase_return_account_id' => ['required', 'integer', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'price_list_id' => ['required', \Illuminate\Validation\Rule::exists('price_lists', 'id')],
+            'name' => ['required', 'string', 'max:255', new UniqueInTrash('vendors', 'name', $this->route('vendor')?->id)],
+            'email' => ['nullable', 'email', 'max:255', new UniqueInTrash('vendors', 'email', $this->route('vendor')?->id)],
+            'phone' => ['nullable', 'string', 'max:20', new UniqueInTrash('vendors', 'phone', $this->route('vendor')?->id)],
+            'currency_id' => ['required', Rule::exists('currencies', 'id')],
+            'payables_account_id' => ['required', 'integer', Rule::exists('chart_of_accounts', 'id')],
+            'purchase_account_id' => ['required', 'integer', Rule::exists('chart_of_accounts', 'id')],
+            'purchase_discount_account_id' => ['required', 'integer', Rule::exists('chart_of_accounts', 'id')],
+            'purchase_return_account_id' => ['required', 'integer', Rule::exists('chart_of_accounts', 'id')],
+            'price_list_id' => ['required', Rule::exists('price_lists', 'id')],
             'billing_address_line_1' => 'nullable|string|max:255',
             'billing_address_line_2' => 'nullable|string|max:255',
             'billing_city' => 'nullable|string|max:255',

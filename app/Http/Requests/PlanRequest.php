@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\PlanIntervalEnum;
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -24,7 +25,7 @@ class PlanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('plans', 'name', $this->route('plan')?->id)],
+            'name' => ['required', 'string', 'max:255', new UniqueInTrash('plans', 'name', $this->route('plan')?->id)],
             'price' => 'required|numeric|min:0',
             'interval' => ['required', new Enum(PlanIntervalEnum::class)],
             'interval_count' => 'required|integer|min:1',

@@ -44,10 +44,9 @@ if (! function_exists('format_currency')) {
         if ($currencySymbol === null) {
             $currencyId = setting('currency_id');
             if ($currencyId) {
-                // Optimization: You might want to cache this query object-wide or similar
-                $currencySymbol = \App\Models\Currency::find($currencyId)?->symbol ?? '$';
+                $currencySymbol = \App\Models\Currency::find($currencyId)?->symbol ?? '₹';
             } else {
-                $currencySymbol = '$';
+                $currencySymbol = '₹';
             }
         }
 

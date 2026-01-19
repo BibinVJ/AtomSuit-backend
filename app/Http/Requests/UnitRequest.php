@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UnitRequest extends FormRequest
@@ -23,7 +24,7 @@ class UnitRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => ['required', 'string', 'max:100', new \App\Rules\UniqueInTrash('units', 'code', $this->route('unit')?->id)],
+            'code' => ['required', 'string', 'max:100', new UniqueInTrash('units', 'code', $this->route('unit')?->id)],
             'description' => 'nullable|string',
         ];
     }

@@ -9,7 +9,6 @@ enum SocialPlatformEnum: string
     case X = 'x';
     case INSTAGRAM = 'instagram';
     case WEBSITE = 'website';
-    // Add more as needed...
 
     public static function values(): array
     {

@@ -81,13 +81,11 @@ class Tenant extends BaseTenant implements TenantWithDatabase
 
     public function subscriptions(): HasMany
     {
-        // Use our extended Subscription model
         return $this->hasMany(Subscription::class, 'user_id', 'id');
     }
 
     public function currentSubscription(): HasOne
     {
-        // Use our extended Subscription model which has the plan relationship
         return $this->hasOne(Subscription::class, 'user_id', 'id')
             ->whereIn('stripe_status', ['active', 'trialing'])
             ->where('name', 'default')

@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\AccountGroup;
 use App\Models\ChartOfAccount;
+use App\Rules\UniqueInTrash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -20,8 +21,6 @@ class ChartOfAccountImport implements ToModel, WithHeadingRow, WithValidation
             'account_group_id' => $accountGroup?->id,
             'description' => $row['description'] ?? '',
             'opening_balance' => $row['opening_balance'] ?? 0,
-            'is_enabled' => isset($row['enabled']) && strtolower($row['enabled']) === 'yes' ? true : false,
-            'is_system' => false,
         ]);
     }
 
@@ -29,7 +28,7 @@ class ChartOfAccountImport implements ToModel, WithHeadingRow, WithValidation
     {
         return [
             'name' => 'required|string',
-            'code' => ['required', 'string', new \App\Rules\UniqueInTrash('chart_of_accounts', 'code')],
+            'code' => ['required', 'string', new UniqueInTrash('chart_of_accounts', 'code')],
             'group' => 'required|exists:account_groups,name',
             'description' => 'nullable|string',
             'opening_balance' => 'nullable|numeric',

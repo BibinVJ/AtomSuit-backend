@@ -10,6 +10,7 @@ use App\Models\PriceList;
 
 class PricingService
 {
+    // TODO: check if this is correctly fetching from the price list and implemetnt  it properly.
     /**
      * Get the price for an item in a specific context.
      *
@@ -60,8 +61,6 @@ class PricingService
      */
     protected function getPriceFromList(int $priceListId, int $itemId, float $quantity)
     {
-        // Find the best tier for the quantity
-        // We want the highest min_quantity that is <= requested quantity
         $tier = ItemPrice::where('price_list_id', $priceListId)
             ->where('item_id', $itemId)
             ->where('min_quantity', '<=', $quantity)

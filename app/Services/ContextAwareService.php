@@ -31,20 +31,4 @@ abstract class ContextAwareService
     {
         return tenant() !== null;
     }
-
-    /**
-     * Get the appropriate guard name
-     */
-    // protected function getGuard(): string
-    // {
-    //     return tenant() ? 'tenant' : 'central';
-    // }
-
-    /**
-     * Get current user regardless of context
-     */
-    // protected function getCurrentUser(): Model
-    // {
-    //     return auth($this->getGuard())->user();
-    // }
 }

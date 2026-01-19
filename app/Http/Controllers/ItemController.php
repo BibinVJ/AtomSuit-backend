@@ -120,10 +120,6 @@ class ItemController extends Controller
 
     public function downloadSample()
     {
-        // For a sample, we can just export an empty or single-row version
-        // Actually, it's better to create a specific Sample export or just use ItemExport with a single dummy item
-        // But since we want "how it should be added", a static collection is best.
-
         return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
         {
             public function collection()

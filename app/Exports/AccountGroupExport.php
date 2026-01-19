@@ -36,7 +36,6 @@ class AccountGroupExport implements FromCollection, WithHeadings, WithMapping, W
             $accountGroup->accountType->name,
             $accountGroup->parent ? $accountGroup->parent->name : '',
             $accountGroup->description,
-            $accountGroup->is_system ? 'Yes' : 'No',
         ];
     }
 

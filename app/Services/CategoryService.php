@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\CategoryRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class CategoryService extends BaseService
 {
@@ -12,7 +13,7 @@ class CategoryService extends BaseService
         $this->repository = $categoryRepository;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $category): void
+    protected function validateForceDelete(Model $category): void
     {
         /** @var \App\Models\Category $category */
         if ($category->items()->exists()) {

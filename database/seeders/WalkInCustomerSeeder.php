@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\ChartOfAccount;
 use App\Models\Currency;
 use App\Models\Customer;
 use App\Models\PriceList;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class WalkInCustomerSeeder extends Seeder
@@ -14,7 +16,7 @@ class WalkInCustomerSeeder extends Seeder
      */
     public function run(): void
     {
-        $currencyId = \App\Models\Setting::where('key', 'currency')->value('value');
+        $currencyId = Setting::where('key', 'currency')->value('value');
         $currency = Currency::find($currencyId);
 
         if (! $currency) {
@@ -30,10 +32,10 @@ class WalkInCustomerSeeder extends Seeder
             ->where('currency_id', $currency->id)
             ->first();
 
-        $salesAccount = \App\Models\ChartOfAccount::where('code', '4001')->first();
-        $salesDiscountAccount = \App\Models\ChartOfAccount::where('code', '4002')->first();
-        $salesReturnAccount = \App\Models\ChartOfAccount::where('code', '4003')->first();
-        $receivablesAccount = \App\Models\ChartOfAccount::where('code', '1003')->first();
+        $salesAccount = ChartOfAccount::where('code', '4001')->first();
+        $salesDiscountAccount = ChartOfAccount::where('code', '4002')->first();
+        $salesReturnAccount = ChartOfAccount::where('code', '4003')->first();
+        $receivablesAccount = ChartOfAccount::where('code', '1003')->first();
 
         // Ensure we handle missing accounts gracefully
         $defaults = [

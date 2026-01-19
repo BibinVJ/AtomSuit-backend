@@ -23,8 +23,8 @@ class StockMovement extends Model
     protected $casts = [
         'transaction_date' => 'datetime',
         'quantity' => 'integer',
-        'rate' => 'decimal:2',
-        'standard_cost' => 'decimal:2',
+        'rate' => 'decimal',
+        'standard_cost' => 'decimal',
     ];
 
     public function item(): BelongsTo

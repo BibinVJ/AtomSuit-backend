@@ -14,11 +14,7 @@ return new class extends Migration
         Schema::create('dashboard_layouts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-
-            $table->foreignId('dashboard_card_id')
-                ->constrained('dashboard_cards')
-                ->onDelete('cascade');
-
+            $table->foreignId('dashboard_card_id')->constrained('dashboard_cards')->onDelete('cascade');
             $table->string('area')->nullable()->comment('Position group, e.g. "left", "right"');
             $table->float('x')->nullable();
             $table->float('y')->nullable();

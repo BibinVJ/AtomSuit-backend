@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Currency;
 use App\Models\PriceList;
+use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
 class DefaultPriceListSeeder extends Seeder
@@ -13,7 +14,7 @@ class DefaultPriceListSeeder extends Seeder
      */
     public function run(): void
     {
-        $currencyId = \App\Models\Setting::where('key', 'currency')->value('value');
+        $currencyId = Setting::where('key', 'currency')->value('value');
         $currency = Currency::find($currencyId);
 
         if (! $currency) {

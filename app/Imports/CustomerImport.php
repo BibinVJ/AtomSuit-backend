@@ -2,7 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\ChartOfAccount;
 use App\Models\Customer;
+use App\Rules\UniqueInTrash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -14,10 +16,10 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
      */
     public function model(array $row)
     {
-        $salesAccount = \App\Models\ChartOfAccount::where('name', $row['sales_account'])->first();
-        $salesDiscountAccount = \App\Models\ChartOfAccount::where('name', $row['sales_discount_account'])->first();
-        $receivablesAccount = \App\Models\ChartOfAccount::where('name', $row['receivables_account'])->first();
-        $salesReturnAccount = \App\Models\ChartOfAccount::where('name', $row['sales_return_account'])->first();
+        $salesAccount = ChartOfAccount::where('name', $row['sales_account'])->first();
+        $salesDiscountAccount = ChartOfAccount::where('name', $row['sales_discount_account'])->first();
+        $receivablesAccount = ChartOfAccount::where('name', $row['receivables_account'])->first();
+        $salesReturnAccount = ChartOfAccount::where('name', $row['sales_return_account'])->first();
 
         return new Customer([
             'name' => $row['name'],
@@ -36,7 +38,7 @@ class CustomerImport implements ToModel, WithHeadingRow, WithValidation
     {
         return [
             'name' => 'required|string',
-            'email' => ['nullable', 'email', new \App\Rules\UniqueInTrash('customers', 'email')],
+            'email' => ['nullable', 'email', new UniqueInTrash('customers', 'email')],
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
             'sales_account' => 'nullable|string|exists:chart_of_accounts,name',

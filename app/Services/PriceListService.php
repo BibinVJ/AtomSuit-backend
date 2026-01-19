@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\PriceList;
 use App\Repositories\PriceListRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class PriceListService extends BaseService
 {
@@ -25,7 +26,7 @@ class PriceListService extends BaseService
         return $priceList;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $model): void
+    protected function validateForceDelete(Model $model): void
     {
         // Check for Item Prices
         if ($model->itemPrices()->exists()) {

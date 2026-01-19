@@ -17,12 +17,10 @@ class SubscriptionRepository
 
     protected function applyFilters(Builder $query, array $filters): Builder
     {
-        // Filter by status
         if (isset($filters['status'])) {
             $query->where('stripe_status', $filters['status']);
         }
 
-        // Filter by plan
         if (isset($filters['plan_id'])) {
             $query->where('plan_id', $filters['plan_id']);
         }
@@ -32,7 +30,6 @@ class SubscriptionRepository
             $query->where('tenant_id', $filters['tenant_id']);
         }
 
-        // Search by tenant name/email
         if (! empty($filters['search'])) {
             $query->whereHas('tenant', function ($q) use ($filters) {
                 $q->where('name', 'like', '%'.$filters['search'].'%')

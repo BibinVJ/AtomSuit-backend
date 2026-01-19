@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\TaxRateRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class TaxRateService extends BaseService
 {
@@ -12,7 +13,7 @@ class TaxRateService extends BaseService
         $this->repository = $taxRateRepository;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $taxRate): void
+    protected function validateForceDelete(Model $taxRate): void
     {
         /** @var \App\Models\TaxRate $taxRate */
         if ($taxRate->taxGroups()->exists()) {

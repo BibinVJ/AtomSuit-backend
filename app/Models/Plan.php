@@ -26,7 +26,7 @@ class Plan extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:2',
+        'price' => 'decimal',
         'interval' => PlanIntervalEnum::class,
         'is_trial_plan' => 'boolean',
         'is_expired_user_plan' => 'boolean',
@@ -42,10 +42,10 @@ class Plan extends Model
         return $this->hasManyThrough(
             Tenant::class,
             Subscription::class,
-            'plan_id',      // Foreign key on subscriptions table
-            'id',            // Foreign key on tenants table
-            'id',            // Local key on plans table
-            'user_id'        // Local key on subscriptions table (NOT tenant_id)
+            'plan_id',
+            'id',
+            'id',
+            'user_id'
         );
     }
 

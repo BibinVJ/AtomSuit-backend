@@ -5,13 +5,11 @@ namespace App\Repositories;
 use App\Models\TaxGroup;
 use App\Repositories\Traits\HasCrudRepository;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 class TaxGroupRepository
 {
-    use HasCrudRepository {
-        create as createTrait;
-        update as updateTrait;
-    }
+    use HasCrudRepository;
 
     public function __construct()
     {
@@ -27,9 +25,9 @@ class TaxGroupRepository
         return $query;
     }
 
-    public function create(array $data): \Illuminate\Database\Eloquent\Model
+    public function create(array $data): Model
     {
-        $taxGroup = $this->createTrait($data);
+        $taxGroup = $this->create($data);
 
         /** @var \App\Models\TaxGroup $taxGroup */
         if (isset($data['tax_rates'])) {
@@ -39,9 +37,9 @@ class TaxGroupRepository
         return $taxGroup->load('taxRates');
     }
 
-    public function update(\Illuminate\Database\Eloquent\Model $model, array $data): \Illuminate\Database\Eloquent\Model
+    public function update(Model $model, array $data): Model
     {
-        $taxGroup = $this->updateTrait($model, $data);
+        $taxGroup = $this->update($model, $data);
 
         /** @var \App\Models\TaxGroup $taxGroup */
         if (isset($data['tax_rates'])) {

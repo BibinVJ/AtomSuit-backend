@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ItemPrice extends Model
 {
-    use AppAudit, HasFactory, SoftDeletes;
+    use AppAudit, SoftDeletes;
 
     protected $fillable = [
         'price_list_id',
@@ -20,8 +19,8 @@ class ItemPrice extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal:4',
-        'min_quantity' => 'decimal:4',
+        'price' => 'decimal',
+        'min_quantity' => 'decimal',
     ];
 
     public function priceList(): BelongsTo

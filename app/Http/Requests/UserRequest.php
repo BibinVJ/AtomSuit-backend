@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserRequest extends FormRequest
@@ -31,14 +32,14 @@ class UserRequest extends FormRequest
                 'nullable',
                 'email',
                 'max:255',
-                new \App\Rules\UniqueInTrash('users', 'email', $user),
+                new UniqueInTrash('users', 'email', $user),
                 'required_without:phone',
             ],
             'phone' => [
                 'nullable',
                 'string',
                 'max:20',
-                new \App\Rules\UniqueInTrash('users', 'phone', $user),
+                new UniqueInTrash('users', 'phone', $user),
                 'required_without:email',
             ],
             'password' => $isUpdate

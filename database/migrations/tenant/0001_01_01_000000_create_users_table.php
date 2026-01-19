@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('phone')->nullable()->unique();
             $table->timestamp('phone_verified_at')->nullable();
 
-            $table->string('provider')->nullable()->comment('provider name, google, linkedin, etc...');
+            $table->string('provider')->nullable()->comment('provider name - google, linkedin, etc...');
             $table->string('provider_id')->nullable();
             $table->rememberToken();
 

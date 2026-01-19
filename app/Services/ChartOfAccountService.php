@@ -2,6 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Category;
+use App\Models\Customer;
+use App\Models\Item;
+use App\Models\Vendor;
 use App\Repositories\ChartOfAccountRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +49,7 @@ class ChartOfAccountService extends BaseService
         //     throw new Exception('Account has transactions and cannot be permanently deleted.');
         // }
 
-        if (\App\Models\Customer::where('sales_account_id', $chartOfAccount->id)
+        if (Customer::where('sales_account_id', $chartOfAccount->id)
             ->orWhere('sales_discount_account_id', $chartOfAccount->id)
             ->orWhere('receivables_account_id', $chartOfAccount->id)
             ->orWhere('sales_return_account_id', $chartOfAccount->id)
@@ -53,7 +57,7 @@ class ChartOfAccountService extends BaseService
             throw new Exception('Cannot hard delete: Account is linked to one or more customers.');
         }
 
-        if (\App\Models\Vendor::where('payables_account_id', $chartOfAccount->id)
+        if (Vendor::where('payables_account_id', $chartOfAccount->id)
             ->orWhere('purchase_account_id', $chartOfAccount->id)
             ->orWhere('purchase_discount_account_id', $chartOfAccount->id)
             ->orWhere('purchase_return_account_id', $chartOfAccount->id)
@@ -61,7 +65,7 @@ class ChartOfAccountService extends BaseService
             throw new Exception('Cannot hard delete: Account is linked to one or more vendors.');
         }
 
-        if (\App\Models\Item::where('sales_account_id', $chartOfAccount->id)
+        if (Item::where('sales_account_id', $chartOfAccount->id)
             ->orWhere('cogs_account_id', $chartOfAccount->id)
             ->orWhere('inventory_account_id', $chartOfAccount->id)
             ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)
@@ -69,7 +73,7 @@ class ChartOfAccountService extends BaseService
             throw new Exception('Cannot hard delete: Account is linked to one or more items.');
         }
 
-        if (\App\Models\Category::where('sales_account_id', $chartOfAccount->id)
+        if (Category::where('sales_account_id', $chartOfAccount->id)
             ->orWhere('cogs_account_id', $chartOfAccount->id)
             ->orWhere('inventory_account_id', $chartOfAccount->id)
             ->orWhere('inventory_adjustment_account_id', $chartOfAccount->id)

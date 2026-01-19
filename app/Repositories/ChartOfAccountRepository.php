@@ -29,10 +29,6 @@ class ChartOfAccountRepository
             $query->where('account_group_id', $filters['account_group_id']);
         }
 
-        if (! empty($filters['is_enabled'])) {
-            $query->where('is_enabled', filter_var($filters['is_enabled'], FILTER_VALIDATE_BOOLEAN));
-        }
-
         return $query;
     }
 }

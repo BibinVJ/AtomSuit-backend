@@ -14,12 +14,10 @@ return new class extends Migration
         Schema::create('chart_of_accounts', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code')->unique(); // Unique code per tenant
-            $table->foreignId('account_group_id')->constrained('account_groups');
+            $table->string('code')->unique();
+            $table->foreignId('account_group_id')->constrained('account_groups')->cascadeOnDelete();
             $table->text('description')->nullable();
             $table->decimal('opening_balance', 15, 2)->default(0);
-            $table->boolean('is_enabled')->default(true);
-            $table->boolean('is_system')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

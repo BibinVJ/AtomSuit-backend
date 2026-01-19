@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class WarehouseRequest extends FormRequest
@@ -21,7 +22,7 @@ class WarehouseRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:50',
-                new \App\Rules\UniqueInTrash('warehouses', 'code', $warehouse),
+                new UniqueInTrash('warehouses', 'code', $warehouse),
             ],
             'description' => 'nullable|string',
             'address_line_1' => 'nullable|string|max:255',

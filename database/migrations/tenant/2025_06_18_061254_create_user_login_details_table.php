@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('user_login_details', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('token_id')->nullable()->index();
             $table->timestamp('login_at')->nullable();
             $table->timestamp('logout_at')->nullable();

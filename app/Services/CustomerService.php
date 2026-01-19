@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\CustomerRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class CustomerService extends BaseService
 {
@@ -12,7 +13,7 @@ class CustomerService extends BaseService
         $this->repository = $customerRepository;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $customer): void
+    protected function validateForceDelete(Model $customer): void
     {
         /** @var \App\Models\Customer $customer */
         if ($customer->sales()->exists()) {

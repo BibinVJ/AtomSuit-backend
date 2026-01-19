@@ -25,7 +25,7 @@ return new class extends Migration
             $table->timestamp('registered_at')->nullable();
             $table->timestamp('deleted_at')->nullable();
             $table->text('deletion_reason')->nullable();
-            $table->json('metadata')->nullable(); // Store any additional info
+            $table->json('metadata')->nullable();
             $table->timestamps();
         });
     }

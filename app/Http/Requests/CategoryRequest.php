@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
@@ -22,7 +23,7 @@ class CategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('categories', 'name', $this->route('category')?->id)],
+            'name' => ['required', 'string', 'max:255', new UniqueInTrash('categories', 'name', $this->route('category')?->id)],
             'description' => 'nullable|string',
             'sales_account_id' => ['required', 'exists:chart_of_accounts,id'],
             'cogs_account_id' => ['required', 'exists:chart_of_accounts,id'],

@@ -8,6 +8,9 @@ class TenantSampleDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
+     * This is a set of sample data for tenants to help them get started quickly.
+     * This seeder runs automalically if the tenant opts in for sample data during onboarding.
      */
     public function run(): void
     {

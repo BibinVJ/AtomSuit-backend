@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\PaymentMethod;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\TransactionStatus;
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Enum;
 
@@ -27,7 +28,7 @@ class StoreSaleRequest extends FormRequest
     {
         return [
             'customer_id' => 'required|exists:customers,id',
-            'invoice_number' => ['required', new \App\Rules\UniqueInTrash('sales', 'invoice_number', $this->route('sale')?->id)],
+            'invoice_number' => ['required', new UniqueInTrash('sales', 'invoice_number', $this->route('sale')?->id)],
             'sale_date' => 'required|date',
             'status' => ['nullable', new Enum(TransactionStatus::class)],
             'payment_status' => ['nullable', new Enum(PaymentStatusEnum::class)],

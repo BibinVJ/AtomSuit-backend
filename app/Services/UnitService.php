@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\UnitRepository;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class UnitService extends BaseService
 {
@@ -12,7 +13,7 @@ class UnitService extends BaseService
         $this->repository = $unitRepository;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $unit): void
+    protected function validateForceDelete(Model $unit): void
     {
         /** @var \App\Models\Unit $unit */
         if ($unit->items()->exists()) {

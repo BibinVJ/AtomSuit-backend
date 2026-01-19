@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ApiResponse
@@ -12,7 +13,7 @@ class ApiResponse
         int $code = Response::HTTP_OK,
         array $meta = [],
         array $links = []
-    ): \Illuminate\Http\JsonResponse {
+    ): JsonResponse {
         $response = array_filter([
             'message' => $message,
             'error' => false,
@@ -29,7 +30,7 @@ class ApiResponse
         string $message,
         mixed $errors = [],
         int $code = Response::HTTP_INTERNAL_SERVER_ERROR
-    ): \Illuminate\Http\JsonResponse {
+    ): JsonResponse {
         return response()->json([
             'message' => $message,
             'error' => true,

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\ChartOfAccount;
+use App\Models\Currency;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
@@ -13,10 +15,10 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         // Helper to get Account ID by Code
-        $getAccountId = fn ($code) => \App\Models\ChartOfAccount::where('code', $code)->first()->id ?? null;
+        $getAccountId = fn ($code) => ChartOfAccount::where('code', $code)->first()->id ?? null;
 
         // Helper to get Currency ID by Code
-        $getCurrencyId = fn ($code) => \App\Models\Currency::where('code', $code)->first()->id ?? null;
+        $getCurrencyId = fn ($code) => Currency::where('code', $code)->first()->id ?? null;
 
         $settings = [
             // Company Information

@@ -25,7 +25,6 @@ class ItemPriceRepository
             $query->where('item_id', $filters['item_id']);
         }
 
-        // Search by Item Name if needed
         if (! empty($filters['search'])) {
             $query->whereHas('item', function ($q) use ($filters) {
                 $q->where('name', 'like', '%'.$filters['search'].'%')

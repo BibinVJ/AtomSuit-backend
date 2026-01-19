@@ -13,7 +13,6 @@ class PriceListSeeder extends Seeder
      */
     public function run(): void
     {
-        // Add lists for other currencies like USD
         $usd = Currency::where('code', 'USD')->first();
 
         if ($usd) {

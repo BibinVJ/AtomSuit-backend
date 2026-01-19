@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class AccountGroupRequest extends FormRequest
 {
@@ -23,9 +25,9 @@ class AccountGroupRequest extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'code' => ['nullable', 'string', 'max:50', new \App\Rules\UniqueInTrash('account_groups', 'code', $this->route('account_group'))],
+            'code' => ['nullable', 'string', 'max:50', new UniqueInTrash('account_groups', 'code', $this->route('account_group')?->id)],
             'account_type_id' => 'required|exists:account_types,id',
-            'parent_id' => ['nullable', \Illuminate\Validation\Rule::exists('account_groups', 'id')],
+            'parent_id' => ['nullable', Rule::exists('account_groups', 'id')],
             'description' => 'nullable|string',
         ];
     }

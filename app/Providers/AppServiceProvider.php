@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogUserLogin;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\User;
 use App\Observers\PurchaseObserver;
 use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
+use Illuminate\Auth\Events\Login;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Events\AccessTokenCreated;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,14 +30,8 @@ class AppServiceProvider extends ServiceProvider
         Sale::observe(SaleObserver::class);
         Purchase::observe(PurchaseObserver::class);
 
-        \Illuminate\Support\Facades\Event::listen(
-            \Laravel\Passport\Events\AccessTokenCreated::class,
-            \App\Listeners\LogUserLogin::class
-        );
+        Event::listen(AccessTokenCreated::class, LogUserLogin::class);
 
-        \Illuminate\Support\Facades\Event::listen(
-            \Illuminate\Auth\Events\Login::class,
-            \App\Listeners\LogUserLogin::class
-        );
+        Event::listen(Login::class, LogUserLogin::class);
     }
 }

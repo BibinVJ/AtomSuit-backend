@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ChartOfAccount;
 use App\Models\Currency;
 use App\Models\PriceList;
 use App\Models\Vendor;
@@ -57,10 +58,10 @@ class VendorSeeder extends Seeder
         ];
 
         // Fetch Default Accounts
-        $payablesAccount = \App\Models\ChartOfAccount::where('code', '2001')->first();
-        $purchaseAccount = \App\Models\ChartOfAccount::where('code', '5001')->first();
-        $purchaseDiscountAccount = \App\Models\ChartOfAccount::where('code', '5002')->first();
-        $purchaseReturnAccount = \App\Models\ChartOfAccount::where('code', '5003')->first();
+        $payablesAccount = ChartOfAccount::where('code', '2001')->first();
+        $purchaseAccount = ChartOfAccount::where('code', '5001')->first();
+        $purchaseDiscountAccount = ChartOfAccount::where('code', '5002')->first();
+        $purchaseReturnAccount = ChartOfAccount::where('code', '5003')->first();
 
         // Fetch all Purchase Price Lists
         $priceLists = PriceList::where('type', 'purchase')->get();

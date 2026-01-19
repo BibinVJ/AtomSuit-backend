@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Enums\UserStatus;
 use App\Traits\AppAudit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -17,8 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements OAuthenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use AppAudit, HasApiTokens, HasFactory, HasRoles, Notifiable, SoftDeletes;
+    use AppAudit, HasApiTokens, HasRoles, Notifiable, SoftDeletes;
 
     protected $guard_name = 'api';
 

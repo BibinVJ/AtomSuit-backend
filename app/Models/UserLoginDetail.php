@@ -47,10 +47,4 @@ class UserLoginDetail extends Model
     {
         return $query->whereNull('logout_at');
     }
-
-    // Scope for specific user
-    // public function scopeForUser($query, $userId)
-    // {
-    //     return $query->where('user_id', $userId);
-    // }
 }

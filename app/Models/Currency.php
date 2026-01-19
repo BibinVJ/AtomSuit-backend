@@ -19,12 +19,12 @@ class Currency extends Model
 
     protected $casts = [];
 
-    public function customers()
+    public function customers(): HasMany
     {
         return $this->hasMany(Customer::class);
     }
 
-    public function vendors()
+    public function vendors(): HasMany
     {
         return $this->hasMany(Vendor::class);
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\PriceListExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\PriceListRequest;
 use App\Http\Resources\PriceListResource;
@@ -10,6 +11,7 @@ use App\Models\PriceList;
 use App\Repositories\PriceListRepository;
 use App\Services\PriceListService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class PriceListController extends Controller
@@ -78,7 +80,7 @@ class PriceListController extends Controller
 
     public function export()
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\PriceListExport, 'price_lists_'.now()->format('Y-m-d_H-i-s').'.xlsx');
+        return Excel::download(new PriceListExport, 'price_lists_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function restore(PriceList $priceList)

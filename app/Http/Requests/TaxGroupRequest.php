@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 
 class TaxGroupRequest extends FormRequest
@@ -26,7 +27,7 @@ class TaxGroupRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
-                new \App\Rules\UniqueInTrash('tax_groups', 'name', $this->route('tax_group')?->id),
+                new UniqueInTrash('tax_groups', 'name', $this->route('tax_group')?->id),
             ],
             'tax_rates' => 'nullable|array',
             'tax_rates.*' => 'exists:tax_rates,id',

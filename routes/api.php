@@ -13,18 +13,21 @@ use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DomainController;
-use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemPriceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanController;
+use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\TaxGroupController;
+use App\Http\Controllers\TaxRateController;
 use App\Http\Controllers\TenantController;
 use App\Http\Controllers\TenantSubscriptionController;
 use App\Http\Controllers\UnitController;
@@ -59,7 +62,6 @@ Route::get('/', function () {
 });
 
 Route::get('plan', [PlanController::class, 'index']);
-Route::post('enquiry', [EnquiryController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------
@@ -138,7 +140,11 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::get('domains', [DomainController::class, 'index']);
 
-    /* Accounting */
+    /*
+    |--------------------------------------------------------------------------
+    | Accounts Management
+    |--------------------------------------------------------------------------
+    */
     /* Account Types */
     Route::get('account-types', [AccountTypeController::class, 'index']);
 
@@ -164,33 +170,26 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('exchange-rates', ExchangeRateController::class)->withTrashed(['show', 'destroy']);
 
     /* Price Lists & Item Prices */
-    Route::get('price-lists/export/excel', [App\Http\Controllers\PriceListController::class, 'export']);
-    Route::post('price-lists/{price_list}/restore', [App\Http\Controllers\PriceListController::class, 'restore'])->withTrashed();
-    Route::apiResource('price-lists', App\Http\Controllers\PriceListController::class)->withTrashed(['show', 'destroy']);
+    Route::get('price-lists/export/excel', [PriceListController::class, 'export']);
+    Route::post('price-lists/{price_list}/restore', [PriceListController::class, 'restore'])->withTrashed();
+    Route::apiResource('price-lists', PriceListController::class)->withTrashed(['show', 'destroy']);
 
-    Route::get('item-prices/export/excel', [App\Http\Controllers\ItemPriceController::class, 'export']);
-    Route::post('item-prices/{item_price}/restore', [App\Http\Controllers\ItemPriceController::class, 'restore'])->withTrashed();
-    Route::apiResource('item-prices', App\Http\Controllers\ItemPriceController::class)->withTrashed(['show', 'destroy']);
+    Route::get('item-prices/export/excel', [ItemPriceController::class, 'export']);
+    Route::post('item-prices/{item_price}/restore', [ItemPriceController::class, 'restore'])->withTrashed();
+    Route::apiResource('item-prices', ItemPriceController::class)->withTrashed(['show', 'destroy']);
 
-    // gl settings
+    /* Tax and Tax Group */
+    Route::post('tax-rates/{tax_rate}/restore', [TaxRateController::class, 'restore'])->withTrashed();
+    Route::apiResource('tax-rates', TaxRateController::class)->withTrashed(['show', 'destroy']);
 
-    /*
-    |--------------------------------------------------------------------------
-    | Tax Management
-    |--------------------------------------------------------------------------
-    */
-    Route::post('tax-rates/{tax_rate}/restore', [App\Http\Controllers\TaxRateController::class, 'restore'])->withTrashed();
-    Route::apiResource('tax-rates', App\Http\Controllers\TaxRateController::class)->withTrashed(['show', 'destroy']);
-
-    Route::post('tax-groups/{tax_group}/restore', [App\Http\Controllers\TaxGroupController::class, 'restore'])->withTrashed();
-    Route::apiResource('tax-groups', App\Http\Controllers\TaxGroupController::class)->withTrashed(['show', 'destroy']);
+    Route::post('tax-groups/{tax_group}/restore', [TaxGroupController::class, 'restore'])->withTrashed();
+    Route::apiResource('tax-groups', TaxGroupController::class)->withTrashed(['show', 'destroy']);
 
     /*
     |--------------------------------------------------------------------------
     | Inventory
     |--------------------------------------------------------------------------
     */
-    /* Category */
     /* Category */
     Route::get('categories/export', [CategoryController::class, 'export']);
     Route::get('categories/sample-excel', [CategoryController::class, 'downloadSample']);
@@ -199,14 +198,12 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('categories', CategoryController::class)->withTrashed(['show', 'destroy']);
 
     /* Unit */
-    /* Unit */
     Route::get('units/export', [UnitController::class, 'export']);
     Route::get('units/sample-excel', [UnitController::class, 'downloadSample']);
     Route::post('units/import', [UnitController::class, 'import']);
     Route::post('units/{unit}/restore', [UnitController::class, 'restore'])->withTrashed();
     Route::apiResource('units', UnitController::class)->withTrashed(['show', 'destroy']);
 
-    /* Item */
     /* Item */
     Route::get('items/export', [ItemController::class, 'export']);
     Route::get('items/sample-excel', [ItemController::class, 'downloadSample']);
@@ -216,8 +213,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     Route::apiResource('batches', BatchController::class);
 
-    // warehouse
-    // warehouse
+    /* Warehouse */
     Route::get('warehouses/export', [WarehouseController::class, 'export']);
     Route::get('warehouses/sample-excel', [WarehouseController::class, 'downloadSample']);
     Route::post('warehouses/import', [WarehouseController::class, 'import']);
@@ -229,7 +225,6 @@ Route::middleware(['auth:api'])->group(function () {
     | Customer & Sales
     |--------------------------------------------------------------------------
     */
-    /* Customer */
     /* Customer */
     Route::get('customers/export', [CustomerController::class, 'export']);
     Route::get('customers/sample-excel', [CustomerController::class, 'downloadSample']);
@@ -246,7 +241,6 @@ Route::middleware(['auth:api'])->group(function () {
     | Vendor & Purchases
     |--------------------------------------------------------------------------
     */
-    /* Vendor */
     /* Vendor */
     Route::get('vendors/export', [VendorController::class, 'export']);
     Route::get('vendors/sample-excel', [VendorController::class, 'downloadSample']);

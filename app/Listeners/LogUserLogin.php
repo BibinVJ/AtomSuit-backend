@@ -2,7 +2,9 @@
 
 namespace App\Listeners;
 
+use App\Jobs\UpdateLoginLocation;
 use App\Models\UserLoginDetail;
+use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Request;
 use Laravel\Passport\Events\AccessTokenCreated;
 
@@ -23,7 +25,7 @@ class LogUserLogin
     {
         if ($event instanceof AccessTokenCreated) {
             $this->handlePassportLogin($event);
-        } elseif ($event instanceof \Illuminate\Auth\Events\Login) {
+        } elseif ($event instanceof Login) {
             $this->handleWebLogin($event);
         }
     }
@@ -45,7 +47,7 @@ class LogUserLogin
     /**
      * Handle standard web login event.
      */
-    protected function handleWebLogin(\Illuminate\Auth\Events\Login $event): void
+    protected function handleWebLogin(Login $event): void
     {
         $this->logLogin(
             $event->user->getAuthIdentifier(),
@@ -74,7 +76,7 @@ class LogUserLogin
             'device_type' => $agent['device_type'],
         ]);
 
-        \App\Jobs\UpdateLoginLocation::dispatch($loginDetail);
+        UpdateLoginLocation::dispatch($loginDetail);
     }
 
     /**

@@ -19,7 +19,7 @@ class PlanFeatureResource extends BaseResource
         return [
             'id' => $this->id,
             'key' => $this->feature_key,
-            'value' => $this->value, // Uses accessor for type casting
+            'value' => $this->value,
             'display_name' => $this->display_name,
             'description' => $this->description,
             'type' => $this->feature_type,

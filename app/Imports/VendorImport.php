@@ -2,7 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\ChartOfAccount;
 use App\Models\Vendor;
+use App\Rules\UniqueInTrash;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
@@ -14,10 +16,10 @@ class VendorImport implements ToModel, WithHeadingRow, WithValidation
      */
     public function model(array $row)
     {
-        $payablesAccount = \App\Models\ChartOfAccount::where('name', $row['payables_account'])->first();
-        $purchaseAccount = \App\Models\ChartOfAccount::where('name', $row['purchase_account'])->first();
-        $purchaseDiscountAccount = \App\Models\ChartOfAccount::where('name', $row['purchase_discount_account'])->first();
-        $purchaseReturnAccount = \App\Models\ChartOfAccount::where('name', $row['purchase_return_account'])->first();
+        $payablesAccount = ChartOfAccount::where('name', $row['payables_account'])->first();
+        $purchaseAccount = ChartOfAccount::where('name', $row['purchase_account'])->first();
+        $purchaseDiscountAccount = ChartOfAccount::where('name', $row['purchase_discount_account'])->first();
+        $purchaseReturnAccount = ChartOfAccount::where('name', $row['purchase_return_account'])->first();
 
         return new Vendor([
             'name' => $row['name'],
@@ -36,7 +38,7 @@ class VendorImport implements ToModel, WithHeadingRow, WithValidation
     {
         return [
             'name' => 'required|string',
-            'email' => ['nullable', 'email', new \App\Rules\UniqueInTrash('vendors', 'email')],
+            'email' => ['nullable', 'email', new UniqueInTrash('vendors', 'email')],
             'phone' => 'nullable|string',
             'address' => 'nullable|string',
             'payables_account' => 'nullable|string|exists:chart_of_accounts,name',

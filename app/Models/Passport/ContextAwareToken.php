@@ -2,6 +2,10 @@
 
 namespace App\Models\Passport;
 
+use App\Models\CentralUser;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Laravel\Passport\Client;
 use Laravel\Passport\Token;
 
 class ContextAwareToken extends Token
@@ -47,10 +51,10 @@ class ContextAwareToken extends Token
     /**
      * Define the client relationship to use central connection
      */
-    public function client(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function client(): BelongsTo
     {
         // Always get client from central database (not tenant database)
-        $client = new \Laravel\Passport\Client;
+        $client = new Client;
         $client->setConnection(null); // Use default (central) connection
 
         return $this->belongsTo(get_class($client), 'client_id', 'id');
@@ -59,13 +63,13 @@ class ContextAwareToken extends Token
     /**
      * Define the user relationship to use current context connection
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         // Use the appropriate user model based on context
         if (tenant()) {
-            return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+            return $this->belongsTo(User::class, 'user_id', 'id');
         } else {
-            return $this->belongsTo(\App\Models\CentralUser::class, 'user_id', 'id');
+            return $this->belongsTo(CentralUser::class, 'user_id', 'id');
         }
     }
 }

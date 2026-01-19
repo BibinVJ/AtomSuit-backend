@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\VendorRepository;
+use Illuminate\Database\Eloquent\Model;
 
 class VendorService extends BaseService
 {
@@ -11,7 +12,7 @@ class VendorService extends BaseService
         $this->repository = $vendorRepository;
     }
 
-    protected function validateForceDelete(\Illuminate\Database\Eloquent\Model $vendor): void
+    protected function validateForceDelete(Model $vendor): void
     {
         /** @var \App\Models\Vendor $vendor */
         if ($vendor->purchases()->exists()) {

@@ -22,7 +22,7 @@ return new class extends Migration
 
             // Accounting Fields
             $table->foreignId('payables_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
-            $table->foreignId('purchase_account_id')->constrained('chart_of_accounts')->restrictOnDelete(); // Default Expense/COGS
+            $table->foreignId('purchase_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
             $table->foreignId('purchase_discount_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
             $table->foreignId('purchase_return_account_id')->constrained('chart_of_accounts')->restrictOnDelete();
 

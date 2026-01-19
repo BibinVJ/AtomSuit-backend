@@ -11,7 +11,6 @@ class PermissionService
     {
         $query = Permission::query();
 
-        // Optional search filter
         if (! empty($filters['search'])) {
             $query->where('name', 'like', '%'.$filters['search'].'%');
         }

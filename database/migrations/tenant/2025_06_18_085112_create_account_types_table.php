@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('account_types', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Asset, Liability, Equity, Income, Cost of Goods Sold, Expense
-            $table->string('code')->nullable(); // 1, 2, 3, 4, 5, 6
-            $table->string('class'); // debit, credit
+            $table->string('name')->comment('Asset, Liability, Equity, Income, Cost of Goods Sold, Expense');
+            $table->string('code')->nullable()->comment('1, 2, 3, 4, 5, 6');
+            $table->string('class')->comment('debit, credit');
             $table->timestamps();
         });
     }

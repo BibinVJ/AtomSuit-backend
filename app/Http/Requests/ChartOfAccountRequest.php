@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,7 +30,7 @@ class ChartOfAccountRequest extends FormRequest
                 'string',
                 'max:50',
                 'max:50',
-                new \App\Rules\UniqueInTrash('chart_of_accounts', 'code', $this->route('chart_of_account')),
+                new UniqueInTrash('chart_of_accounts', 'code', $this->route('chart_of_account')?->id),
             ],
             'account_group_id' => [
                 'required',

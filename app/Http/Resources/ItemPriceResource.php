@@ -16,7 +16,7 @@ class ItemPriceResource extends BaseResource
         return [
             'id' => $this->id,
             'price_list' => new PriceListResource($this->whenLoaded('priceList')),
-            'item' => new \App\Http\Resources\ItemResource($this->whenLoaded('item')), // Assuming ItemResource exists
+            'item' => new ItemResource($this->whenLoaded('item')),
             'min_quantity' => $this->min_quantity,
             'price' => $this->price,
             'created_at' => $this->created_at,

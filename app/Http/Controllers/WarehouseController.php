@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\WarehouseExport;
 use App\Helpers\ApiResponse;
+use App\Http\Requests\ImportRequest;
 use App\Http\Requests\WarehouseRequest;
 use App\Http\Resources\WarehouseResource;
+use App\Imports\WarehouseImport;
 use App\Models\Warehouse;
 use App\Repositories\WarehouseRepository;
 use App\Services\WarehouseService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class WarehouseController extends Controller
@@ -78,12 +82,12 @@ class WarehouseController extends Controller
 
     public function export()
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\WarehouseExport, 'warehouses_'.now()->format('Y-m-d_H-i-s').'.xlsx');
+        return Excel::download(new WarehouseExport, 'warehouses_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
-    public function import(\App\Http\Requests\ImportRequest $request)
+    public function import(ImportRequest $request)
     {
-        \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\WarehouseImport, $request->file('file'));
+        Excel::import(new WarehouseImport, $request->file('file'));
 
         return ApiResponse::success('Warehouses imported successfully.');
     }

@@ -3,7 +3,9 @@
 namespace App\Http\Requests;
 
 use App\Enums\ItemType;
+use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class ItemRequest extends FormRequest
@@ -24,17 +26,17 @@ class ItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'sku' => ['required', 'string', 'max:255', new \App\Rules\UniqueInTrash('items', 'sku', $this->route('item')?->id)],
+            'sku' => ['required', 'string', 'max:255', new UniqueInTrash('items', 'sku', $this->route('item')?->id)],
             'name' => 'required|string|max:255',
-            'category_id' => ['required', \Illuminate\Validation\Rule::exists('categories', 'id')],
-            'unit_id' => ['required', \Illuminate\Validation\Rule::exists('units', 'id')],
+            'category_id' => ['required', Rule::exists('categories', 'id')],
+            'unit_id' => ['required', Rule::exists('units', 'id')],
             'description' => 'nullable|string',
             'type' => ['required', new Enum(ItemType::class)],
-            'sales_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'cogs_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'inventory_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'inventory_adjustment_account_id' => ['required', \Illuminate\Validation\Rule::exists('chart_of_accounts', 'id')],
-            'tax_group_id' => ['required', \Illuminate\Validation\Rule::exists('tax_groups', 'id')],
+            'sales_account_id' => ['required', Rule::exists('chart_of_accounts', 'id')],
+            'cogs_account_id' => ['required', Rule::exists('chart_of_accounts', 'id')],
+            'inventory_account_id' => ['required', Rule::exists('chart_of_accounts', 'id')],
+            'inventory_adjustment_account_id' => ['required', Rule::exists('chart_of_accounts', 'id')],
+            'tax_group_id' => ['required', Rule::exists('tax_groups', 'id')],
             'prices' => ['sometimes', 'array'],
             'prices.*.id' => ['sometimes', 'integer', 'exists:item_prices,id'],
             'prices.*.price_list_id' => ['required_with:prices', 'integer', 'exists:price_lists,id'],

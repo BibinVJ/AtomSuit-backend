@@ -8,6 +8,8 @@ class TenantDefaultDataSeeder extends Seeder
 {
     /**
      * Run the database seeds for tenant database.
+     *
+     * This is a set of data that is required for every tenant to function properly.
      */
     public function run(): void
     {

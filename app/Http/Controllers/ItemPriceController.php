@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\ItemPriceExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ItemPriceRequest;
 use App\Http\Resources\ItemPriceResource;
@@ -10,6 +11,7 @@ use App\Models\ItemPrice;
 use App\Repositories\ItemPriceRepository;
 use App\Services\ItemPriceService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class ItemPriceController extends Controller
@@ -78,7 +80,7 @@ class ItemPriceController extends Controller
 
     public function export()
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\ItemPriceExport, 'item_prices_'.now()->format('Y-m-d_H-i-s').'.xlsx');
+        return Excel::download(new ItemPriceExport, 'item_prices_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 
     public function restore(ItemPrice $itemPrice)

@@ -6,6 +6,7 @@ use App\Enums\ItemType;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Unit;
+use App\Rules\UniqueInTrash;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
@@ -46,7 +47,7 @@ class ItemImport implements ToModel, WithHeadingRow, WithValidation
     public function rules(): array
     {
         return [
-            'sku' => ['required', new \App\Rules\UniqueInTrash('items', 'sku')],
+            'sku' => ['required', new UniqueInTrash('items', 'sku')],
             'name' => 'required|string',
             'category' => 'required|string',
             'unit' => 'required|string',

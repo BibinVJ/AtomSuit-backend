@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\ChartOfAccount;
+use App\Models\TaxGroup;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
@@ -18,7 +19,7 @@ class CategorySeeder extends Seeder
         $inventoryAccount = ChartOfAccount::where('name', 'Inventory')->first();
         $adjustmentAccount = ChartOfAccount::where('name', 'Inventory Adjustment')->first();
 
-        $taxGroup = \App\Models\TaxGroup::where('name', 'GST 18%')->first();
+        $taxGroup = TaxGroup::where('name', 'GST 18%')->first();
 
         $categories = [
             [

@@ -15,7 +15,6 @@ return new class extends Migration
         Schema::create('subscription_invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('subscription_id')->constrained()->cascadeOnDelete();
-
             $table->decimal('amount', 10, 2);
             $table->string('currency', 10)->default('USD');
             $table->string('payment_status')->default(PaymentStatusEnum::PENDING->value);

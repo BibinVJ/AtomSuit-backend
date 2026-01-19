@@ -18,7 +18,7 @@ class PurchaseItem extends Model
 
     protected $casts = [
         'quantity' => 'integer',
-        'unit_cost' => 'decimal:2',
+        'unit_cost' => 'decimal',
     ];
 
     public function purchase(): BelongsTo
