@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\UnitExport;
+use App\Exports\UnitSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\UnitRequest;
@@ -92,29 +93,6 @@ class UnitController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'Sample Unit',
-                        'SU',
-                        'Sample Description',
-                        'active',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'Name',
-                    'Code',
-                    'Description',
-                    'Status',
-                ];
-            }
-        }, 'sample_units.xlsx');
+        return Excel::download(new UnitSampleExport, 'sample_units.xlsx');
     }
 }

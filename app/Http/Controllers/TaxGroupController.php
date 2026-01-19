@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\TaxGroupExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\TaxGroupRequest;
 use App\Http\Resources\TaxGroupResource;
@@ -10,6 +11,7 @@ use App\Models\TaxGroup;
 use App\Repositories\TaxGroupRepository;
 use App\Services\TaxGroupService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class TaxGroupController extends Controller
@@ -76,5 +78,10 @@ class TaxGroupController extends Controller
         $taxGroup = $this->taxGroupService->restore($taxGroup);
 
         return ApiResponse::success('Tax group restored successfully.', TaxGroupResource::make($taxGroup));
+    }
+
+    public function export()
+    {
+        return Excel::download(new TaxGroupExport, 'tax_groups_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 }

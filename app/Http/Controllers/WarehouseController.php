@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\WarehouseExport;
+use App\Exports\WarehouseSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\WarehouseRequest;
@@ -94,43 +95,6 @@ class WarehouseController extends Controller
 
     public function downloadSample()
     {
-        return \Maatwebsite\Excel\Facades\Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'Main Warehouse',
-                        'WH-001',
-                        'Main storage facility',
-                        '123 Main St',
-                        'Suite 100',
-                        'New York',
-                        'NY',
-                        'USA',
-                        '10001',
-                        '123-456-7890',
-                        'warehouse@example.com',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'Name',
-                    'Code',
-                    'Description',
-                    'Address Line 1',
-                    'Address Line 2',
-                    'City',
-                    'State',
-                    'Country',
-                    'Zip Code',
-                    'Phone',
-                    'Email',
-                ];
-            }
-        }, 'sample_warehouses.xlsx');
+        return Excel::download(new WarehouseSampleExport, 'sample_warehouses.xlsx');
     }
 }

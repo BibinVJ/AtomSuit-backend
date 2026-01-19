@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\AccountGroupExport;
+use App\Exports\AccountGroupSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\AccountGroupRequest;
 use App\Http\Requests\ImportRequest;
@@ -101,5 +102,10 @@ class AccountGroupController extends Controller
     public function export()
     {
         return Excel::download(new AccountGroupExport, 'account_groups_'.now()->format('Y-m-d_H-i-s').'.xlsx');
+    }
+
+    public function downloadSample()
+    {
+        return Excel::download(new AccountGroupSampleExport, 'sample_account_groups.xlsx');
     }
 }

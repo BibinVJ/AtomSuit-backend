@@ -150,12 +150,14 @@ Route::middleware(['auth:api'])->group(function () {
 
     /* Account Groups */
     Route::get('account-groups/export/excel', [AccountGroupController::class, 'export']);
+    Route::get('account-groups/sample-excel', [AccountGroupController::class, 'downloadSample']);
     Route::post('account-groups/import', [AccountGroupController::class, 'import']);
     Route::post('account-groups/{accountGroup}/restore', [AccountGroupController::class, 'restore'])->withTrashed();
     Route::apiResource('account-groups', AccountGroupController::class)->withTrashed(['show', 'destroy']);
 
     /* Chart of Accounts */
     Route::get('chart-of-accounts/export/excel', [ChartOfAccountController::class, 'export']);
+    Route::get('chart-of-accounts/sample-excel', [ChartOfAccountController::class, 'downloadSample']);
     Route::post('chart-of-accounts/import', [ChartOfAccountController::class, 'import']);
     Route::post('chart-of-accounts/{chartOfAccount}/restore', [ChartOfAccountController::class, 'restore'])->withTrashed();
     Route::apiResource('chart-of-accounts', ChartOfAccountController::class)->withTrashed(['show', 'destroy']);
@@ -182,6 +184,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('tax-rates/{tax_rate}/restore', [TaxRateController::class, 'restore'])->withTrashed();
     Route::apiResource('tax-rates', TaxRateController::class)->withTrashed(['show', 'destroy']);
 
+    Route::get('tax-groups/export', [TaxGroupController::class, 'export']);
     Route::post('tax-groups/{tax_group}/restore', [TaxGroupController::class, 'restore'])->withTrashed();
     Route::apiResource('tax-groups', TaxGroupController::class)->withTrashed(['show', 'destroy']);
 
@@ -234,6 +237,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /* Sale */
     Route::get('sales/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
+    Route::get('sales/export', [SaleController::class, 'export']);
     Route::apiResource('sales', SaleController::class);
 
     /*
@@ -250,6 +254,7 @@ Route::middleware(['auth:api'])->group(function () {
 
     /* Purchase */
     Route::get('purchases/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
+    Route::get('purchases/export', [PurchaseController::class, 'export']);
     Route::apiResource('purchases', PurchaseController::class);
 
     /*
@@ -268,6 +273,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::get('audits/{activity}', [AuditController::class, 'show']);
 
     /* User Management */
+    Route::get('users/export', [UserController::class, 'export']);
     Route::post('users/{user}/send-mail', [UserController::class, 'sendMail']);
     Route::post('users/{user}/restore', [UserController::class, 'restore'])->withTrashed();
     Route::apiResource('users', UserController::class)->withTrashed(['show', 'destroy']);

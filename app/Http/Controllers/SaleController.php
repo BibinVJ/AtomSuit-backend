@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\SaleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\StoreSaleRequest;
 use App\Http\Resources\SaleResource;
@@ -10,6 +11,7 @@ use App\Models\Sale;
 use App\Repositories\SaleRepository;
 use App\Services\SaleService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
@@ -86,5 +88,10 @@ class SaleController extends Controller
         $this->saleService->void($sale);
 
         return ApiResponse::success('Sale Voided.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new SaleExport, 'sales_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 }

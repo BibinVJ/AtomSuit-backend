@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
+use App\Exports\PurchaseExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\StorePurchaseRequest;
 use App\Http\Resources\PurchaseResource;
@@ -10,6 +11,7 @@ use App\Models\Purchase;
 use App\Repositories\PurchaseRepository;
 use App\Services\PurchaseService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class PurchaseController extends Controller
@@ -87,5 +89,10 @@ class PurchaseController extends Controller
         $this->purchaseService->void($purchase);
 
         return ApiResponse::success('Purchase Voided.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new PurchaseExport, 'purchases_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 }

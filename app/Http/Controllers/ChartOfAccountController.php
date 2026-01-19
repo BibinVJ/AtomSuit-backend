@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\ChartOfAccountExport;
+use App\Exports\ChartOfAccountSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ChartOfAccountRequest;
 use App\Http\Requests\ImportRequest;
@@ -97,5 +98,10 @@ class ChartOfAccountController extends Controller
     public function export()
     {
         return Excel::download(new ChartOfAccountExport, 'chart_of_accounts_'.now()->format('Y-m-d_H-i-s').'.xlsx');
+    }
+
+    public function downloadSample()
+    {
+        return Excel::download(new ChartOfAccountSampleExport, 'sample_chart_of_accounts.xlsx');
     }
 }

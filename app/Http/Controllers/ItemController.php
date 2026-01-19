@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\ItemExport;
+use App\Exports\ItemSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\ItemRequest;
@@ -120,37 +121,6 @@ class ItemController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'SKU001',
-                        'Sample Product',
-                        'General',
-                        'Pieces',
-                        'This is a sample product description',
-                        'product',
-                        '100.00',
-                        'active',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'SKU',
-                    'Name',
-                    'Category',
-                    'Unit',
-                    'Description',
-                    'Type',
-                    'Selling Price',
-                    'Status',
-                ];
-            }
-        }, 'sample_items.xlsx');
+        return Excel::download(new ItemSampleExport, 'sample_items.xlsx');
     }
 }

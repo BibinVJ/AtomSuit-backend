@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\CategoryExport;
+use App\Exports\CategorySampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CategoryRequest;
 use App\Http\Requests\ImportRequest;
@@ -13,8 +14,6 @@ use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
-use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -100,27 +99,6 @@ class CategoryController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements FromCollection, WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'Sample Category',
-                        'This is a sample category description',
-                        'active',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'Name',
-                    'Description',
-                    'Status',
-                ];
-            }
-        }, 'sample_categories.xlsx');
+        return Excel::download(new CategorySampleExport, 'sample_categories.xlsx');
     }
 }

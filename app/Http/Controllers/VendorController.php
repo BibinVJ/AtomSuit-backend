@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\VendorExport;
+use App\Exports\VendorSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\ImportRequest;
 use App\Http\Requests\VendorRequest;
@@ -111,37 +112,6 @@ class VendorController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'Jane Doe',
-                        'jane@example.com',
-                        '9876543210',
-                        '456 Elm St, Metropolis',
-                        'Accounts Payable',
-                        'Cost of Goods Sold',
-                        'Purchase Discounts',
-                        'Purchase Returns',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'Name',
-                    'Email',
-                    'Phone',
-                    'Address',
-                    'Payables Account',
-                    'Purchase Account',
-                    'Purchase Discount Account',
-                    'Purchase Return Account',
-                ];
-            }
-        }, 'sample_vendors.xlsx');
+        return Excel::download(new VendorSampleExport, 'sample_vendors.xlsx');
     }
 }

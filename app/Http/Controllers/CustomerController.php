@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\PermissionsEnum;
 use App\Exports\CustomerExport;
+use App\Exports\CustomerSampleExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Requests\ImportRequest;
@@ -111,37 +112,6 @@ class CustomerController extends Controller
 
     public function downloadSample()
     {
-        return Excel::download(new class implements \Maatwebsite\Excel\Concerns\FromCollection, \Maatwebsite\Excel\Concerns\WithHeadings
-        {
-            public function collection()
-            {
-                return collect([
-                    [
-                        'John Doe',
-                        'john@example.com',
-                        '1234567890',
-                        '123 Main St, Springfield',
-                        'Sales Revenue',
-                        'Sales Discounts',
-                        'Accounts Receivable',
-                        'Sales Returns',
-                    ],
-                ]);
-            }
-
-            public function headings(): array
-            {
-                return [
-                    'Name',
-                    'Email',
-                    'Phone',
-                    'Address',
-                    'Sales Account',
-                    'Sales Discount Account',
-                    'Receivables Account',
-                    'Sales Return Account',
-                ];
-            }
-        }, 'sample_customers.xlsx');
+        return Excel::download(new CustomerSampleExport, 'sample_customers.xlsx');
     }
 }

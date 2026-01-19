@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\SendUserMailAction;
 use App\Enums\PermissionsEnum;
+use App\Exports\UserExport;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\UserRequest;
 use App\Http\Requests\UserSendMailRequest;
@@ -12,6 +13,7 @@ use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -89,5 +91,10 @@ class UserController extends Controller
         $this->sendUserMailAction->execute($user, $request->validated()['subject'], $request->validated()['body']);
 
         return ApiResponse::success('Mail sent successfully.');
+    }
+
+    public function export()
+    {
+        return Excel::download(new UserExport, 'users_'.now()->format('Y-m-d_H-i-s').'.xlsx');
     }
 }
