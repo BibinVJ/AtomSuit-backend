@@ -16,6 +16,8 @@ class TenantDefaultDataSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,
             DefaultCurrencySeeder::class,
+            AccountTypeSeeder::class,
+            AccountGroupSeeder::class,
             ChartOfAccountSeeder::class,
             DashboardCardSeeder::class,
             SettingSeeder::class,

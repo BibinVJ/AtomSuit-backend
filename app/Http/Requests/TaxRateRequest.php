@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\TaxRateTypeEnum;
 use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -31,7 +32,7 @@ class TaxRateRequest extends FormRequest
                 new UniqueInTrash('tax_rates', 'name', $this->route('tax_rate')?->id),
             ],
             'rate' => 'required|numeric|min:0',
-            'type' => ['required', Rule::in(['percentage', 'fixed'])],
+            'type' => ['required', Rule::enum(TaxRateTypeEnum::class)],
             'sales_account_id' => ['nullable', Rule::exists('chart_of_accounts', 'id')],
             'purchase_account_id' => ['nullable', Rule::exists('chart_of_accounts', 'id')],
         ];

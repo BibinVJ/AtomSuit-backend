@@ -11,6 +11,7 @@ class AccountType extends Model
     use AppAudit;
 
     protected $fillable = [
+        'id',
         'name',
         'code',
         'class',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PriceListTypeEnum;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,6 +24,7 @@ class PriceList extends Model
 
     protected $casts = [
         'is_tax_inclusive' => 'boolean',
+        'type' => PriceListTypeEnum::class,
     ];
 
     public function currency(): BelongsTo

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\TaxRateTypeEnum;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,6 +19,10 @@ class TaxRate extends Model
         'type',
         'sales_account_id',
         'purchase_account_id',
+    ];
+
+    protected $casts = [
+        'type' => TaxRateTypeEnum::class,
     ];
 
     public function salesAccount(): BelongsTo

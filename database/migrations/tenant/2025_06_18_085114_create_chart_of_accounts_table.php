@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->unique();
-            $table->foreignId('account_group_id')->constrained('account_groups')->cascadeOnDelete();
+            $table->foreignId('account_group_id')->constrained('account_groups')->restrictOnDelete();
             $table->text('description')->nullable();
             $table->decimal('opening_balance', 15, 2)->default(0);
             $table->timestamps();

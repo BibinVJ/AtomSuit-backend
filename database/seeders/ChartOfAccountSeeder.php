@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\AccountGroup;
-use App\Models\AccountType;
 use App\Models\ChartOfAccount;
 use Illuminate\Database\Seeder;
 
@@ -14,57 +13,6 @@ class ChartOfAccountSeeder extends Seeder
      */
     public function run(): void
     {
-        // Seed Account Types
-        $accountTypes = [
-            ['name' => 'Asset', 'code' => '1', 'class' => 'debit'],
-            ['name' => 'Liability', 'code' => '2', 'class' => 'credit'],
-            ['name' => 'Equity', 'code' => '3', 'class' => 'credit'],
-            ['name' => 'Income', 'code' => '4', 'class' => 'credit'],
-            ['name' => 'Cost of Goods Sold', 'code' => '5', 'class' => 'debit'],
-            ['name' => 'Expense', 'code' => '6', 'class' => 'debit'],
-        ];
-
-        foreach ($accountTypes as $type) {
-            AccountType::firstOrCreate(
-                ['name' => $type['name']],
-                $type
-            );
-        }
-
-        // Helper to get Type ID
-        $getTypeId = fn ($name) => AccountType::where('name', $name)->first()->id;
-
-        // Seed Account Groups
-        $groups = [
-            // Assets
-            ['name' => 'Current Assets', 'code' => '100', 'account_type_id' => $getTypeId('Asset')],
-            ['name' => 'Non-Current Assets', 'code' => '110', 'account_type_id' => $getTypeId('Asset')],
-
-            // Liabilities
-            ['name' => 'Current Liabilities', 'code' => '200', 'account_type_id' => $getTypeId('Liability')],
-            ['name' => 'Non-Current Liabilities', 'code' => '210', 'account_type_id' => $getTypeId('Liability')],
-
-            // Equity
-            ['name' => 'Owners Equity', 'code' => '300', 'account_type_id' => $getTypeId('Equity')],
-
-            // Income
-            ['name' => 'Operating Income', 'code' => '400', 'account_type_id' => $getTypeId('Income')],
-            ['name' => 'Non-Operating Income', 'code' => '410', 'account_type_id' => $getTypeId('Income')],
-
-            // COGS
-            ['name' => 'Cost of Goods Sold', 'code' => '500', 'account_type_id' => $getTypeId('Cost of Goods Sold')],
-
-            // Expenses
-            ['name' => 'Operating Expenses', 'code' => '600', 'account_type_id' => $getTypeId('Expense')],
-        ];
-
-        foreach ($groups as $group) {
-            AccountGroup::firstOrCreate(
-                ['code' => $group['code']],
-                $group
-            );
-        }
-
         // Helper to get Group ID
         $getGroupId = fn ($code) => AccountGroup::where('code', $code)->first()->id;
 

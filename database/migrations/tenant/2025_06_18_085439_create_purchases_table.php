@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->comment('the user who made the purchase entry');
-            $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('vendor_id')->constrained()->restrictOnDelete();
             $table->string('invoice_number')->unique();
             $table->date('purchase_date');
             $table->string('status')->default(TransactionStatus::DRAFT->value);

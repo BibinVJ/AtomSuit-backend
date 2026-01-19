@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('stock_movements', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('item_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('item_id')->constrained()->restrictOnDelete();
             $table->foreignId('batch_id')->nullable()->constrained()->nullOnDelete();
 
             $table->timestamp('transaction_date')->default(DB::raw('CURRENT_TIMESTAMP'))->comment('Date and time of the stock transaction');

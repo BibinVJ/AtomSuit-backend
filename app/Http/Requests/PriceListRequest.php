@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\PriceListTypeEnum;
 use App\Rules\UniqueInTrash;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -39,7 +40,7 @@ class PriceListRequest extends FormRequest
                 new UniqueInTrash('price_lists', 'code', $priceList?->id),
             ],
             'currency_id' => 'required|exists:currencies,id',
-            'type' => ['required', Rule::in(['sales', 'purchase'])],
+            'type' => ['required', Rule::enum(PriceListTypeEnum::class)],
             'is_tax_inclusive' => 'boolean',
             'description' => 'nullable|string|max:1000',
         ];

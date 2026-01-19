@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->morphs('payable');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->restrictOnDelete();
             $table->string('method')->nullable();
             $table->string('status')->default(PaymentStatusEnum::PENDING->value);
             $table->double('amount')->default(0);

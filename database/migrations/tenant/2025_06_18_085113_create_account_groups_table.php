@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('code')->nullable();
-            $table->foreignId('account_type_id')->constrained('account_types')->cascadeOnDelete();
+            $table->foreignId('account_type_id')->constrained('account_types')->restrictOnDelete();
             $table->foreignId('parent_id')->nullable()->constrained('account_groups')->nullOnDelete();
             $table->text('description')->nullable();
             $table->timestamps();

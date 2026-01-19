@@ -26,7 +26,7 @@ class Plan extends Model
     ];
 
     protected $casts = [
-        'price' => 'decimal',
+        'price' => 'decimal:2',
         'interval' => PlanIntervalEnum::class,
         'is_trial_plan' => 'boolean',
         'is_expired_user_plan' => 'boolean',
