@@ -44,7 +44,8 @@ if (! function_exists('format_currency')) {
         if ($currencySymbol === null) {
             $currencyId = setting('currency_id');
             if ($currencyId) {
-                $currencySymbol = \App\Models\Currency::find($currencyId)?->symbol ?? '₹';
+                $currency = \App\Models\Currency::find($currencyId);
+                $currencySymbol = $currency ? $currency->symbol : '₹';
             } else {
                 $currencySymbol = '₹';
             }
