@@ -17,8 +17,6 @@ class Currency extends Model
         'symbol',
     ];
 
-    protected $casts = [];
-
     public function customers(): HasMany
     {
         return $this->hasMany(Customer::class);

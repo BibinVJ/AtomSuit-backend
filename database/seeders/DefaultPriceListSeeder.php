@@ -26,7 +26,7 @@ class DefaultPriceListSeeder extends Seeder
         }
 
         // 1. Create Standard Sales Price List
-        PriceList::firstOrCreate(
+        PriceList::updateOrCreate(
             ['code' => 'PL-SALES-STD-'.$currency->code],
             [
                 'name' => 'Standard Sales Price List',
@@ -38,7 +38,7 @@ class DefaultPriceListSeeder extends Seeder
         );
 
         // 2. Create Standard Purchase Price List
-        PriceList::firstOrCreate(
+        PriceList::updateOrCreate(
             ['code' => 'PL-PURCHASE-STD-'.$currency->code],
             [
                 'name' => 'Standard Purchase Price List',

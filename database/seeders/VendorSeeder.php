@@ -88,7 +88,7 @@ class VendorSeeder extends Seeder
                 $data['currency_id'] = $inr?->id;
             }
 
-            Vendor::firstOrCreate(
+            Vendor::updateOrCreate(
                 ['email' => $vendor['email']],
                 $data
             );

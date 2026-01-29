@@ -83,7 +83,7 @@ class CustomerSeeder extends Seeder
             $data = array_merge($customer, $defaults);
             $data['price_list_id'] = $priceList?->id;
 
-            Customer::firstOrCreate(
+            Customer::updateOrCreate(
                 ['email' => $customer['email']],
                 $data
             );

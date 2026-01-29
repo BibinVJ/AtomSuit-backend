@@ -19,11 +19,6 @@ class SaleItem extends Model
         'description',
     ];
 
-    protected $casts = [
-        'quantity' => 'integer',
-        'unit_price' => 'decimal',
-    ];
-
     public function sale(): BelongsTo
     {
         return $this->belongsTo(Sale::class);

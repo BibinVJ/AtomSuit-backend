@@ -19,7 +19,6 @@ class ExchangeRate extends Model
     ];
 
     protected $casts = [
-        'rate' => 'decimal',
         'effective_date' => 'date',
     ];
 

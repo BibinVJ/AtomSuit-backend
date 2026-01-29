@@ -38,7 +38,7 @@ class AccountGroupSeeder extends Seeder
         ];
 
         foreach ($groups as $group) {
-            AccountGroup::firstOrCreate(
+            AccountGroup::updateOrCreate(
                 ['code' => $group['code']],
                 $group
             );

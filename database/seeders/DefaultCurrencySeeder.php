@@ -12,7 +12,7 @@ class DefaultCurrencySeeder extends Seeder
      */
     public function run(): void
     {
-        Currency::firstOrCreate(
+        Currency::updateOrCreate(
             ['code' => 'INR'],
             [
                 'name' => 'Indian Rupee',

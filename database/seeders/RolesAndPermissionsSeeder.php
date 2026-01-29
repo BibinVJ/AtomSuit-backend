@@ -25,7 +25,7 @@ class RolesAndPermissionsSeeder extends Seeder
          * to add/create a new permission add it to the enum list.
          */
         foreach (PermissionsEnum::tenantPermissions() as $permissionEnum) {
-            Permission::firstOrCreate([
+            Permission::updateOrCreate([
                 'name' => $permissionEnum,
                 'guard_name' => $guard,
             ]);
@@ -35,11 +35,11 @@ class RolesAndPermissionsSeeder extends Seeder
          * Create and assign permissions to roles
          */
         // ADMIN - Assign all permissions
-        $adminRole = Role::firstOrCreate(['name' => RolesEnum::ADMIN->value, 'guard_name' => $guard]);
+        $adminRole = Role::updateOrCreate(['name' => RolesEnum::ADMIN->value, 'guard_name' => $guard]);
         $adminRole->syncPermissions(Permission::all());
 
         // INVENTORY MANAGER
-        $InventoryManagerRole = Role::firstOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value, 'guard_name' => $guard]);
+        $InventoryManagerRole = Role::updateOrCreate(['name' => RolesEnum::INVENTORY_MANAGER->value, 'guard_name' => $guard]);
         $InventoryManagerRole->syncPermissions([
             // Category
             PermissionsEnum::VIEW_CATEGORY->value,
@@ -76,7 +76,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // SALES PERSON
-        $salesPersonRole = Role::firstOrCreate(['name' => RolesEnum::SALES_PERSON->value, 'guard_name' => $guard]);
+        $salesPersonRole = Role::updateOrCreate(['name' => RolesEnum::SALES_PERSON->value, 'guard_name' => $guard]);
         $salesPersonRole->syncPermissions([
             // Customer
             PermissionsEnum::VIEW_CUSTOMER->value,

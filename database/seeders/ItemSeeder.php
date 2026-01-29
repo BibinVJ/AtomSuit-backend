@@ -83,7 +83,7 @@ class ItemSeeder extends Seeder
             $sellingPrice = $itemData['selling_price'];
             unset($itemData['selling_price']);
 
-            $item = Item::firstOrCreate(
+            $item = Item::updateOrCreate(
                 ['name' => $itemData['name']],
                 array_merge([
                     'sku' => (string) mt_rand(10000000, 99999999),

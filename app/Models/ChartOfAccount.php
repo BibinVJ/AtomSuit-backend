@@ -17,11 +17,6 @@ class ChartOfAccount extends Model
         'account_group_id',
         'description',
         'opening_balance',
-        'opening_balance',
-    ];
-
-    protected $casts = [
-        'opening_balance' => 'decimal',
     ];
 
     public function accountGroup(): BelongsTo

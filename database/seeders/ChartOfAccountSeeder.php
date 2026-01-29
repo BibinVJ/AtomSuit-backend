@@ -52,7 +52,7 @@ class ChartOfAccountSeeder extends Seeder
         ];
 
         foreach ($accounts as $account) {
-            ChartOfAccount::firstOrCreate(
+            ChartOfAccount::updateOrCreate(
                 ['code' => $account['code']],
                 $account
             );

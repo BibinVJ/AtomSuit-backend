@@ -18,11 +18,6 @@ class ItemPrice extends Model
         'min_quantity',
     ];
 
-    protected $casts = [
-        'price' => 'decimal',
-        'min_quantity' => 'decimal',
-    ];
-
     public function priceList(): BelongsTo
     {
         return $this->belongsTo(PriceList::class);

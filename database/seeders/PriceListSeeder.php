@@ -16,7 +16,7 @@ class PriceListSeeder extends Seeder
         $usd = Currency::where('code', 'USD')->first();
 
         if ($usd) {
-            PriceList::firstOrCreate(
+            PriceList::updateOrCreate(
                 ['code' => 'PL-SALES-STD-'.$usd->code],
                 [
                     'name' => 'Standard Sales Price List (USD)',
@@ -27,7 +27,7 @@ class PriceListSeeder extends Seeder
                 ]
             );
 
-            PriceList::firstOrCreate(
+            PriceList::updateOrCreate(
                 ['code' => 'PL-PURCHASE-STD-'.$usd->code],
                 [
                     'name' => 'Standard Purchase Price List (USD)',

@@ -25,7 +25,7 @@ class CentralRolesAndPermissionsSeeder extends Seeder
          * to add/create a new permission add it to the enum list.
          */
         foreach (PermissionsEnum::centralPermissions() as $permissionName) {
-            Permission::firstOrCreate([
+            Permission::updateOrCreate([
                 'name' => $permissionName,
                 'guard_name' => $guard,
             ]);
@@ -35,7 +35,7 @@ class CentralRolesAndPermissionsSeeder extends Seeder
          * Create and assign permissions to roles
          */
         // SUPER ADMIN - Assign all permissions
-        $superAdminRole = Role::firstOrCreate(['name' => RolesEnum::SUPER_ADMIN->value, 'guard_name' => $guard]);
+        $superAdminRole = Role::updateOrCreate(['name' => RolesEnum::SUPER_ADMIN->value, 'guard_name' => $guard]);
         $superAdminRole->syncPermissions(Permission::all());
 
     }

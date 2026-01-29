@@ -16,11 +16,6 @@ class PurchaseItem extends Model
         'description',
     ];
 
-    protected $casts = [
-        'quantity' => 'integer',
-        'unit_cost' => 'decimal',
-    ];
-
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class);

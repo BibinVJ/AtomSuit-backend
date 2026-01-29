@@ -47,7 +47,7 @@ class WalkInCustomerSeeder extends Seeder
             'currency_id' => $currency->id,
         ];
 
-        Customer::firstOrCreate(
+        Customer::updateOrCreate(
             ['phone' => '0000000000'], // Use a dummy phone identifier
             array_merge([
                 'name' => 'Walk-in Customer',

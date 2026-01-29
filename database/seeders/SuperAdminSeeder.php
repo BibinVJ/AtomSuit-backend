@@ -15,7 +15,7 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = CentralUser::firstOrCreate(
+        $admin = CentralUser::updateOrCreate(
             ['email' => 'superadmin@example.com'],
             [
                 'name' => 'Super Admin User',

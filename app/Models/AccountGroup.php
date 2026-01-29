@@ -21,9 +21,6 @@ class AccountGroup extends Model
         'description',
     ];
 
-    protected $casts = [
-    ];
-
     public function accountType(): BelongsTo
     {
         return $this->belongsTo(AccountType::class);

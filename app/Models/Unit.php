@@ -17,9 +17,6 @@ class Unit extends Model
         'description',
     ];
 
-    protected $casts = [
-    ];
-
     public function items(): HasMany
     {
         return $this->hasMany(Item::class);

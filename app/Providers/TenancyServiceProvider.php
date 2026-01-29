@@ -50,7 +50,7 @@ class TenancyServiceProvider extends ServiceProvider
                     Jobs\DeleteDatabase::class,
                 ])->send(function (Events\TenantDeleted $event) {
                     return $event->tenant;
-                })->shouldBeQueued(true),
+                })->shouldBeQueued(false),
             ],
 
             // Domain events

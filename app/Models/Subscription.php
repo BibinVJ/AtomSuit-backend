@@ -32,7 +32,6 @@ class Subscription extends CashierSubscription
      * @var array
      */
     protected $casts = [
-        'plan_id' => 'integer',
         'trial_ends_at' => 'datetime',
         'ends_at' => 'datetime',
         'created_at' => 'datetime',

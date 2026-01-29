@@ -37,9 +37,6 @@ class Vendor extends Model
         'shipping_zip_code',
     ];
 
-    protected $casts = [
-    ];
-
     public function currency(): BelongsTo
     {
         return $this->belongsTo(Currency::class);

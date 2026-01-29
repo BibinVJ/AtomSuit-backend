@@ -26,6 +26,5 @@ class ArchivedTenant extends Model
         'registered_at' => 'datetime',
         'deleted_at' => 'datetime',
         'metadata' => 'array',
-        'plan_price' => 'decimal',
     ];
 }

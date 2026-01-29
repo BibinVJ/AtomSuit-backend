@@ -15,7 +15,7 @@ class UsersSeeder extends Seeder
      */
     public function run(): void
     {
-        $inventoryManager = User::firstOrCreate(
+        $inventoryManager = User::updateOrCreate(
             ['email' => 'inventory.manager@example.com'],
             [
                 'name' => 'Inventory Manager User',
@@ -26,7 +26,7 @@ class UsersSeeder extends Seeder
         );
         $inventoryManager->assignRole(RolesEnum::INVENTORY_MANAGER->value);
 
-        $salesPerson = User::firstOrCreate(
+        $salesPerson = User::updateOrCreate(
             ['phone' => '1234567890'],
             [
                 'name' => 'Sales Person User',

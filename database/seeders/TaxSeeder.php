@@ -19,7 +19,7 @@ class TaxSeeder extends Seeder
         $purchaseAccount = ChartOfAccount::where('code', '1005')->first() ?? ChartOfAccount::first(); // Asset
 
         // 2. Create Tax Rates
-        $cgst9 = TaxRate::firstOrCreate(
+        $cgst9 = TaxRate::updateOrCreate(
             ['name' => 'CGST 9%'],
             [
                 'rate' => 9.00,
@@ -29,7 +29,7 @@ class TaxSeeder extends Seeder
             ]
         );
 
-        $sgst9 = TaxRate::firstOrCreate(
+        $sgst9 = TaxRate::updateOrCreate(
             ['name' => 'SGST 9%'],
             [
                 'rate' => 9.00,
@@ -39,7 +39,7 @@ class TaxSeeder extends Seeder
             ]
         );
 
-        $igst18 = TaxRate::firstOrCreate(
+        $igst18 = TaxRate::updateOrCreate(
             ['name' => 'IGST 18%'],
             [
                 'rate' => 18.00,
@@ -49,7 +49,7 @@ class TaxSeeder extends Seeder
             ]
         );
 
-        $exemptRate = TaxRate::firstOrCreate(
+        $exemptRate = TaxRate::updateOrCreate(
             ['name' => 'Zero Rate'],
             [
                 'rate' => 0.00,
@@ -60,17 +60,17 @@ class TaxSeeder extends Seeder
         );
 
         // 3. Create Tax Groups and attach Rates
-        $gst18Group = TaxGroup::firstOrCreate(['name' => 'GST 18%']);
+        $gst18Group = TaxGroup::updateOrCreate(['name' => 'GST 18%']);
         if ($gst18Group->taxRates()->count() === 0) {
             $gst18Group->taxRates()->attach([$cgst9->id, $sgst9->id]);
         }
 
-        $igst18Group = TaxGroup::firstOrCreate(['name' => 'IGST 18%']);
+        $igst18Group = TaxGroup::updateOrCreate(['name' => 'IGST 18%']);
         if ($igst18Group->taxRates()->count() === 0) {
             $igst18Group->taxRates()->attach([$igst18->id]);
         }
 
-        $exemptGroup = TaxGroup::firstOrCreate(['name' => 'Exempt']);
+        $exemptGroup = TaxGroup::updateOrCreate(['name' => 'Exempt']);
         if ($exemptGroup->taxRates()->count() === 0) {
             $exemptGroup->taxRates()->attach([$exemptRate->id]);
         }
