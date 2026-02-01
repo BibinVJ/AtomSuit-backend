@@ -26,10 +26,15 @@ class PasswordResetController extends Controller
      */
     public function sendPasswordResetOtp(SendResetOtpRequest $request)
     {
-        $user = $this->userRepository->findByEmail($request->validated()['email']);
+        $user = $this->userRepository->findByIdentifier($request->validated()['identifier']);
+
+        if (! $user) {
+            return ApiResponse::error('User not found.', [], Response::HTTP_NOT_FOUND);
+        }
+
         $this->otpService->sendPasswordResetOtp($user);
 
-        return ApiResponse::success('OTP sent to your email and mobile.');
+        return ApiResponse::success('Password reset OTP sent successfully.');
     }
 
     /**
@@ -37,7 +42,11 @@ class PasswordResetController extends Controller
      */
     public function verifyOtp(VerifyOtpRequest $request)
     {
-        $user = $this->userRepository->findByEmail($request->validated()['email']);
+        $user = $this->userRepository->findByIdentifier($request->validated()['identifier']);
+
+        if (! $user) {
+            return ApiResponse::error('User not found.', [], Response::HTTP_NOT_FOUND);
+        }
 
         if (! $this->otpService->verify($user, OtpPurposeEnum::PASSWORD_RESET, $request->validated()['otp'])) {
             return ApiResponse::error('Invalid or expired OTP.', [], Response::HTTP_BAD_REQUEST);
@@ -51,7 +60,11 @@ class PasswordResetController extends Controller
      */
     public function resetPassword(ResetPasswordRequest $request)
     {
-        $user = $this->userRepository->findByEmail($request->validated()['email']);
+        $user = $this->userRepository->findByIdentifier($request->validated()['identifier']);
+
+        if (! $user) {
+            return ApiResponse::error('User not found.', [], Response::HTTP_NOT_FOUND);
+        }
 
         if (! $this->otpService->verify($user, OtpPurposeEnum::PASSWORD_RESET, $request->validated()['otp'])) {
             return ApiResponse::error('Invalid or expired OTP.', [], Response::HTTP_BAD_REQUEST);

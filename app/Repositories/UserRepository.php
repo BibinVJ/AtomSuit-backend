@@ -48,6 +48,13 @@ class UserRepository
         return User::where('email', $email)->first();
     }
 
+    public function findByIdentifier(string $identifier): ?User
+    {
+        return User::where('email', $identifier)
+            ->orWhere('phone', $identifier)
+            ->first();
+    }
+
     public function updatePassword(User $user, string $password): void
     {
         $user->update(['password' => Hash::make($password)]);

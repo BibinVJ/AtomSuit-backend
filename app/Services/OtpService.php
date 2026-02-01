@@ -84,4 +84,9 @@ class OtpService
 
         return true;
     }
+
+    public function sendPasswordResetOtp(User $user): void
+    {
+        $this->generate($user, OtpPurposeEnum::PASSWORD_RESET);
+    }
 }

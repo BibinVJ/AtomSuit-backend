@@ -13,7 +13,7 @@ enum OtpPurposeEnum: string
         return match ($this) {
             self::PASSWORD_RESET => 'Password Reset',
             self::ORDER_VERIFICATION => 'Order Verfication',
-            self::TWO_FACTOR => 'Two Factor'
+            self::TWO_FACTOR => 'Two Factor',
         };
     }
 }
