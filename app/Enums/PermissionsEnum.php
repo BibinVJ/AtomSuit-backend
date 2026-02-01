@@ -197,12 +197,6 @@ enum PermissionsEnum: string
             self::UPDATE_SETTING->value,
             self::VIEW_COMPANY_INFO->value,
             self::UPDATE_COMPANY_INFO->value,
-
-            // Warehouse
-            self::VIEW_WAREHOUSE->value,
-            self::CREATE_WAREHOUSE->value,
-            self::UPDATE_WAREHOUSE->value,
-            self::DELETE_WAREHOUSE->value,
         ];
     }
 
