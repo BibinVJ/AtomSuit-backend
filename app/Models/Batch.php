@@ -40,7 +40,7 @@ class Batch extends Model
 
     public function purchaseItems(): HasMany
     {
-        return $this->hasMany(PurchaseItem::class);
+        return $this->hasMany(PurchaseOrderItem::class);
     }
 
     /**

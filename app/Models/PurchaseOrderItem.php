@@ -13,6 +13,7 @@ class PurchaseOrderItem extends Model
         'description',
         'quantity',
         'unit_price',
+        'discount_amount',
         'tax_group_id',
     ];
 
@@ -33,6 +34,6 @@ class PurchaseOrderItem extends Model
 
     public function getTotalAttribute(): float
     {
-        return $this->quantity * $this->unit_price;
+        return ($this->quantity * $this->unit_price) - $this->discount_amount;
     }
 }

@@ -10,7 +10,7 @@ use App\DataTransferObjects\DashboardTopItemDTO;
 use App\Models\Batch;
 use App\Models\Customer;
 use App\Models\Item;
-use App\Models\Purchase;
+use App\Models\PurchaseOrder;
 use App\Models\Sale;
 use App\Models\StockMovement;
 use Carbon\Carbon;
@@ -25,7 +25,7 @@ class DashboardRepository
 
     public function getTotalPurchaseAmount(): float
     {
-        return Purchase::with('items')->get()->sum(fn ($purchase) => $purchase->total);
+        return PurchaseOrder::with('items')->get()->sum(fn ($purchase) => $purchase->total);
     }
 
     public function getTopSellingItems(int $limit = 5): Collection
@@ -48,7 +48,7 @@ class DashboardRepository
     public function getTopPurchasedItems(int $limit = 5): Collection
     {
         return StockMovement::selectRaw('item_id, SUM(quantity) as total_quantity')
-            ->where('source_type', Purchase::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
+            ->where('source_type', PurchaseOrder::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
             ->groupBy('item_id')
             ->with('item:id,sku,name')
             ->orderByDesc('total_quantity')
@@ -165,12 +165,12 @@ class DashboardRepository
 
     public function getPurchaseChartData(): array
     {
-        return Purchase::with('items')
-            ->orderBy('purchase_date')
+        return PurchaseOrder::with('items')
+            ->orderBy('order_date')
             ->get()
-            ->groupBy(fn ($purchase) => $purchase->purchase_date->toDateString())
+            ->groupBy(fn ($purchase) => $purchase->order_date->toDateString())
             ->map(fn ($purchases, $date) => new DashboardChartPointDTO(
-                date: \Carbon\Carbon::parse($date),
+                date: Carbon::parse($date),
                 total: $purchases->sum(fn ($purchase) => $purchase->total)
             ))
             ->values()

@@ -69,7 +69,7 @@ class Vendor extends Model
 
     public function purchases(): HasMany
     {
-        return $this->hasMany(Purchase::class);
+        return $this->hasMany(PurchaseOrder::class);
     }
 
     public function taxGroup(): BelongsTo

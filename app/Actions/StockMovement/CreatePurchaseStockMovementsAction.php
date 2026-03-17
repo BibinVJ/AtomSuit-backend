@@ -2,16 +2,16 @@
 
 namespace App\Actions\StockMovement;
 
-use App\Models\Purchase;
+use App\Models\PurchaseOrder;
 use App\Repositories\StockMovementRepository;
 
 class CreatePurchaseStockMovementsAction
 {
     public function __construct(protected StockMovementRepository $stockRepo) {}
 
-    public function execute(Purchase $purchase): void
+    public function execute(PurchaseOrder $purchase): void
     {
-        /** @var \App\Models\PurchaseItem $item */
+        /** @var \App\Models\PurchaseOrderItem $item */
         foreach ($purchase->items as $item) {
             $this->stockRepo->create([
                 'item_id' => $item->item_id,
@@ -20,7 +20,7 @@ class CreatePurchaseStockMovementsAction
                 'quantity' => $item->quantity,
                 'rate' => $item->unit_cost,
                 'standard_cost' => $item->unit_cost,
-                'source_type' => Purchase::class,
+                'source_type' => PurchaseOrder::class,
                 'source_id' => $purchase->id,
                 'description' => 'Purchase inbound',
                 'reference' => $purchase->invoice_number,

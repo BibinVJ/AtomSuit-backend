@@ -7,6 +7,7 @@ use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends Model
@@ -56,5 +57,15 @@ class PurchaseOrder extends Model
     public function goodsReceivedNotes(): HasMany
     {
         return $this->hasMany(GoodsReceivedNote::class);
+    }
+
+    public function stockMovements(): MorphMany
+    {
+        return $this->morphMany(StockMovement::class, 'source');
+    }
+
+    public function getTotalAttribute(): float
+    {
+        return $this->items->sum('total');
     }
 }

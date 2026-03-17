@@ -114,7 +114,7 @@ class Item extends Model
     public function totalPurchased(): int
     {
         return $this->stockMovements()
-            ->where('source_type', Purchase::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
+            ->where('source_type', PurchaseOrder::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
             ->sum('quantity');
     }
 

@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Actions\StockMovement\CreatePurchaseStockMovementsAction;
 use App\Actions\StockMovement\CreateSaleStockMovementsAction;
-use App\Models\Purchase;
+use App\Models\PurchaseOrder;
 use App\Models\Sale;
 use App\Models\StockMovement;
 use App\Repositories\StockMovementRepository;
@@ -22,7 +22,7 @@ class StockMovementService
     public function createStockMovements(Model $model): void
     {
         match (true) {
-            $model instanceof Purchase => $this->createPurchaseStockMovements->execute($model),
+            $model instanceof PurchaseOrder => $this->createPurchaseStockMovements->execute($model),
             $model instanceof Sale => $this->createSaleStockMovements->execute($model),
             default => throw new InvalidArgumentException('Unsupported model for stock movement.'),
         };
@@ -30,7 +30,7 @@ class StockMovementService
 
     public function reverseStockMovements(Model $model): void
     {
-        /** @var \App\Models\Purchase|\App\Models\Sale $model */
+        /** @var \App\Models\PurchaseOrder|\App\Models\Sale $model */
         foreach ($model->stockMovements as $movement) {
             $this->stockMovementRepository->create([
                 ...$movement->only([
@@ -49,9 +49,9 @@ class StockMovementService
         }
     }
 
-    public function hasStockBeenConsumed(Purchase $purchase): bool
+    public function hasStockBeenConsumed(PurchaseOrder $purchase): bool
     {
-        /** @var \App\Models\PurchaseItem $item */
+        /** @var \App\Models\PurchaseOrderItem $item */
         foreach ($purchase->items as $item) {
             $batchId = $item->batch_id;
 
@@ -71,7 +71,7 @@ class StockMovementService
 
     public function deleteStockMovements(Model $model): void
     {
-        /** @var \App\Models\Purchase|\App\Models\Sale $model */
+        /** @var \App\Models\PurchaseOrder|\App\Models\Sale $model */
         $model->stockMovements()->delete();
     }
 }
