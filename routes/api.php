@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\PasswordResetController;
 use App\Http\Controllers\BatchController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChartOfAccountController;
+use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
@@ -20,7 +21,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PriceListController;
-use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
@@ -188,6 +189,10 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('tax-groups/{tax_group}/restore', [TaxGroupController::class, 'restore'])->withTrashed();
     Route::apiResource('tax-groups', TaxGroupController::class)->withTrashed(['show', 'destroy']);
 
+    /* Cost Center */
+    Route::post('cost-centers/{cost_center}/restore', [CostCenterController::class, 'restore'])->withTrashed();
+    Route::apiResource('cost-centers', CostCenterController::class)->withTrashed(['show', 'destroy']);
+
     /*
     |--------------------------------------------------------------------------
     | Inventory
@@ -252,10 +257,11 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('vendors/{vendor}/restore', [VendorController::class, 'restore'])->withTrashed();
     Route::apiResource('vendors', VendorController::class)->withTrashed(['show', 'destroy']);
 
-    /* Purchase */
-    Route::get('purchases/next-invoice-number', [PurchaseController::class, 'getNextInvoiceNumber']);
-    Route::get('purchases/export', [PurchaseController::class, 'export']);
-    Route::apiResource('purchases', PurchaseController::class);
+    /* Purchase Order */
+    Route::get('purchase-orders/next-order-number', [PurchaseOrderController::class, 'nextOrderNumber']);
+    Route::post('purchase-orders/{purchase_order}/status', [PurchaseOrderController::class, 'updateStatus']);
+    Route::post('purchase-orders/{purchase_order}/restore', [PurchaseOrderController::class, 'restore'])->withTrashed();
+    Route::apiResource('purchase-orders', PurchaseOrderController::class)->withTrashed(['show', 'destroy']);
 
     /*
     |--------------------------------------------------------------------------

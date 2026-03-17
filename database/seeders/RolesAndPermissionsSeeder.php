@@ -71,11 +71,17 @@ class RolesAndPermissionsSeeder extends Seeder
             PermissionsEnum::UPDATE_VENDOR->value,
             PermissionsEnum::DELETE_VENDOR->value,
 
+            // Cost Center
+            PermissionsEnum::VIEW_COST_CENTER->value,
+            PermissionsEnum::CREATE_COST_CENTER->value,
+            PermissionsEnum::UPDATE_COST_CENTER->value,
+            PermissionsEnum::DELETE_COST_CENTER->value,
+
             // Purchase
-            PermissionsEnum::VIEW_PURCHASE->value,
-            PermissionsEnum::CREATE_PURCHASE->value,
-            PermissionsEnum::UPDATE_PURCHASE->value,
-            PermissionsEnum::DELETE_PURCHASE->value,
+            PermissionsEnum::VIEW_PURCHASE_ORDER->value,
+            PermissionsEnum::CREATE_PURCHASE_ORDER->value,
+            PermissionsEnum::UPDATE_PURCHASE_ORDER->value,
+            PermissionsEnum::DELETE_PURCHASE_ORDER->value,
         ]);
 
         // SALES PERSON

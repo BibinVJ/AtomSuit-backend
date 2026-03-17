@@ -43,7 +43,7 @@ class ItemController extends Controller
             'cogsAccount' => fn ($q) => $q->withTrashed(),
             'inventoryAccount' => fn ($q) => $q->withTrashed(),
             'inventoryAdjustmentAccount' => fn ($q) => $q->withTrashed(),
-            'taxGroup' => fn ($q) => $q->withTrashed(),
+            'taxGroup' => fn ($q) => $q->withTrashed()->with('taxRates'),
             'itemPrices.priceList' => fn ($q) => $q->withTrashed(),
         ]);
 
@@ -72,7 +72,7 @@ class ItemController extends Controller
             'cogsAccount',
             'inventoryAccount',
             'inventoryAdjustmentAccount',
-            'taxGroup',
+            'taxGroup' => fn ($q) => $q->withTrashed()->with('taxRates'),
             'itemPrices.priceList',
         ]);
 

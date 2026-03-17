@@ -22,12 +22,14 @@ class TenantSampleDataSeeder extends Seeder
             CategorySeeder::class,
             UnitSeeder::class,
             ItemSeeder::class,
+            WarehouseSeeder::class,
+            CostCenterSeeder::class,
 
             VendorSeeder::class,
             CustomerSeeder::class,
 
-            PurchaseSeeder::class,
-            SaleSeeder::class,
+            // PurchaseSeeder::class,
+            // SaleSeeder::class,
         ]);
     }
 }

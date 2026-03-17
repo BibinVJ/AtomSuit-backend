@@ -79,12 +79,6 @@ enum PermissionsEnum: string
     case UPDATE_CUSTOMER = 'update-customer';
     case DELETE_CUSTOMER = 'delete-customer';
 
-    // purchase management
-    case VIEW_PURCHASE = 'view-purchase';
-    case CREATE_PURCHASE = 'create-purchase';
-    case UPDATE_PURCHASE = 'update-purchase';
-    case DELETE_PURCHASE = 'delete-purchase';
-
     // sale management
     case VIEW_SALE = 'view-sale';
     case CREATE_SALE = 'create-sale';
@@ -132,6 +126,12 @@ enum PermissionsEnum: string
     case UPDATE_TAX_GROUP = 'update-tax-group';
     case DELETE_TAX_GROUP = 'delete-tax-group';
 
+    // Cost Center
+    case VIEW_COST_CENTER = 'view-cost-center';
+    case CREATE_COST_CENTER = 'create-cost-center';
+    case UPDATE_COST_CENTER = 'update-cost-center';
+    case DELETE_COST_CENTER = 'delete-cost-center';
+
     // Audit
     case VIEW_AUDIT = 'view-audit';
 
@@ -146,6 +146,12 @@ enum PermissionsEnum: string
     case CREATE_ITEM_PRICE = 'create-item-price';
     case UPDATE_ITEM_PRICE = 'update-item-price';
     case DELETE_ITEM_PRICE = 'delete-item-price';
+
+    // Purchase Order Management
+    case VIEW_PURCHASE_ORDER = 'view-purchase-order';
+    case CREATE_PURCHASE_ORDER = 'create-purchase-order';
+    case UPDATE_PURCHASE_ORDER = 'update-purchase-order';
+    case DELETE_PURCHASE_ORDER = 'delete-purchase-order';
 
     // System Monitoring / Analytics
     case VIEW_SYSTEM_ANALYTICS = 'view-system-analytics';
@@ -200,8 +206,13 @@ enum PermissionsEnum: string
         ];
     }
 
+    /**
+     * Returns a list of permissions that are available for tenants
+     * we can exclude central permissions from this list
+     */
     public static function tenantPermissions(): array
     {
+        // exclude central permissions
         $excluded = [
             self::CREATE_PLAN->value,
             self::UPDATE_PLAN->value,
@@ -219,6 +230,7 @@ enum PermissionsEnum: string
             self::VIEW_SYSTEM_ANALYTICS->value,
         ];
 
+        // load all the permission except excluded
         return collect(self::cases())
             ->map(fn ($case) => $case->value)
             ->reject(fn ($permission) => in_array($permission, $excluded, true))

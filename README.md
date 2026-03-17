@@ -149,6 +149,11 @@ nad once this default system currency is set they cannot change it.
 
 
 
+# TAX
+we have tax and tax group.
+items are assigned a tax group which have have single or multiple taxes.
+vedors and customers are assigned default tax group(optionally).
+if tax group is assign to a vendor or customer then it will be used for transactions, else the item tax group will be used.
 
 
 
