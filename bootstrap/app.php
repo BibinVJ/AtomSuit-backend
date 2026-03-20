@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
             'log.webhook' => \App\Http\Middleware\LogWebhookRequests::class,
             'admin.tenant.context' => \App\Http\Middleware\IdentifyAdminTenantContext::class,
+            'module' => \App\Http\Middleware\CheckModuleAccess::class,
         ]);
 
         $middleware->append([

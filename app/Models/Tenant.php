@@ -74,6 +74,24 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         return $this->hasOne(Domain::class);
     }
 
+    /**
+     * Modules enabled for this tenant.
+     */
+    public function modules(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'tenant_modules')
+            ->withPivot('source', 'enabled_at')
+            ->withTimestamps();
+    }
+
+    /**
+     * POS device licenses for this tenant.
+     */
+    public function deviceLicenses(): HasMany
+    {
+        return $this->hasMany(DeviceLicense::class);
+    }
+
     public function plan(): BelongsTo
     {
         return $this->belongsTo(Plan::class);
@@ -154,9 +172,9 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     /**
      * Check if a module is enabled for this tenant.
      */
-    public function hasModule(string $moduleName): bool
+    public function hasModule(string $moduleSlug): bool
     {
-        return (bool) $this->getFeature("module_{$moduleName}", false);
+        return $this->modules()->where('slug', $moduleSlug)->where('is_active', true)->exists();
     }
 
     /**

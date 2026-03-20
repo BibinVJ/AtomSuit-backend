@@ -17,6 +17,7 @@ use App\Http\Controllers\DomainController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemPriceController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanController;
@@ -134,6 +135,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('tenants', TenantController::class);
 
     Route::apiResource('subscriptions', SubscriptionController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | Module Management (Super Admin)
+    |--------------------------------------------------------------------------
+    */
+    Route::get('modules', [ModuleController::class, 'index']);
+    Route::get('tenants/{tenant}/modules', [ModuleController::class, 'tenantModulesList']);
+    Route::post('tenants/{tenant}/modules', [ModuleController::class, 'enableForTenant']);
+    Route::delete('tenants/{tenant}/modules/{slug}', [ModuleController::class, 'disableForTenant']);
 
     Route::prefix('tenant-subscription')->group(function () {
         Route::get('current', [TenantSubscriptionController::class, 'current']);
@@ -279,6 +290,9 @@ Route::middleware(['auth:api'])->group(function () {
     /* Audit Logs */
     Route::get('audits', [AuditController::class, 'index']);
     Route::get('audits/{activity}', [AuditController::class, 'show']);
+
+    /* My Modules (Tenant) */
+    Route::get('my-modules', [ModuleController::class, 'tenantModules']);
 
     /* User Management */
     Route::get('users/export', [UserController::class, 'export']);

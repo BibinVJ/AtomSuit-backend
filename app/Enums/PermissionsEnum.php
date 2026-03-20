@@ -156,6 +156,10 @@ enum PermissionsEnum: string
     // System Monitoring / Analytics
     case VIEW_SYSTEM_ANALYTICS = 'view-system-analytics';
 
+    // Module Management
+    case VIEW_MODULE = 'view-module';
+    case MANAGE_MODULE = 'manage-module';
+
     public static function centralPermissions(): array
     {
         return [
@@ -166,6 +170,10 @@ enum PermissionsEnum: string
 
             // System Monitoring
             self::VIEW_SYSTEM_ANALYTICS->value,
+
+            // Module Management
+            self::VIEW_MODULE->value,
+            self::MANAGE_MODULE->value,
 
             // Plan
             self::CREATE_PLAN->value,

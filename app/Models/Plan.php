@@ -54,6 +54,15 @@ class Plan extends Model
     }
 
     /**
+     * Modules included in this plan.
+     */
+    public function modules(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Module::class, 'plan_modules')
+            ->withTimestamps();
+    }
+
+    /**
      * Check if plan has a specific feature.
      */
     public function hasFeature(string $featureKey): bool

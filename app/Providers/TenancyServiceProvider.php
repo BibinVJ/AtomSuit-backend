@@ -8,6 +8,7 @@ use App\Http\Middleware\InitializeTenancyBySubdomainHeader;
 use App\Jobs\CreateTenantAdmin;
 use App\Jobs\CreateTenantDomain;
 use App\Jobs\CreateTenantSubscription;
+use App\Jobs\SyncTenantModules;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
@@ -35,6 +36,7 @@ class TenancyServiceProvider extends ServiceProvider
                     CreateTenantAdmin::class,
                     CreateTenantDomain::class,
                     CreateTenantSubscription::class,
+                    SyncTenantModules::class,
 
                 ])->send(function (Events\TenantCreated $event) {
                     return $event->tenant;
