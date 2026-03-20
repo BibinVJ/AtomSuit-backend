@@ -129,6 +129,8 @@ Route::middleware(['auth:api'])->group(function () {
     */
     Route::get('tenant-stats', [TenantController::class, 'stats']);
     Route::post('tenants/{tenant}/send-mail', [TenantController::class, 'sendMail']);
+    Route::post('tenants/{tenant}/domains', [TenantController::class, 'addDomain']);
+    Route::delete('tenants/{tenant}/domains', [TenantController::class, 'removeDomain']);
     Route::apiResource('tenants', TenantController::class);
 
     Route::apiResource('subscriptions', SubscriptionController::class);

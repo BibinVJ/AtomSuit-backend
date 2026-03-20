@@ -10,6 +10,7 @@ use App\Http\Requests\UserSendMailRequest;
 use App\Http\Resources\TenantResource;
 use App\Models\Tenant;
 use App\Repositories\TenantRepository;
+use App\Services\DomainService;
 use App\Services\TenantService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,11 +20,12 @@ class TenantController extends Controller
     public function __construct(
         protected TenantRepository $tenantRepository,
         protected TenantService $tenantService,
-        protected SendTenantMailAction $sendTenantMailAction
+        protected SendTenantMailAction $sendTenantMailAction,
+        protected DomainService $domainService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_TENANT->value)->only(['index']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_TENANT->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_TENANT->value)->only(['update']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_TENANT->value)->only(['update', 'addDomain', 'removeDomain']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_TENANT->value)->only(['destroy']);
     }
 
@@ -83,5 +85,33 @@ class TenantController extends Controller
         $this->sendTenantMailAction->execute($tenant, $request->validated()['subject'], $request->validated()['body']);
 
         return ApiResponse::success('Mail sent successfully.');
+    }
+
+    /**
+     * Add a custom domain to a tenant.
+     */
+    public function addDomain(Request $request, Tenant $tenant)
+    {
+        $request->validate(['domain' => 'required|string|max:255']);
+
+        $domain = $this->domainService->addCustomDomain($tenant, $request->input('domain'));
+
+        return ApiResponse::success('Custom domain added successfully.', [
+            'id' => $domain->id,
+            'domain' => $domain->domain,
+            'tenant_id' => $domain->tenant_id,
+        ], Response::HTTP_CREATED);
+    }
+
+    /**
+     * Remove a custom domain from a tenant.
+     */
+    public function removeDomain(Request $request, Tenant $tenant)
+    {
+        $request->validate(['domain' => 'required|string|max:255']);
+
+        $this->domainService->removeCustomDomain($tenant, $request->input('domain'));
+
+        return ApiResponse::success('Custom domain removed successfully.');
     }
 }

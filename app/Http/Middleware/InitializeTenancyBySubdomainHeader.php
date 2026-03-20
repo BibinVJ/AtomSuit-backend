@@ -46,7 +46,11 @@ class InitializeTenancyBySubdomainHeader extends IdentificationMiddleware
         }
 
         // Case 2: Has X-Tenant → resolve tenant
-        $fullDomain = $subdomain.'.'.config('tenancy.base_domain');
+        // If X-Tenant contains a dot, treat as a full custom domain (e.g. app.clientname.com)
+        // Otherwise, treat as a subdomain prefix and append base_domain
+        $fullDomain = str_contains($subdomain, '.')
+            ? $subdomain
+            : $subdomain.'.'.config('tenancy.base_domain');
 
         try {
             return $this->initializeTenancy($request, $next, $fullDomain);
