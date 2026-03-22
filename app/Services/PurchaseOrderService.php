@@ -26,9 +26,17 @@ class PurchaseOrderService extends BaseService
 
     protected function validateForceDelete(Model $model): void
     {
+        if ($model->status !== PurchaseOrderStatus::DRAFT) {
+            throw new Exception('Only Draft orders can be deleted.');
+        }
+
         /** @var \App\Models\PurchaseOrder $model */
         if ($model->goodsReceivedNotes()->exists()) {
             throw new Exception('Purchase Order has associated Goods Received Notes and cannot be permanently deleted.');
+        }
+
+        if ($model->purchaseInvoices()->exists()) {
+            throw new Exception('Purchase Order has associated Invoices and cannot be permanently deleted.');
         }
     }
 }

@@ -11,6 +11,7 @@ class PurchaseInvoiceItem extends Model
         'purchase_invoice_id',
         'item_id',
         'goods_received_note_item_id',
+        'purchase_order_item_id',
         'description',
         'quantity',
         'unit_price',
@@ -31,6 +32,11 @@ class PurchaseInvoiceItem extends Model
     public function goodsReceivedNoteItem(): BelongsTo
     {
         return $this->belongsTo(GoodsReceivedNoteItem::class);
+    }
+
+    public function purchaseOrderItem(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrderItem::class);
     }
 
     public function taxGroup(): BelongsTo

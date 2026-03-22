@@ -16,6 +16,7 @@ class PurchaseInvoice extends Model
 
     protected $fillable = [
         'grn_id',
+        'purchase_order_id',
         'vendor_id',
         'invoice_number',
         'reference_number',
@@ -37,6 +38,11 @@ class PurchaseInvoice extends Model
     public function grn(): BelongsTo
     {
         return $this->belongsTo(GoodsReceivedNote::class, 'grn_id');
+    }
+
+    public function purchaseOrder(): BelongsTo
+    {
+        return $this->belongsTo(PurchaseOrder::class, 'purchase_order_id');
     }
 
     public function costCenter(): BelongsTo

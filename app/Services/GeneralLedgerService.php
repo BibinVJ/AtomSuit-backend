@@ -60,4 +60,35 @@ class GeneralLedgerService
             return $transaction;
         });
     }
+
+    /**
+     * Reverses an existing GL Transaction by creating an inverse entry.
+     */
+    public function reverseTransaction(Model $reference, $date, string $description): ?GeneralLedgerTransaction
+    {
+        $originalTx = GeneralLedgerTransaction::where('reference_type', $reference->getMorphClass())
+            ->where('reference_id', $reference->getKey())
+            ->first();
+
+        if (! $originalTx) {
+            return null;
+        }
+
+        $entries = [];
+        $originalEntries = GeneralLedgerEntry::where('gl_transaction_id', $originalTx->id)->get();
+
+        foreach ($originalEntries as $entry) {
+            $entries[] = [
+                'account_id' => $entry->account_id,
+                'debit' => $entry->credit, // Swap credit to debit
+                'credit' => $entry->debit, // Swap debit to credit
+                'description' => $description.' (Revr: '.$entry->description.')',
+                'entity_type' => $entry->entity_type,
+                'entity_id' => $entry->entity_id,
+                'cost_center_id' => $entry->cost_center_id,
+            ];
+        }
+
+        return $this->postTransaction($reference, $date, $description, $entries);
+    }
 }

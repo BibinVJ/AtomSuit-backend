@@ -7,6 +7,7 @@ use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GoodsReceivedNote extends Model
@@ -57,8 +58,13 @@ class GoodsReceivedNote extends Model
         return $this->hasMany(GoodsReceivedNoteItem::class);
     }
 
-    public function invoices(): HasMany
+    public function purchaseInvoices(): HasMany
     {
         return $this->hasMany(PurchaseInvoice::class, 'grn_id');
+    }
+
+    public function stockMovements(): MorphMany
+    {
+        return $this->morphMany(StockMovement::class, 'source');
     }
 }

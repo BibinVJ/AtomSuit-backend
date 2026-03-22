@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Actions\StockMovement\CreatePurchaseStockMovementsAction;
+use App\Actions\StockMovement\CreateGoodsReceivedNoteStockMovementsAction;
 use App\Actions\StockMovement\CreateSaleStockMovementsAction;
-use App\Models\PurchaseOrder;
+use App\Models\GoodsReceivedNote;
 use App\Models\Sale;
 use App\Models\StockMovement;
 use App\Repositories\StockMovementRepository;
@@ -14,7 +14,7 @@ use InvalidArgumentException;
 class StockMovementService
 {
     public function __construct(
-        protected CreatePurchaseStockMovementsAction $createPurchaseStockMovements,
+        protected CreateGoodsReceivedNoteStockMovementsAction $createGrnStockMovements,
         protected CreateSaleStockMovementsAction $createSaleStockMovements,
         protected StockMovementRepository $stockMovementRepository
     ) {}
@@ -22,7 +22,7 @@ class StockMovementService
     public function createStockMovements(Model $model): void
     {
         match (true) {
-            $model instanceof PurchaseOrder => $this->createPurchaseStockMovements->execute($model),
+            $model instanceof GoodsReceivedNote => $this->createGrnStockMovements->execute($model),
             $model instanceof Sale => $this->createSaleStockMovements->execute($model),
             default => throw new InvalidArgumentException('Unsupported model for stock movement.'),
         };
@@ -30,7 +30,7 @@ class StockMovementService
 
     public function reverseStockMovements(Model $model): void
     {
-        /** @var \App\Models\PurchaseOrder|\App\Models\Sale $model */
+        /** @var \App\Models\GoodsReceivedNote|\App\Models\Sale $model */
         foreach ($model->stockMovements as $movement) {
             $this->stockMovementRepository->create([
                 ...$movement->only([
@@ -44,15 +44,15 @@ class StockMovementService
                 'transaction_date' => now(),
                 'quantity' => -($movement->quantity), // opposie of the original movement
                 'description' => "Reversal of movement ID: {$movement->id}",
-                'reference' => 'VOID-'.($movement->reference ?? $model->invoice_number),
+                'reference' => 'VOID-'.($movement->reference ?? ($model->grn_number ?? $model->invoice_number ?? 'UNKNOWN')),
             ]);
         }
     }
 
-    public function hasStockBeenConsumed(PurchaseOrder $purchase): bool
+    public function hasStockBeenConsumed(GoodsReceivedNote $grn): bool
     {
-        /** @var \App\Models\PurchaseOrderItem $item */
-        foreach ($purchase->items as $item) {
+        /** @var \App\Models\GoodsReceivedNoteItem $item */
+        foreach ($grn->items as $item) {
             $batchId = $item->batch_id;
 
             $consumed = StockMovement::query()
@@ -71,7 +71,7 @@ class StockMovementService
 
     public function deleteStockMovements(Model $model): void
     {
-        /** @var \App\Models\PurchaseOrder|\App\Models\Sale $model */
+        /** @var \App\Models\GoodsReceivedNote|\App\Models\Sale $model */
         $model->stockMovements()->delete();
     }
 }

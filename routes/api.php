@@ -15,6 +15,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\ExchangeRateController;
+use App\Http\Controllers\GoodsReceivedNoteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\ItemPriceController;
 use App\Http\Controllers\ModuleController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\PlanController;
 use App\Http\Controllers\PriceListController;
+use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SaleController;
@@ -275,6 +277,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('purchase-orders/{purchase_order}/status', [PurchaseOrderController::class, 'updateStatus']);
     Route::post('purchase-orders/{purchase_order}/restore', [PurchaseOrderController::class, 'restore'])->withTrashed();
     Route::apiResource('purchase-orders', PurchaseOrderController::class)->withTrashed(['show', 'destroy']);
+
+    /* Goods Received Notes */
+    Route::get('goods-received-notes/next-grn-number', [GoodsReceivedNoteController::class, 'nextGrnNumber']);
+    Route::post('goods-received-notes/{goods_received_note}/restore', [GoodsReceivedNoteController::class, 'restore'])->withTrashed();
+    Route::apiResource('goods-received-notes', GoodsReceivedNoteController::class)->withTrashed(['show', 'destroy']);
+
+    /* Purchase Invoices */
+    Route::get('purchase-invoices/next-invoice-number', [PurchaseInvoiceController::class, 'nextInvoiceNumber']);
+    Route::post('purchase-invoices/{purchase_invoice}/restore', [PurchaseInvoiceController::class, 'restore'])->withTrashed();
+    Route::apiResource('purchase-invoices', PurchaseInvoiceController::class)->withTrashed(['show', 'destroy']);
 
     /*
     |--------------------------------------------------------------------------

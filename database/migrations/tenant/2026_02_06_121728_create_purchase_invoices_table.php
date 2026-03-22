@@ -15,6 +15,7 @@ return new class extends Migration
         Schema::create('purchase_invoices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('grn_id')->nullable()->constrained('goods_received_notes')->nullOnDelete();
+            $table->foreignId('purchase_order_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('vendor_id')->constrained()->restrictOnDelete();
             $table->string('invoice_number');
             $table->string('reference_number')->nullable()->comment('Additional Reference');

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Actions\Purchase;
+namespace App\Actions\GeneralLedger;
 
 use App\Models\PurchaseInvoice;
 use App\Services\GeneralLedgerService;
 
-class PostInvoiceToLedger
+class PostPurchaseInvoiceToLedgerAction
 {
     public function __construct(
         protected GeneralLedgerService $glService

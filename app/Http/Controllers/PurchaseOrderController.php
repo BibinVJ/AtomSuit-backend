@@ -111,18 +111,13 @@ class PurchaseOrderController extends Controller
 
     public function nextOrderNumber(): JsonResponse
     {
-        // Simple logic: PO-{LatestID + 1} or user provided logic.
-        // For now, let's find the max order_number or just id.
-        // A common pattern is PO-YYYYMM-XXXX
+        $nextId = PurchaseOrder::max('id') + 1;
+        $prefix = 'PO-'.now()->format('Ym').'-';
+        $orderNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
 
-        $latest = PurchaseOrder::latest('id')->first();
-        $nextId = $latest ? $latest->id + 1 : 1;
-        $orderNumber = 'PO-'.str_pad((string) $nextId, 6, '0', STR_PAD_LEFT);
-
-        // Ensure uniqueness just in case (optional, but good practice)
         while (PurchaseOrder::where('order_number', $orderNumber)->exists()) {
             $nextId++;
-            $orderNumber = 'PO-'.str_pad((string) $nextId, 6, '0', STR_PAD_LEFT);
+            $orderNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
         }
 
         return ApiResponse::success('Next order number retrieved.', ['order_number' => $orderNumber]);

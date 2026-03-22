@@ -147,18 +147,30 @@ enum PermissionsEnum: string
     case UPDATE_ITEM_PRICE = 'update-item-price';
     case DELETE_ITEM_PRICE = 'delete-item-price';
 
-    // Purchase Order Management
-    case VIEW_PURCHASE_ORDER = 'view-purchase-order';
-    case CREATE_PURCHASE_ORDER = 'create-purchase-order';
-    case UPDATE_PURCHASE_ORDER = 'update-purchase-order';
-    case DELETE_PURCHASE_ORDER = 'delete-purchase-order';
-
     // System Monitoring / Analytics
     case VIEW_SYSTEM_ANALYTICS = 'view-system-analytics';
 
     // Module Management
     case VIEW_MODULE = 'view-module';
     case MANAGE_MODULE = 'manage-module';
+
+    // Purchase Order
+    case VIEW_PURCHASE_ORDER = 'view-purchase-order';
+    case CREATE_PURCHASE_ORDER = 'create-purchase-order';
+    case UPDATE_PURCHASE_ORDER = 'update-purchase-order';
+    case DELETE_PURCHASE_ORDER = 'delete-purchase-order';
+
+    // Goods Received Note
+    case VIEW_GRN = 'view-grn';
+    case CREATE_GRN = 'create-grn';
+    case UPDATE_GRN = 'update-grn';
+    case DELETE_GRN = 'delete-grn';
+
+    // Purchase Invoice
+    case VIEW_PURCHASE_INVOICE = 'view-purchase-invoice';
+    case CREATE_PURCHASE_INVOICE = 'create-purchase-invoice';
+    case UPDATE_PURCHASE_INVOICE = 'update-purchase-invoice';
+    case DELETE_PURCHASE_INVOICE = 'delete-purchase-invoice';
 
     public static function centralPermissions(): array
     {

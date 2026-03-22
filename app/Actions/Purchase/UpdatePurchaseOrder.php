@@ -14,7 +14,7 @@ class UpdatePurchaseOrder
     {
         if ($po->status !== PurchaseOrderStatus::DRAFT) {
             throw ValidationException::withMessages([
-                'status' => 'Cannot update a confirmed or completed order.',
+                'status' => 'Only draft purchase orders can be updated.',
             ]);
         }
 

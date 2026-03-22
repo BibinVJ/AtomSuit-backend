@@ -59,6 +59,11 @@ class PurchaseOrder extends Model
         return $this->hasMany(GoodsReceivedNote::class);
     }
 
+    public function purchaseInvoices(): HasMany
+    {
+        return $this->hasMany(PurchaseInvoice::class);
+    }
+
     public function stockMovements(): MorphMany
     {
         return $this->morphMany(StockMovement::class, 'source');
