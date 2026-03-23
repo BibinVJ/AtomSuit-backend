@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use App\Actions\StockMovement\CreateGoodsReceivedNoteStockMovementsAction;
-use App\Actions\StockMovement\CreateSaleStockMovementsAction;
 use App\Models\GoodsReceivedNote;
-use App\Models\Sale;
 use App\Models\StockMovement;
 use App\Repositories\StockMovementRepository;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +13,6 @@ class StockMovementService
 {
     public function __construct(
         protected CreateGoodsReceivedNoteStockMovementsAction $createGrnStockMovements,
-        protected CreateSaleStockMovementsAction $createSaleStockMovements,
         protected StockMovementRepository $stockMovementRepository
     ) {}
 
@@ -23,14 +20,13 @@ class StockMovementService
     {
         match (true) {
             $model instanceof GoodsReceivedNote => $this->createGrnStockMovements->execute($model),
-            $model instanceof Sale => $this->createSaleStockMovements->execute($model),
             default => throw new InvalidArgumentException('Unsupported model for stock movement.'),
         };
     }
 
     public function reverseStockMovements(Model $model): void
     {
-        /** @var \App\Models\GoodsReceivedNote|\App\Models\Sale $model */
+        /** @var \App\Models\GoodsReceivedNote $model */
         foreach ($model->stockMovements as $movement) {
             $this->stockMovementRepository->create([
                 ...$movement->only([
@@ -71,7 +67,7 @@ class StockMovementService
 
     public function deleteStockMovements(Model $model): void
     {
-        /** @var \App\Models\GoodsReceivedNote|\App\Models\Sale $model */
+        /** @var \App\Models\GoodsReceivedNote $model */
         $model->stockMovements()->delete();
     }
 }

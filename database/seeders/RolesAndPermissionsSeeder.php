@@ -98,11 +98,6 @@ class RolesAndPermissionsSeeder extends Seeder
 
             // Item
             PermissionsEnum::VIEW_ITEM->value,
-
-            // Sale
-            PermissionsEnum::VIEW_SALE->value,
-            PermissionsEnum::CREATE_SALE->value,
-            PermissionsEnum::DELETE_SALE->value,
         ]);
     }
 }

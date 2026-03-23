@@ -27,7 +27,6 @@ use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
@@ -256,11 +255,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('customers/import', [CustomerController::class, 'import']);
     Route::post('customers/{customer}/restore', [CustomerController::class, 'restore'])->withTrashed();
     Route::apiResource('customers', CustomerController::class)->withTrashed(['show', 'destroy']);
-
-    /* Sale */
-    Route::get('sales/next-invoice-number', [SaleController::class, 'getNextInvoiceNumber']);
-    Route::get('sales/export', [SaleController::class, 'export']);
-    Route::apiResource('sales', SaleController::class);
 
     /*
     |--------------------------------------------------------------------------

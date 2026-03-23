@@ -79,12 +79,6 @@ enum PermissionsEnum: string
     case UPDATE_CUSTOMER = 'update-customer';
     case DELETE_CUSTOMER = 'delete-customer';
 
-    // sale management
-    case VIEW_SALE = 'view-sale';
-    case CREATE_SALE = 'create-sale';
-    case UPDATE_SALE = 'update-sale';
-    case DELETE_SALE = 'delete-sale';
-
     // currency management
     case VIEW_CURRENCY = 'view-currency';
     case CREATE_CURRENCY = 'create-currency';

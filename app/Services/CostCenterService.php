@@ -15,7 +15,7 @@ class CostCenterService extends BaseService
     {
         /** @var \App\Models\CostCenter $costCenter */
 
-        // TODO: Add sales based validation later once implemented.
+        // TODO: Add sales based validation later once implemented. andd add all the validation
 
         if ($costCenter->children()->exists()) {
             throw new \Exception('Cost Center has child cost centers and cannot be permanently deleted.');

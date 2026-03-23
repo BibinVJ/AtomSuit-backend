@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -65,11 +64,6 @@ class Customer extends Model
     public function salesReturnAccount(): BelongsTo
     {
         return $this->belongsTo(ChartOfAccount::class, 'sales_return_account_id');
-    }
-
-    public function sales(): HasMany
-    {
-        return $this->hasMany(Sale::class);
     }
 
     public function taxGroup(): BelongsTo
