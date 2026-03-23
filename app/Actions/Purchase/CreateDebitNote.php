@@ -60,7 +60,7 @@ class CreateDebitNote
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
             $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 2. Process Items
             foreach ($data['items'] as $itemData) {
@@ -74,7 +74,24 @@ class CreateDebitNote
                     'category' => $itemModel->category?->name,
                     'unit' => $itemModel->unit?->name,
                 ] : null;
-                $taxMeta = $taxModel ? ['name' => $taxModel->name, 'rate' => $taxModel->rate] : null;
+
+                $taxMeta = null;
+                if ($taxModel) {
+                    $rates = [];
+                    foreach ($taxModel->taxRates as $tr) {
+                        $rates[] = [
+                            'id' => $tr->id,
+                            'name' => $tr->name,
+                            'rate' => (float) $tr->rate,
+                            'type' => $tr->type->value,
+                        ];
+                    }
+                    $taxMeta = [
+                        'id' => $taxModel->id,
+                        'name' => $taxModel->name,
+                        'rates' => $rates,
+                    ];
+                }
 
                 $debitNote->items()->create([
                     'item_id' => $itemData['item_id'],
@@ -91,7 +108,7 @@ class CreateDebitNote
             }
 
             // Secure Math Cache
-            app(\App\Actions\Purchase\RecalculateDocumentTotalsAction::class)->execute($debitNote);
+            app(\App\Actions\Purchase\RecalculatePurchaseDocumentTotalsAction::class)->execute($debitNote);
 
             // 3. Post to General Ledger
             $this->postToLedger->execute($debitNote, (float) $debitNote->total_amount);

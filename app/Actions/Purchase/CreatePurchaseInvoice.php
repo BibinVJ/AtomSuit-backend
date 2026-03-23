@@ -60,7 +60,7 @@ class CreatePurchaseInvoice
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
             $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 2. Create Items
             foreach ($data['items'] as $itemData) {
@@ -88,7 +88,24 @@ class CreatePurchaseInvoice
                     'category' => $itemModel->category?->name,
                     'unit' => $itemModel->unit?->name,
                 ] : null));
-                $taxMeta = $grnItem ? $grnItem->tax_meta : ($poItem ? $poItem->tax_meta : ($taxModel ? ['name' => $taxModel->name, 'rate' => $taxModel->rate] : null));
+
+                $taxMeta = $grnItem ? $grnItem->tax_meta : ($poItem ? $poItem->tax_meta : null);
+                if (! $taxMeta && $taxModel) {
+                    $rates = [];
+                    foreach ($taxModel->taxRates as $tr) {
+                        $rates[] = [
+                            'id' => $tr->id,
+                            'name' => $tr->name,
+                            'rate' => (float) $tr->rate,
+                            'type' => $tr->type->value,
+                        ];
+                    }
+                    $taxMeta = [
+                        'id' => $taxModel->id,
+                        'name' => $taxModel->name,
+                        'rates' => $rates,
+                    ];
+                }
 
                 $invoice->items()->create([
                     'item_id' => $itemData['item_id'],
@@ -106,7 +123,7 @@ class CreatePurchaseInvoice
             }
 
             // Secure Math
-            app(\App\Actions\Purchase\RecalculateDocumentTotalsAction::class)->execute($invoice);
+            app(\App\Actions\Purchase\RecalculatePurchaseDocumentTotalsAction::class)->execute($invoice);
 
             // 3. Post to General Ledger
             ($this->glPoster)->handle($invoice);

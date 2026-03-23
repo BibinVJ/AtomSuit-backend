@@ -69,7 +69,7 @@ class CreateGoodsReceivedNote
             }
 
             $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 3. Create Items
             foreach ($data['items'] as $itemData) {
@@ -94,7 +94,24 @@ class CreateGoodsReceivedNote
                     'category' => $itemModel->category?->name,
                     'unit' => $itemModel->unit?->name,
                 ] : null);
-                $taxMeta = $poItem ? $poItem->tax_meta : ($taxModel ? ['name' => $taxModel->name, 'rate' => $taxModel->rate] : null);
+
+                $taxMeta = $poItem ? $poItem->tax_meta : null;
+                if (! $taxMeta && $taxModel) {
+                    $rates = [];
+                    foreach ($taxModel->taxRates as $tr) {
+                        $rates[] = [
+                            'id' => $tr->id,
+                            'name' => $tr->name,
+                            'rate' => (float) $tr->rate,
+                            'type' => $tr->type->value,
+                        ];
+                    }
+                    $taxMeta = [
+                        'id' => $taxModel->id,
+                        'name' => $taxModel->name,
+                        'rates' => $rates,
+                    ];
+                }
 
                 $grn->items()->create([
                     'item_id' => $itemData['item_id'],
@@ -113,7 +130,7 @@ class CreateGoodsReceivedNote
             }
 
             // Fire Global Calculator
-            $calculator = app(RecalculateDocumentTotalsAction::class);
+            $calculator = app(RecalculatePurchaseDocumentTotalsAction::class);
             $calculator->execute($grn);
 
             // 4. Update Stock

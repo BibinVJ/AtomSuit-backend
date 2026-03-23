@@ -1,160 +1,45 @@
 # Atom Suit API Backend
-This repository contains the API-only backend for the **Atom Suit** platform. It is built using the Laravel framework (v12).
 
+> **The AI-Powered Business OS that unifies everything — built for effortless growth and unstoppable success.**
 
-this is a complete erp system suit, and the backend is in the backend folder written in laravel, frontend is in frontend folder written in nextjs, desktop is in desktop folder written in electron.
-it is a multitenant based, seperate subdomain for each tenant with seperate db for each tenant.
-it uses tenancy for laravel package and is a multi tenant based, subdomain and seperate db setup.
-registration and payment are captured using stripe.
+Welcome to the backend engine for **Atom Suit**, the World's Most Complete Business Operating System. 
 
+The world's most advanced AI-driven ERP transforms how businesses operate. This intelligent API-First platform seamlessly combines accounting, inventory, HR, CRM, sales, POS, and analytics into a future-proof Laravel ecosystem. With offline-first POS integration, high-level data security, IoT integration capabilities, and global compliance, it adapts to any business size or industry.
 
-
-
-before setting stripe in local or in server set the stripw webhook correctly.
-
-
-## System Requirements
-- PHP 8.2+
-- Composer
-- Node.js & npm
-- A supported database (like MySQL, PostgreSQL, or SQLite)
-- **For Production:**
-    - **Supervisor:** To ensure the queue worker process remains active.
-    - **Cron:** For running scheduled tasks.
-
-
-## Key Features
-- Modular Transaction Workflow (Purchase/Sale)
-- FIFO Inventory Management
-- Role & Permission Management (Spatie)
-- OAuth2 Authentication (Laravel Passport)
-- API-First Clean Architecture
-
-
-## Installation
-```bash
-- cp .env.example .env
-- composer install
-
-- php artisan key:generate
-
-- php artisan migrate --seed
-- php artisan db:seed --class=UsersSeeder # (Optional) Create default users for each role if needed
-- php artisan db:seed --class=RolesAndPermissionsSeeder # (Optional) to sync the newly added roles and permission
-
-- php artisan passport:keys --force  # Generates Passport keys
-- php artisan passport:client --personal  # Generates a personal access client
-
-- php artisan queue:listen # For local env
-```
-
-## Contribution Guidelines
-To maintain code quality and consistency, please adhere to the following guidelines when contributing to the project.
-
-### General Principles
-- **Keep it DRY:** Avoid duplicating code. Utilize existing services, actions, and helpers where possible.
-- **Thin Controllers:** Controllers should only be responsible for receiving requests and returning responses.
-- **Use Request Classes:** All request validation and authorization logic must be handled within dedicated `Request` classes.
-- **Business Logic:** Complex business logic should be encapsulated within `Service` or `Action` classes.
-- **Permissions over Roles:** Whenever checking for authorization, prefer using specific permissions (`$user->can('do_something')`) instead of checking for roles directly (`$user->hasRole('role')`). This makes the system more flexible.
-
-### Git Workflow & Commit Guidelines
-Follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for clear commit history.
-
-
-#### Commit and PR Types Guide (Conventional Commits)
-| **Type**    | **Usage**                                          | **Example Commit Message**                                  |
-|-------------|----------------------------------------------------|-------------------------------------------------------------|
-| **feat**    | A new feature                                      | `feat(user): add user export API endpoint`                  |
-| **fix**     | A bug fix                                          | `fix(order): correct invalid status code on approval`       |
-| **docs**    | Documentation only changes                         | `docs(contributing): add guidelines for new contributors`   |
-| **style**   | Code style changes (formatting, spacing, etc.)     | `style: apply Pint fixes to inventory module`               |
-| **refactor**| Code refactoring (no bug fix or new feature)       | `refactor(batch): optimize FIFO stock retrieval logic`      |
-| **perf**    | Performance improvements                           | `perf(sale): improve sale item lookup performance`          |
-| **test**    | Adding or fixing tests                             | `test(item): add unit tests for stockOnHand calculation`    |
-| **build**   | Build system or dependency changes                 | `build: update npm dependencies`                            |
-| **ci**      | CI/CD pipeline or automation related changes       | `ci(github): add CI workflow for PR validation`             |
-| **chore**   | Routine tasks, maintenance (non-code affecting)    | `chore: clean up unused services`                           |
-| **revert**  | Reverting a previous commit                        | `revert: revert 'feat(user): add user export API endpoint'` |
-
-#### Branch Naming Conventions
-```bash
-git checkout -b feature/user-export-endpoint
-git checkout -b bug/fix-status-code
-git checkout -b enhancement/optimize-export-performance
-```
-
-### Coding Standards
-- **Static Analysis:** Run PHPStan before pushing code:
-  ```bash
-  ./vendor/bin/phpstan analyse
-  ```
-- **Code Formatting:** Run Laravel Pint to fix styling:
-  ```bash
-  ./vendor/bin/pint
-  ```
-- **Naming Conventions:** Follow Laravel’s standard conventions.
-
-
-### Database Migrations & Seeders
-- Never modify merged migrations. Create a new migration for schema changes.
-- Update relevant seeders if you add essential application data.
+Experience the operating system that doesn't just manage your business—it accelerates it.
 
 ---
 
+## 🚀 Core Features & Capabilities
 
+### **Global Scale & Multi-Tenancy**
+Designed natively for multi-tenant SaaS architectures, Atom Suit deploys isolated databases and dedicated subdomains per tenant. 
 
+### **Unbreakable Operations & Unified Commerce**
+Built alongside an Electron Desktop POS module, terminals can operate completely offline and intelligently synchronize with this Cloud ERP the moment internet connectivity is restored. Whether Direct Sales, Quotes, or complex Invoices, the platform merges all channels seamlessly.
 
+### **Enterprise Financial Control**
+Includes multi-currency accounting, comprehensive Chart of Accounts, Journal Entries, native Credit/Debit notes, and robust tax matrices configured to handle global compliance (including tiered state and federal taxes).
 
+### **End-to-End Supply Chain**
+A complete workflow encompassing Purchase Orders (PO), Goods Received Notes (GRN), Inventory Transfers, sophisticated FIFO batch tracking, Item/Category management, Cost Centers, and Delivery Notes.
 
+### **AI & Extensibility**
+Engineered for the next decade of business, the system comes primed with an AI report summarizer capable of scanning the entire database context to retrieve any data slice or custom report format. Native support easily scales to ultra-specific vertical modules like HIMS (Healthcare Inventory), Restaurant & Dine-In management, and Grocery workflows.
 
+---
+
+## 🛠 Developer Resources
+
+If you are a software engineer looking to install, run, or contribute to this infrastructure, please refer to our dedicated documentation:
+
+- 📖 **[Developer & Contribution Guide](docs/DEVELOPMENT_GUIDE.md)**: System requirements, installation instructions, PHPStan standards, and Git workflows.
+- ⚙️ **[Purchase Transactions & Financial Engine Guide](docs/PURCHASE_FLOW.md)**: A deep technical dive into our native transaction snapshotting, document immutability, and nested Tax mathematical compilers.
+
+---
 # Transaction Workflow
 
-## Purchasing Flow
-| Action Type        | Model               | Editable? | Voidable? | Notes                                              |
-|--------------------|--------------------|-----------|-----------|----------------------------------------------------|
-| Direct Purchase     | Purchase            | ❌ After payment | ✅ If unpaid | Immediate purchase (Invoice + GRN in one step)     |
-| Quoted Purchase     | PurchaseOrder       | ✅ Until converted | ✅ Before conversion | Proposal to vendor, converts to Invoice & GRN      |
-| Goods Received      | GoodsReceivedNote   | ❌ Immutable | ⚠️ If no invoice tied | Confirms actual goods received, triggers stock-in  |
-| Vendor Billing      | PurchaseInvoice     | ❌ Immutable | ✅ If unpaid/no journal | Vendor's bill for accounting purposes              |
-
-## Sales Flow
-| Action Type         | Model               | Editable? | Voidable? | Notes                                              |
-|---------------------|--------------------|-----------|-----------|----------------------------------------------------|
-| Direct Sale          | Sale                | ❌ After payment | ✅ If unpaid | POS sale, Invoice + Delivery Note auto-created     |
-| Sales Proposal       | SaleOrder           | ✅ Until converted | ✅ Before conversion | Customer proposal, converts to Invoice & Delivery  |
-| Goods Out            | DeliveryNote        | ❌ Immutable | ⚠️ If no invoice tied | Goods handed over, triggers stock-out              |
-| Customer Billing     | SaleInvoice         | ❌ Immutable | ✅ If unpaid/no journal | Customer's final bill                              |
-
----
-
-# Transaction Flow Matrix
-
-| Flow                          | Allowed? | When to Use                                              |
-|-------------------------------|----------|----------------------------------------------------------|
-| PO → GRN → Invoice             | Yes      | Default, strict procurement                             |
-| PO → Invoice → GRN             | Yes      | Vendor invoices before delivery                          |
-| Direct Invoice → No GRN        | Yes      | Services/non-stock items                                 |
-| Direct Invoice → GRN           | Yes      | When user confirms delivery with warehouse               |
-| Direct GRN → Invoice           | Yes      | Order received first, invoice to follow                  |
-| POS Purchase → Invoice → GRN   | Yes      | For POS sales with automated flows                      |
-
-Same principles apply for Sales as well.
-
-
-# currency setup
-and for a tenant there is only one dafault system currency, this is set up on their first login time, if they have not set it up it will prompt to set it up on login.
-
-nad once this default system currency is set they cannot change it.
-
-
-
-# TAX
-we have tax and tax group.
-items are assigned a tax group which have have single or multiple taxes.
-vedors and customers are assigned default tax group(optionally).
-if tax group is assign to a vendor or customer then it will be used for transactions, else the item tax group will be used.
-
+*(For a deep technical dive into the transaction lifecycle, metadata snapshotting, and the global tax/mathematical engine, see the [Purchase Transactions Flow Guide](docs/PURCHASE_FLOW.md)).*
 
 
 ---

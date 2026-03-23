@@ -4,7 +4,7 @@ namespace App\Actions\Purchase;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RecalculateDocumentTotalsAction
+class RecalculatePurchaseDocumentTotalsAction
 {
     /**
      * Systematically loops all line items of any Core Purchase Document,
@@ -40,7 +40,18 @@ class RecalculateDocumentTotalsAction
 
             // 3. Evaluate Snapshot Tax Block
             $lineTax = 0.0;
-            if (is_array($item->tax_meta) && isset($item->tax_meta['rate'])) {
+            if (is_array($item->tax_meta) && isset($item->tax_meta['rates'])) {
+                foreach ($item->tax_meta['rates'] as $taxRateData) {
+                    $rateValue = (float) $taxRateData['rate'];
+                    if (($taxRateData['type'] ?? 'percentage') === \App\Enums\TaxRateTypeEnum::PERCENTAGE->value) {
+                        $lineTax += $afterDiscount * ($rateValue / 100);
+                    } else {
+                        // Fixed tax is considered a per-unit fee in typical ERP handling
+                        $lineTax += $rateValue * $qty;
+                    }
+                }
+            } elseif (is_array($item->tax_meta) && isset($item->tax_meta['rate'])) {
+                // Fallback for old documents before the compound array migration
                 $taxRate = (float) $item->tax_meta['rate'];
                 $lineTax = $afterDiscount * ($taxRate / 100);
             }

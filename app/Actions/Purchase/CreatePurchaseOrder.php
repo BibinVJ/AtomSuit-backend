@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class CreatePurchaseOrder
 {
-    public function __construct(protected RecalculateDocumentTotalsAction $calculator) {}
+    public function __construct(protected RecalculatePurchaseDocumentTotalsAction $calculator) {}
 
     public function handle(array $data, ?User $creator = null): PurchaseOrder
     {
@@ -52,7 +52,7 @@ class CreatePurchaseOrder
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
             $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             foreach ($data['items'] as $itemData) {
                 $itemModel = $itemsDb->get($itemData['item_id']);
@@ -65,10 +65,28 @@ class CreatePurchaseOrder
                     'unit' => $itemModel->unit?->name,
                 ] : null;
 
+                $taxMeta = null;
+                if ($taxModel) {
+                    $rates = [];
+                    foreach ($taxModel->taxRates as $tr) {
+                        $rates[] = [
+                            'id' => $tr->id,
+                            'name' => $tr->name,
+                            'rate' => (float) $tr->rate,
+                            'type' => $tr->type->value,
+                        ];
+                    }
+                    $taxMeta = [
+                        'id' => $taxModel->id,
+                        'name' => $taxModel->name,
+                        'rates' => $rates,
+                    ];
+                }
+
                 $po->items()->create([
                     'item_id' => $itemData['item_id'],
                     'item_meta' => $itemMeta,
-                    'tax_meta' => $taxModel ? ['name' => $taxModel->name, 'rate' => $taxModel->rate] : null,
+                    'tax_meta' => $taxMeta,
                     'description' => $itemData['description'] ?? null,
                     'quantity' => $itemData['quantity'],
                     'unit_price' => $itemData['unit_price'],
