@@ -24,7 +24,7 @@ class PurchaseInvoiceController extends Controller
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_PURCHASE_INVOICE->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_PURCHASE_INVOICE->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_PURCHASE_INVOICE->value)->only(['update', 'restore']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_PURCHASE_INVOICE->value)->only(['update']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_PURCHASE_INVOICE->value)->only(['destroy']);
     }
 
@@ -96,13 +96,6 @@ class PurchaseInvoiceController extends Controller
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), Response::HTTP_FORBIDDEN);
         }
-    }
-
-    public function restore(PurchaseInvoice $purchaseInvoice): JsonResponse
-    {
-        $pi = $this->piService->restore($purchaseInvoice);
-
-        return ApiResponse::success('Purchase Invoice restored successfully.', PurchaseInvoiceResource::make($pi));
     }
 
     public function nextInvoiceNumber(): JsonResponse

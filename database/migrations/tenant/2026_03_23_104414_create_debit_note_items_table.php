@@ -11,22 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('purchase_order_items', function (Blueprint $table) {
+        Schema::create('debit_note_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_order_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('item_id')->constrained()->restrictOnDelete();
+            $table->foreignId('debit_note_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('item_id')->constrained();
             $table->json('item_meta')->nullable();
-            $table->string('description')->nullable();
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_price', 15, 4);
-            $table->string('discount_type')->nullable(); // percentage or fixed
+            $table->string('discount_type')->nullable();
             $table->decimal('discount_value', 15, 4)->default(0);
             $table->decimal('discount_amount', 15, 4)->default(0);
             $table->decimal('sub_total', 15, 4)->default(0);
-            $table->foreignId('tax_group_id')->nullable()->constrained()->restrictOnDelete();
+            $table->foreignId('tax_group_id')->nullable()->constrained('tax_groups')->nullOnDelete();
             $table->json('tax_meta')->nullable();
             $table->decimal('tax_amount', 15, 4)->default(0);
             $table->decimal('total_amount', 15, 4)->default(0);
+            $table->string('description')->nullable();
+            $table->boolean('is_stock_returned')->default(false);
             $table->timestamps();
         });
     }
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('purchase_order_items');
+        Schema::dropIfExists('debit_note_items');
     }
 };

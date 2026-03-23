@@ -23,7 +23,7 @@ class GoodsReceivedNoteController extends Controller
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_GRN->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_GRN->value)->only(['store']);
-        $this->middleware('permission:'.PermissionsEnum::UPDATE_GRN->value)->only(['update', 'restore']);
+        $this->middleware('permission:'.PermissionsEnum::UPDATE_GRN->value)->only(['update']);
         $this->middleware('permission:'.PermissionsEnum::DELETE_GRN->value)->only(['destroy']);
     }
 
@@ -89,13 +89,6 @@ class GoodsReceivedNoteController extends Controller
         } catch (\Exception $e) {
             return ApiResponse::error($e->getMessage(), Response::HTTP_FORBIDDEN);
         }
-    }
-
-    public function restore(GoodsReceivedNote $goodsReceivedNote): JsonResponse
-    {
-        $grn = $this->grnService->restore($goodsReceivedNote);
-
-        return ApiResponse::success('Goods Received Note restored successfully.', GoodsReceivedNoteResource::make($grn));
     }
 
     public function nextGrnNumber(): JsonResponse

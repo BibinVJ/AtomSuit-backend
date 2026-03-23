@@ -172,6 +172,18 @@ enum PermissionsEnum: string
     case UPDATE_PURCHASE_INVOICE = 'update-purchase-invoice';
     case DELETE_PURCHASE_INVOICE = 'delete-purchase-invoice';
 
+    // Debit Note
+    case VIEW_DEBIT_NOTE = 'view-debit-note';
+    case CREATE_DEBIT_NOTE = 'create-debit-note';
+    case UPDATE_DEBIT_NOTE = 'update-debit-note';
+    case DELETE_DEBIT_NOTE = 'delete-debit-note';
+
+    // Vendor Payment
+    case VIEW_VENDOR_PAYMENT = 'view-vendor-payment';
+    case CREATE_VENDOR_PAYMENT = 'create-vendor-payment';
+    case UPDATE_VENDOR_PAYMENT = 'update-vendor-payment';
+    case DELETE_VENDOR_PAYMENT = 'delete-vendor-payment';
+
     public static function centralPermissions(): array
     {
         return [

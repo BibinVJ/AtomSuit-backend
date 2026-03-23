@@ -40,6 +40,8 @@ class GoodsReceivedNoteRequest extends FormRequest
             'items.*.accepted_quantity' => ['required', 'numeric', 'min:0.0001'],
             'items.*.rejected_quantity' => ['nullable', 'numeric', 'min:0'],
             'items.*.unit_price' => ['required', 'numeric', 'min:0'],
+            'items.*.discount_type' => ['nullable', 'string', 'in:percentage,fixed'],
+            'items.*.discount_value' => ['nullable', 'numeric', 'min:0'],
             'items.*.discount_amount' => ['nullable', 'numeric', 'min:0'],
             'items.*.tax_group_id' => ['nullable', 'exists:tax_groups,id'],
         ];

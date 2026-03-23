@@ -15,10 +15,16 @@ return new class extends Migration
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('vendor_id')->constrained()->restrictOnDelete();
+            $table->json('vendor_meta')->nullable();
             $table->string('order_number')->unique();
             $table->date('order_date');
             $table->date('expected_delivery_date')->nullable();
             $table->string('status')->default(PurchaseOrderStatus::DRAFT->value); // Enum: DRAFT, SENT, CONFIRMED, COMPLETED, CANCELLED
+            $table->string('reference_number')->nullable()->comment('Vendor Quote/Ref Number');
+            $table->decimal('sub_total', 15, 4)->default(0);
+            $table->decimal('discount_total', 15, 4)->default(0);
+            $table->decimal('tax_total', 15, 4)->default(0);
+            $table->decimal('total_amount', 15, 4)->default(0);
             $table->string('reference_number')->nullable()->comment('Vendor Quote/Ref Number');
             $table->foreignId('cost_center_id')->constrained()->restrictOnDelete();
             $table->foreignId('warehouse_id')->constrained()->restrictOnDelete();

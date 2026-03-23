@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\GoodsReceivedNoteStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,26 +11,26 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('goods_received_notes', function (Blueprint $table) {
+        Schema::create('debit_notes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_order_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('vendor_id')->constrained()->restrictOnDelete();
+            $table->foreignId('vendor_id')->constrained();
             $table->json('vendor_meta')->nullable();
-            $table->string('grn_number')->unique();
-            $table->string('reference_number')->nullable()->comment('Vendor Delivery Note/Reference');
-            $table->date('received_date');
-            $table->string('status')->default(GoodsReceivedNoteStatus::RECEIVED->value);
+            $table->foreignId('purchase_invoice_id')->nullable()->constrained();
+            $table->string('debit_note_number')->unique();
+            $table->string('reference_number')->nullable();
+            $table->date('date');
+            $table->string('status')->default('POSTED');
             $table->decimal('sub_total', 15, 4)->default(0);
             $table->decimal('discount_total', 15, 4)->default(0);
             $table->decimal('tax_total', 15, 4)->default(0);
             $table->decimal('total_amount', 15, 4)->default(0);
-            $table->foreignId('cost_center_id')->constrained()->restrictOnDelete();
-            $table->foreignId('warehouse_id')->constrained()->restrictOnDelete();
             $table->text('notes')->nullable();
+            $table->foreignId('warehouse_id')->constrained();
+            $table->foreignId('cost_center_id')->constrained();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -40,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('goods_received_notes');
+        Schema::dropIfExists('debit_notes');
     }
 };

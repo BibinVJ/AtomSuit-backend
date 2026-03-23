@@ -3,27 +3,24 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 
-class GoodsReceivedNoteItemResource extends JsonResource
+class DebitNoteItemResource extends BaseResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
-            'goods_received_note_id' => $this->goods_received_note_id,
-            'purchase_order_item_id' => $this->purchase_order_item_id,
+            'debit_note_id' => $this->debit_note_id,
             'item_id' => $this->item_id,
             'item_meta' => $this->item_meta,
             'description' => $this->description,
-            'quantity_received' => $this->quantity_received,
-            'accepted_quantity' => $this->accepted_quantity,
-            'rejected_quantity' => $this->rejected_quantity,
+            'quantity' => $this->quantity,
             'unit_price' => $this->unit_price,
             'discount_type' => $this->discount_type,
             'discount_value' => $this->discount_value,
             'discount_amount' => $this->discount_amount,
             'tax_group_id' => $this->tax_group_id,
+            'is_stock_returned' => $this->is_stock_returned,
             'sub_total' => $this->sub_total,
             'tax_meta' => $this->tax_meta,
             'tax_amount' => $this->tax_amount,

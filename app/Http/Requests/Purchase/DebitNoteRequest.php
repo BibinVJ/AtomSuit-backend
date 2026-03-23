@@ -5,7 +5,7 @@ namespace App\Http\Requests\Purchase;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class PurchaseOrderRequest extends FormRequest
+class DebitNoteRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -14,15 +14,19 @@ class PurchaseOrderRequest extends FormRequest
 
     public function rules(): array
     {
-        $purchaseOrder = $this->route('purchase_order');
-        $purchaseOrderId = $purchaseOrder?->id;
+        $debitNoteId = $this->route('debit_note')?->id;
 
-        $rules = [
+        return [
             'vendor_id' => ['required', 'exists:vendors,id'],
-            'order_number' => ['required', 'string', 'max:255', Rule::unique('purchase_orders', 'order_number')->ignore($purchaseOrderId)],
+            'purchase_invoice_id' => ['nullable', 'exists:purchase_invoices,id'],
+            'debit_note_number' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('debit_notes', 'debit_note_number')->ignore($debitNoteId),
+            ],
             'reference_number' => ['nullable', 'string', 'max:255'],
-            'order_date' => ['required', 'date'],
-            'expected_delivery_date' => ['nullable', 'date', 'after_or_equal:order_date'],
+            'date' => ['required', 'date'],
             'cost_center_id' => ['required', 'exists:cost_centers,id'],
             'warehouse_id' => ['required', 'exists:warehouses,id'],
             'notes' => ['nullable', 'string'],
@@ -37,8 +41,7 @@ class PurchaseOrderRequest extends FormRequest
             'items.*.discount_value' => ['nullable', 'numeric', 'min:0'],
             'items.*.discount_amount' => ['nullable', 'numeric', 'min:0'],
             'items.*.tax_group_id' => ['nullable', 'exists:tax_groups,id'],
+            'items.*.is_stock_returned' => ['boolean'],
         ];
-
-        return $rules;
     }
 }

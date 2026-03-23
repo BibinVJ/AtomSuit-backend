@@ -76,4 +76,14 @@ class Vendor extends Model
     {
         return $this->belongsTo(TaxGroup::class);
     }
+
+    public function debitNotes(): HasMany
+    {
+        return $this->hasMany(DebitNote::class);
+    }
+
+    public function vendorPayments(): HasMany
+    {
+        return $this->hasMany(VendorPayment::class);
+    }
 }

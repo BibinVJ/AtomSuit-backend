@@ -5,17 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class GoodsReceivedNoteItem extends Model
+class DebitNoteItem extends Model
 {
     protected $fillable = [
-        'goods_received_note_id',
+        'debit_note_id',
         'item_id',
         'item_meta',
-        'purchase_order_item_id',
-        'description',
-        'quantity_received',
-        'accepted_quantity',
-        'rejected_quantity',
+        'quantity',
         'unit_price',
         'discount_type',
         'discount_value',
@@ -25,25 +21,23 @@ class GoodsReceivedNoteItem extends Model
         'tax_meta',
         'tax_amount',
         'total_amount',
+        'description',
+        'is_stock_returned',
     ];
 
     protected $casts = [
+        'is_stock_returned' => 'boolean',
         'item_meta' => 'array',
         'tax_meta' => 'array',
     ];
 
-    public function goodsReceivedNote(): BelongsTo
+    public function debitNote(): BelongsTo
     {
-        return $this->belongsTo(GoodsReceivedNote::class);
+        return $this->belongsTo(DebitNote::class);
     }
 
     public function item(): BelongsTo
     {
         return $this->belongsTo(Item::class);
-    }
-
-    public function purchaseOrderItem(): BelongsTo
-    {
-        return $this->belongsTo(PurchaseOrderItem::class);
     }
 }

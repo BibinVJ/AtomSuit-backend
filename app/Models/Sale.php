@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Enums\PaymentMethod;
-use App\Enums\PaymentStatusEnum;
-use App\Enums\TransactionStatus;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -29,8 +27,8 @@ class Sale extends Model
 
     protected $casts = [
         'sale_date' => 'date',
-        'status' => TransactionStatus::class,
-        'payment_status' => PaymentStatusEnum::class,
+        'status' => 'string',
+        'payment_status' => 'string',
         'payment_method' => PaymentMethod::class,
     ];
 

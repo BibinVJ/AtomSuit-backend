@@ -10,11 +10,23 @@ class PurchaseOrderItem extends Model
     protected $fillable = [
         'purchase_order_id',
         'item_id',
+        'item_meta',
         'description',
         'quantity',
         'unit_price',
+        'discount_type',
+        'discount_value',
         'discount_amount',
+        'sub_total',
         'tax_group_id',
+        'tax_meta',
+        'tax_amount',
+        'total_amount',
+    ];
+
+    protected $casts = [
+        'item_meta' => 'array',
+        'tax_meta' => 'array',
     ];
 
     public function purchaseOrder(): BelongsTo

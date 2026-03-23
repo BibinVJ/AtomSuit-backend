@@ -17,11 +17,16 @@ class GoodsReceivedNote extends Model
     protected $fillable = [
         'purchase_order_id',
         'vendor_id',
+        'vendor_meta',
         'grn_number',
         'reference_number',
         'received_date',
         'status',
         'notes',
+        'sub_total',
+        'discount_total',
+        'tax_total',
+        'total_amount',
         'cost_center_id',
         'warehouse_id',
         'created_by',
@@ -31,6 +36,7 @@ class GoodsReceivedNote extends Model
     protected $casts = [
         'received_date' => 'date',
         'status' => GoodsReceivedNoteStatus::class,
+        'vendor_meta' => 'array',
     ];
 
     public function purchaseOrder(): BelongsTo

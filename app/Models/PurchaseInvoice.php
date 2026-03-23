@@ -18,11 +18,17 @@ class PurchaseInvoice extends Model
         'grn_id',
         'purchase_order_id',
         'vendor_id',
+        'vendor_meta',
         'invoice_number',
         'reference_number',
         'posting_date',
         'due_date',
         'status',
+        'sub_total',
+        'discount_total',
+        'tax_total',
+        'total_amount',
+        'paid_amount',
         'cost_center_id',
         'warehouse_id',
         'created_by',
@@ -33,6 +39,7 @@ class PurchaseInvoice extends Model
         'posting_date' => 'date',
         'due_date' => 'date',
         'status' => PurchaseInvoiceStatus::class,
+        'vendor_meta' => 'array',
     ];
 
     public function grn(): BelongsTo
@@ -68,5 +75,15 @@ class PurchaseInvoice extends Model
     public function transactions(): MorphMany
     {
         return $this->morphMany(GeneralLedgerTransaction::class, 'reference');
+    }
+
+    public function debitNotes(): HasMany
+    {
+        return $this->hasMany(DebitNote::class);
+    }
+
+    public function vendorPaymentAllocations(): HasMany
+    {
+        return $this->hasMany(VendorPaymentAllocation::class);
     }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\CostCenterController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DebitNoteController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\GoodsReceivedNoteController;
@@ -280,13 +281,19 @@ Route::middleware(['auth:api'])->group(function () {
 
     /* Goods Received Notes */
     Route::get('goods-received-notes/next-grn-number', [GoodsReceivedNoteController::class, 'nextGrnNumber']);
-    Route::post('goods-received-notes/{goods_received_note}/restore', [GoodsReceivedNoteController::class, 'restore'])->withTrashed();
-    Route::apiResource('goods-received-notes', GoodsReceivedNoteController::class)->withTrashed(['show', 'destroy']);
+    Route::apiResource('goods-received-notes', GoodsReceivedNoteController::class);
 
     /* Purchase Invoices */
     Route::get('purchase-invoices/next-invoice-number', [PurchaseInvoiceController::class, 'nextInvoiceNumber']);
-    Route::post('purchase-invoices/{purchase_invoice}/restore', [PurchaseInvoiceController::class, 'restore'])->withTrashed();
-    Route::apiResource('purchase-invoices', PurchaseInvoiceController::class)->withTrashed(['show', 'destroy']);
+    Route::apiResource('purchase-invoices', PurchaseInvoiceController::class);
+
+    // Debit Notes
+    Route::get('debit-notes/next-debit-note-number', [DebitNoteController::class, 'nextDebitNoteNumber']);
+    Route::apiResource('debit-notes', DebitNoteController::class)->except(['update']);
+
+    // Vendor Payments
+    Route::get('vendor-payments/next-payment-number', [\App\Http\Controllers\VendorPaymentController::class, 'nextPaymentNumber']);
+    Route::apiResource('vendor-payments', \App\Http\Controllers\VendorPaymentController::class)->except(['update']);
 
     /*
     |--------------------------------------------------------------------------
