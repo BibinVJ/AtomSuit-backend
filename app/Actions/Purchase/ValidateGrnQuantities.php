@@ -2,6 +2,7 @@
 
 namespace App\Actions\Purchase;
 
+use App\Models\GoodsReceivedNoteItem;
 use App\Models\PurchaseOrder;
 use Illuminate\Validation\ValidationException;
 
@@ -26,7 +27,7 @@ class ValidateGrnQuantities
             }
 
             // Calculate how much has already been received across all GRNs
-            $previouslyReceived = \App\Models\GoodsReceivedNoteItem::where('purchase_order_item_id', $poItem->id)
+            $previouslyReceived = GoodsReceivedNoteItem::where('purchase_order_item_id', $poItem->id)
                 ->sum('accepted_quantity');
 
             $totalRequested = $previouslyReceived + $itemData['accepted_quantity'];

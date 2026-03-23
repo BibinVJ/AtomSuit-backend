@@ -6,6 +6,8 @@ use App\Actions\GeneralLedger\PostDebitNoteToLedgerAction;
 use App\Actions\StockMovement\CreateDebitNoteStockMovementsAction;
 use App\Enums\DebitNoteStatus;
 use App\Models\DebitNote;
+use App\Models\Item;
+use App\Models\TaxGroup;
 use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
@@ -59,8 +61,8 @@ class CreateDebitNote
             // Preload Master Data
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
-            $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $itemsDb = Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
+            $taxesDb = TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 2. Process Items
             foreach ($data['items'] as $itemData) {
@@ -108,7 +110,7 @@ class CreateDebitNote
             }
 
             // Secure Math Cache
-            app(\App\Actions\Purchase\RecalculatePurchaseDocumentTotalsAction::class)->execute($debitNote);
+            app(RecalculatePurchaseDocumentTotalsAction::class)->execute($debitNote);
 
             // 3. Post to General Ledger
             $this->postToLedger->execute($debitNote, (float) $debitNote->total_amount);

@@ -40,6 +40,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserLoginDetailController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\VendorController;
+use App\Http\Controllers\VendorPaymentController;
 use App\Http\Controllers\WarehouseController;
 use Illuminate\Support\Facades\Route;
 
@@ -292,8 +293,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::apiResource('debit-notes', DebitNoteController::class)->except(['update']);
 
     // Vendor Payments
-    Route::get('vendor-payments/next-payment-number', [\App\Http\Controllers\VendorPaymentController::class, 'nextPaymentNumber']);
-    Route::apiResource('vendor-payments', \App\Http\Controllers\VendorPaymentController::class)->except(['update']);
+    Route::get('vendor-payments/next-payment-number', [VendorPaymentController::class, 'nextPaymentNumber']);
+    Route::apiResource('vendor-payments', VendorPaymentController::class)->except(['update']);
 
     /*
     |--------------------------------------------------------------------------

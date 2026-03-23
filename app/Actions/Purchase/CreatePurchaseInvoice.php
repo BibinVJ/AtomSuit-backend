@@ -4,9 +4,15 @@ namespace App\Actions\Purchase;
 
 use App\Actions\GeneralLedger\PostPurchaseInvoiceToLedgerAction;
 use App\Enums\PurchaseInvoiceStatus;
+use App\Enums\PurchaseOrderStatus;
 use App\Models\GoodsReceivedNote;
+use App\Models\Item;
 use App\Models\PurchaseInvoice;
+use App\Models\PurchaseInvoiceItem;
+use App\Models\PurchaseOrder;
+use App\Models\TaxGroup;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 
 class CreatePurchaseInvoice
@@ -15,12 +21,12 @@ class CreatePurchaseInvoice
         protected PostPurchaseInvoiceToLedgerAction $glPoster
     ) {}
 
-    public function handle(?GoodsReceivedNote $grn, ?\App\Models\PurchaseOrder $po, array $data, ?User $creator = null): PurchaseInvoice
+    public function handle(?GoodsReceivedNote $grn, ?PurchaseOrder $po, array $data, ?User $creator = null): PurchaseInvoice
     {
         return DB::transaction(function () use ($grn, $po, $data, $creator) {
 
             $vendorId = $data['vendor_id'] ?? $grn?->vendor_id ?? $po?->vendor_id;
-            $vendor = \App\Models\Vendor::find($vendorId);
+            $vendor = Vendor::find($vendorId);
             $vendorMeta = $vendor ? [
                 'name' => $vendor->name,
                 'email' => $vendor->email,
@@ -59,8 +65,8 @@ class CreatePurchaseInvoice
             // Preload Master Data
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
-            $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $itemsDb = Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
+            $taxesDb = TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 2. Create Items
             foreach ($data['items'] as $itemData) {
@@ -123,7 +129,7 @@ class CreatePurchaseInvoice
             }
 
             // Secure Math
-            app(\App\Actions\Purchase\RecalculatePurchaseDocumentTotalsAction::class)->execute($invoice);
+            app(RecalculatePurchaseDocumentTotalsAction::class)->execute($invoice);
 
             // 3. Post to General Ledger
             ($this->glPoster)->handle($invoice);
@@ -137,12 +143,12 @@ class CreatePurchaseInvoice
         });
     }
 
-    protected function updatePurchaseOrderStatus(\App\Models\PurchaseOrder $po): void
+    protected function updatePurchaseOrderStatus(PurchaseOrder $po): void
     {
         $allItemsInvoiced = true;
 
         foreach ($po->items as $poItem) {
-            $invoicedQty = \App\Models\PurchaseInvoiceItem::where('purchase_order_item_id', $poItem->id)
+            $invoicedQty = PurchaseInvoiceItem::where('purchase_order_item_id', $poItem->id)
                 ->sum('quantity');
 
             if ($invoicedQty < $poItem->quantity) {
@@ -151,7 +157,7 @@ class CreatePurchaseInvoice
         }
 
         if ($allItemsInvoiced) {
-            $po->update(['status' => \App\Enums\PurchaseOrderStatus::COMPLETED]);
+            $po->update(['status' => PurchaseOrderStatus::COMPLETED]);
         }
     }
 }

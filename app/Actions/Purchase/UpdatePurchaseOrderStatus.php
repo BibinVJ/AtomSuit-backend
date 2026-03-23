@@ -24,10 +24,6 @@ class UpdatePurchaseOrderStatus
             default => [], // Terminating states (COMPLETED, CANCELLED) cannot be changed manually usually
         };
 
-        // Allow Manual Override to 'COMPLETED' or 'CLOSED' from any state?
-        // Or strictly enforce flow?
-        // For now, simple strict flow:
-
         if (! in_array($newStatus, $allowed)) {
             throw ValidationException::withMessages([
                 'status' => "Cannot transition from '{$po->status->value}' to '{$newStatus->value}'.",

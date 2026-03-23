@@ -3,8 +3,11 @@
 namespace App\Actions\Purchase;
 
 use App\Enums\PurchaseOrderStatus;
+use App\Models\Item;
 use App\Models\PurchaseOrder;
+use App\Models\TaxGroup;
 use App\Models\User;
+use App\Models\Vendor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -22,7 +25,7 @@ class UpdatePurchaseOrder
 
         return DB::transaction(function () use ($po, $data, $updater) {
             $vendorId = $data['vendor_id'] ?? $po->vendor_id;
-            $vendor = \App\Models\Vendor::find($vendorId);
+            $vendor = Vendor::find($vendorId);
             $vendorMeta = $vendor ? [
                 'name' => $vendor->name,
                 'email' => $vendor->email,
@@ -58,8 +61,8 @@ class UpdatePurchaseOrder
 
                 $itemIds = array_column($data['items'], 'item_id');
                 $taxIds = array_column($data['items'], 'tax_group_id');
-                $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-                $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+                $itemsDb = Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
+                $taxesDb = TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
                 foreach ($data['items'] as $itemData) {
                     $itemModel = $itemsDb->get($itemData['item_id']);

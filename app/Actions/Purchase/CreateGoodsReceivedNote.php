@@ -3,8 +3,12 @@
 namespace App\Actions\Purchase;
 
 use App\Enums\GoodsReceivedNoteStatus;
+use App\Enums\PurchaseOrderStatus;
 use App\Models\GoodsReceivedNote;
+use App\Models\GoodsReceivedNoteItem;
+use App\Models\Item;
 use App\Models\PurchaseOrder;
+use App\Models\TaxGroup;
 use App\Models\User;
 use App\Services\StockMovementService;
 use Illuminate\Support\Facades\DB;
@@ -68,8 +72,8 @@ class CreateGoodsReceivedNote
                 // For Atom Suit, we'll snapshot the current DB state.
             }
 
-            $itemsDb = \App\Models\Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
-            $taxesDb = \App\Models\TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
+            $itemsDb = Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
+            $taxesDb = TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
             // 3. Create Items
             foreach ($data['items'] as $itemData) {
@@ -151,7 +155,7 @@ class CreateGoodsReceivedNote
         $anyItemsReceived = false;
 
         foreach ($po->items as $poItem) {
-            $receivedQty = \App\Models\GoodsReceivedNoteItem::where('purchase_order_item_id', $poItem->id)
+            $receivedQty = GoodsReceivedNoteItem::where('purchase_order_item_id', $poItem->id)
                 ->sum('accepted_quantity');
 
             if ($receivedQty > 0) {
@@ -164,9 +168,9 @@ class CreateGoodsReceivedNote
         }
 
         if ($allItemsReceived) {
-            $po->update(['status' => \App\Enums\PurchaseOrderStatus::RECEIVED]);
+            $po->update(['status' => PurchaseOrderStatus::RECEIVED]);
         } elseif ($anyItemsReceived) {
-            $po->update(['status' => \App\Enums\PurchaseOrderStatus::PARTIALLY_RECEIVED]);
+            $po->update(['status' => PurchaseOrderStatus::PARTIALLY_RECEIVED]);
         }
     }
 }
