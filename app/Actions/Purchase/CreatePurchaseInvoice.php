@@ -18,7 +18,8 @@ use Illuminate\Support\Facades\DB;
 class CreatePurchaseInvoice
 {
     public function __construct(
-        protected PostPurchaseInvoiceToLedgerAction $glPoster
+        protected PostPurchaseInvoiceToLedgerAction $glPoster,
+        protected RecalculatePurchaseDocumentTotalsAction $calculator
     ) {}
 
     public function handle(?GoodsReceivedNote $grn, ?PurchaseOrder $po, array $data, ?User $creator = null): PurchaseInvoice
@@ -129,7 +130,7 @@ class CreatePurchaseInvoice
             }
 
             // Secure Math
-            app(RecalculatePurchaseDocumentTotalsAction::class)->execute($invoice);
+            $this->calculator->execute($invoice);
 
             // 3. Post to General Ledger
             ($this->glPoster)->handle($invoice);

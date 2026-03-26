@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,6 +21,7 @@ class SubscriptionInvoice extends Model
     protected $casts = [
         'invoice_date' => 'datetime',
         'metadata' => 'array',
+        'payment_status' => PaymentStatus::class,
     ];
 
     public function subscription(): BelongsTo

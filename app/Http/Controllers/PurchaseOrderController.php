@@ -13,6 +13,7 @@ use App\Http\Requests\Purchase\UpdatePurchaseOrderStatusRequest;
 use App\Http\Resources\PurchaseOrderResource;
 use App\Models\PurchaseOrder;
 use App\Repositories\PurchaseOrderRepository;
+use App\Services\DocumentSequenceService;
 use App\Services\PurchaseOrderService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +23,8 @@ class PurchaseOrderController extends Controller
 {
     public function __construct(
         protected PurchaseOrderRepository $purchaseOrderRepository,
-        protected PurchaseOrderService $purchaseOrderService
+        protected PurchaseOrderService $purchaseOrderService,
+        protected DocumentSequenceService $sequenceService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_PURCHASE_ORDER->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_PURCHASE_ORDER->value)->only(['store']);
@@ -111,14 +113,7 @@ class PurchaseOrderController extends Controller
 
     public function nextOrderNumber(): JsonResponse
     {
-        $nextId = PurchaseOrder::max('id') + 1;
-        $prefix = 'PO-'.now()->format('Ym').'-';
-        $orderNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-
-        while (PurchaseOrder::where('order_number', $orderNumber)->exists()) {
-            $nextId++;
-            $orderNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-        }
+        $orderNumber = $this->sequenceService->generateNext('purchase_order');
 
         return ApiResponse::success('Next order number retrieved.', ['order_number' => $orderNumber]);
     }

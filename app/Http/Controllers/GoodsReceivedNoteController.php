@@ -10,6 +10,7 @@ use App\Http\Resources\GoodsReceivedNoteResource;
 use App\Models\GoodsReceivedNote;
 use App\Models\PurchaseOrder;
 use App\Repositories\GoodsReceivedNoteRepository;
+use App\Services\DocumentSequenceService;
 use App\Services\GoodsReceivedNoteService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -19,7 +20,8 @@ class GoodsReceivedNoteController extends Controller
 {
     public function __construct(
         protected GoodsReceivedNoteRepository $grnRepository,
-        protected GoodsReceivedNoteService $grnService
+        protected GoodsReceivedNoteService $grnService,
+        protected DocumentSequenceService $sequenceService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_GRN->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_GRN->value)->only(['store']);
@@ -93,14 +95,7 @@ class GoodsReceivedNoteController extends Controller
 
     public function nextGrnNumber(): JsonResponse
     {
-        $nextId = GoodsReceivedNote::max('id') + 1;
-        $prefix = 'GRN-'.now()->format('Ym').'-';
-        $grnNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-
-        while (GoodsReceivedNote::where('grn_number', $grnNumber)->exists()) {
-            $nextId++;
-            $grnNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-        }
+        $grnNumber = $this->sequenceService->generateNext('grn');
 
         return ApiResponse::success('Next GRN number retrieved.', ['grn_number' => $grnNumber]);
     }

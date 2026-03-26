@@ -2,7 +2,13 @@
 
 namespace App\Services;
 
+use App\Actions\StockMovement\CreateCreditNoteStockMovementsAction;
+use App\Actions\StockMovement\CreateDebitNoteStockMovementsAction;
+use App\Actions\StockMovement\CreateDeliveryNoteStockMovementsAction;
 use App\Actions\StockMovement\CreateGoodsReceivedNoteStockMovementsAction;
+use App\Models\CreditNote;
+use App\Models\DebitNote;
+use App\Models\DeliveryNote;
 use App\Models\GoodsReceivedNote;
 use App\Models\StockMovement;
 use App\Repositories\StockMovementRepository;
@@ -13,6 +19,9 @@ class StockMovementService
 {
     public function __construct(
         protected CreateGoodsReceivedNoteStockMovementsAction $createGrnStockMovements,
+        protected CreateDeliveryNoteStockMovementsAction $createDnStockMovements,
+        protected CreateDebitNoteStockMovementsAction $createDebitNoteStockMovements,
+        protected CreateCreditNoteStockMovementsAction $createCreditNoteStockMovements,
         protected StockMovementRepository $stockMovementRepository
     ) {}
 
@@ -20,6 +29,9 @@ class StockMovementService
     {
         match (true) {
             $model instanceof GoodsReceivedNote => $this->createGrnStockMovements->execute($model),
+            $model instanceof DeliveryNote => $this->createDnStockMovements->execute($model),
+            $model instanceof DebitNote => $this->createDebitNoteStockMovements->execute($model),
+            $model instanceof CreditNote => $this->createCreditNoteStockMovements->execute($model),
             default => throw new InvalidArgumentException('Unsupported model for stock movement.'),
         };
     }
@@ -63,11 +75,5 @@ class StockMovementService
         }
 
         return false;
-    }
-
-    public function deleteStockMovements(Model $model): void
-    {
-        /** @var \App\Models\GoodsReceivedNote $model */
-        $model->stockMovements()->delete();
     }
 }

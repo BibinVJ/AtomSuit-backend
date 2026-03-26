@@ -3,25 +3,37 @@
 namespace App\Actions\Purchase;
 
 use App\Actions\GeneralLedger\PostDebitNoteToLedgerAction;
-use App\Actions\StockMovement\CreateDebitNoteStockMovementsAction;
 use App\Enums\DebitNoteStatus;
+use App\Enums\PurchaseInvoiceStatus;
+use App\Models\Batch;
 use App\Models\DebitNote;
+use App\Models\GoodsReceivedNoteItem;
 use App\Models\Item;
+use App\Models\PurchaseInvoice;
 use App\Models\TaxGroup;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Services\StockMovementService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class CreateDebitNote
 {
     public function __construct(
         protected PostDebitNoteToLedgerAction $postToLedger,
-        protected CreateDebitNoteStockMovementsAction $stockAction
+        protected StockMovementService $stockService,
+        protected RecalculatePurchaseDocumentTotalsAction $calculator
     ) {}
 
     public function handle(array $data, ?User $creator = null): DebitNote
     {
         return DB::transaction(function () use ($data, $creator) {
+            if (! empty($data['purchase_invoice_id'])) {
+                $pi = PurchaseInvoice::findOrFail($data['purchase_invoice_id']);
+                if ($pi->status === PurchaseInvoiceStatus::VOIDED) {
+                    throw new \Exception('Cannot create a Debit Note against a voided Purchase Invoice.');
+                }
+            }
 
             $vendor = Vendor::findOrFail($data['vendor_id']);
             $vendorMeta = $vendor ? [
@@ -95,8 +107,31 @@ class CreateDebitNote
                     ];
                 }
 
+                $batchId = $itemData['batch_id'] ?? null;
+
+                // Attempt to auto-find batch if purchase_invoice_id is provided
+                if (! $batchId && $debitNote->purchase_invoice_id) {
+                    $pi = PurchaseInvoice::find($debitNote->purchase_invoice_id);
+                    if ($pi && $pi->goods_received_note_id) {
+                        $grnItem = GoodsReceivedNoteItem::where('goods_received_note_id', $pi->goods_received_note_id)
+                            ->where('item_id', $itemData['item_id'])
+                            ->first();
+                        $batchId = $grnItem?->batch_id;
+                    }
+                }
+
+                if ($batchId && ($itemData['is_stock_returned'] ?? false)) {
+                    $batch = Batch::find($batchId);
+                    if ($batch && $batch->stockOnHand() < $itemData['quantity']) {
+                        throw ValidationException::withMessages([
+                            'items' => "Cannot return {$itemData['quantity']} for item {$itemMeta['name']}. Only {$batch->stockOnHand()} remains in stock from this purchase batch ({$batch->batch_number}).",
+                        ]);
+                    }
+                }
+
                 $debitNote->items()->create([
                     'item_id' => $itemData['item_id'],
+                    'batch_id' => $batchId,
                     'item_meta' => $itemMeta,
                     'tax_meta' => $taxMeta,
                     'quantity' => $itemData['quantity'],
@@ -110,13 +145,13 @@ class CreateDebitNote
             }
 
             // Secure Math Cache
-            app(RecalculatePurchaseDocumentTotalsAction::class)->execute($debitNote);
+            $this->calculator->execute($debitNote);
 
             // 3. Post to General Ledger
             $this->postToLedger->execute($debitNote, (float) $debitNote->total_amount);
 
-            // 4. Update Stock (The action evaluates if the individual items have is_stock_returned true)
-            $this->stockAction->execute($debitNote);
+            // 4. Update Stock (The service evaluates if the individual items have is_stock_returned true)
+            $this->stockService->createStockMovements($debitNote);
 
             return $debitNote;
         });

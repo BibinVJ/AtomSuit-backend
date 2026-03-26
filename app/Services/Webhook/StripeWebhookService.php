@@ -2,6 +2,7 @@
 
 namespace App\Services\Webhook;
 
+use App\Enums\PaymentStatus;
 use App\Models\SubscriptionInvoice;
 use App\Models\Tenant;
 use App\Services\StripeSubscriptionService;
@@ -151,7 +152,7 @@ class StripeWebhookService
             'subscription_id' => $subscription->id,
             'amount' => $invoice['amount_paid'] / 100, // Convert from cents
             'currency' => strtoupper($invoice['currency']),
-            'payment_status' => 'paid',
+            'payment_status' => PaymentStatus::PAID,
             'transaction_id' => $invoice['id'],
             'invoice_date' => Carbon::createFromTimestamp($invoice['created']),
             'metadata' => [
@@ -195,7 +196,7 @@ class StripeWebhookService
             'subscription_id' => $subscription->id,
             'amount' => $invoice['amount_due'] / 100,
             'currency' => strtoupper($invoice['currency']),
-            'payment_status' => 'failed',
+            'payment_status' => PaymentStatus::FAILED,
             'transaction_id' => $invoice['id'],
             'invoice_date' => Carbon::createFromTimestamp($invoice['created']),
             'metadata' => [

@@ -10,10 +10,13 @@ use App\Http\Controllers\BatchController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChartOfAccountController;
 use App\Http\Controllers\CostCenterController;
+use App\Http\Controllers\CreditNoteController;
 use App\Http\Controllers\CurrencyController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DebitNoteController;
+use App\Http\Controllers\DeliveryNoteController;
 use App\Http\Controllers\DomainController;
 use App\Http\Controllers\ExchangeRateController;
 use App\Http\Controllers\GoodsReceivedNoteController;
@@ -27,6 +30,8 @@ use App\Http\Controllers\PriceListController;
 use App\Http\Controllers\PurchaseInvoiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SalesInvoiceController;
+use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionController;
@@ -255,6 +260,28 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('customers/import', [CustomerController::class, 'import']);
     Route::post('customers/{customer}/restore', [CustomerController::class, 'restore'])->withTrashed();
     Route::apiResource('customers', CustomerController::class)->withTrashed(['show', 'destroy']);
+
+    /* Sales Orders */
+    Route::get('sales-orders/next-order-number', [SalesOrderController::class, 'nextOrderNumber']);
+    Route::post('sales-orders/{sales_order}/status', [SalesOrderController::class, 'updateStatus']);
+    Route::post('sales-orders/{sales_order}/restore', [SalesOrderController::class, 'restore'])->withTrashed();
+    Route::apiResource('sales-orders', SalesOrderController::class)->withTrashed(['show', 'destroy']);
+
+    /* Delivery Notes */
+    Route::get('delivery-notes/next-delivery-note-number', [DeliveryNoteController::class, 'nextDnNumber']);
+    Route::apiResource('delivery-notes', DeliveryNoteController::class);
+
+    /* Sales Invoices */
+    Route::get('sales-invoices/next-invoice-number', [SalesInvoiceController::class, 'nextInvoiceNumber']);
+    Route::apiResource('sales-invoices', SalesInvoiceController::class);
+
+    /* Credit Notes */
+    Route::get('credit-notes/next-credit-note-number', [CreditNoteController::class, 'nextCreditNoteNumber']);
+    Route::apiResource('credit-notes', CreditNoteController::class)->except(['update']);
+
+    /* Customer Payments */
+    Route::get('customer-payments/next-payment-number', [CustomerPaymentController::class, 'nextPaymentNumber']);
+    Route::apiResource('customer-payments', CustomerPaymentController::class)->except(['update']);
 
     /*
     |--------------------------------------------------------------------------

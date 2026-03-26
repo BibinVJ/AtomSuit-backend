@@ -178,6 +178,36 @@ enum PermissionsEnum: string
     case UPDATE_VENDOR_PAYMENT = 'update-vendor-payment';
     case DELETE_VENDOR_PAYMENT = 'delete-vendor-payment';
 
+    // Sales Order
+    case VIEW_SALES_ORDER = 'view-sales-order';
+    case CREATE_SALES_ORDER = 'create-sales-order';
+    case UPDATE_SALES_ORDER = 'update-sales-order';
+    case DELETE_SALES_ORDER = 'delete-sales-order';
+
+    // Delivery Note
+    case VIEW_DELIVERY_NOTE = 'view-delivery-note';
+    case CREATE_DELIVERY_NOTE = 'create-delivery-note';
+    case UPDATE_DELIVERY_NOTE = 'update-delivery-note';
+    case DELETE_DELIVERY_NOTE = 'delete-delivery-note';
+
+    // Sales Invoice
+    case VIEW_SALES_INVOICE = 'view-sales-invoice';
+    case CREATE_SALES_INVOICE = 'create-sales-invoice';
+    case UPDATE_SALES_INVOICE = 'update-sales-invoice';
+    case DELETE_SALES_INVOICE = 'delete-sales-invoice';
+
+    // Credit Note
+    case VIEW_CREDIT_NOTE = 'view-credit-note';
+    case CREATE_CREDIT_NOTE = 'create-credit-note';
+    case UPDATE_CREDIT_NOTE = 'update-credit-note';
+    case DELETE_CREDIT_NOTE = 'delete-credit-note';
+
+    // Customer Payment
+    case VIEW_CUSTOMER_PAYMENT = 'view-customer-payment';
+    case CREATE_CUSTOMER_PAYMENT = 'create-customer-payment';
+    case UPDATE_CUSTOMER_PAYMENT = 'update-customer-payment';
+    case DELETE_CUSTOMER_PAYMENT = 'delete-customer-payment';
+
     public static function centralPermissions(): array
     {
         return [

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\PaymentStatus;
 use App\Models\Subscription;
 use App\Models\SubscriptionInvoice;
 use Carbon\Carbon;
@@ -78,7 +79,7 @@ class BackfillSubscriptionInvoices extends Command
                         'subscription_id' => $subscription->id,
                         'amount' => $stripeInvoice->amount_paid / 100, // Convert from cents
                         'currency' => strtoupper($stripeInvoice->currency),
-                        'payment_status' => $stripeInvoice->status === 'paid' ? 'paid' : 'failed',
+                        'payment_status' => $stripeInvoice->status === 'paid' ? PaymentStatus::PAID : PaymentStatus::FAILED,
                         'transaction_id' => $stripeInvoice->id,
                         'invoice_date' => Carbon::createFromTimestamp($stripeInvoice->created),
                         'metadata' => [
@@ -139,7 +140,7 @@ class BackfillSubscriptionInvoices extends Command
             'subscription_id' => $subscription->id,
             'amount' => $plan->price,
             'currency' => 'USD',
-            'payment_status' => 'paid',
+            'payment_status' => PaymentStatus::PAID,
             'transaction_id' => 'manual_'.$subscription->id.'_initial',
             'invoice_date' => $subscription->created_at,
             'metadata' => [

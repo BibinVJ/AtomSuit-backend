@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\TaxRateTypeEnum;
 use App\Models\ChartOfAccount;
 use App\Models\TaxGroup;
 use App\Models\TaxRate;
@@ -23,7 +24,7 @@ class TaxSeeder extends Seeder
             ['name' => 'CGST 9%'],
             [
                 'rate' => 9.00,
-                'type' => 'percentage',
+                'type' => TaxRateTypeEnum::PERCENTAGE,
                 'sales_account_id' => $salesAccount?->id,
                 'purchase_account_id' => $purchaseAccount?->id,
             ]
@@ -33,7 +34,7 @@ class TaxSeeder extends Seeder
             ['name' => 'SGST 9%'],
             [
                 'rate' => 9.00,
-                'type' => 'percentage',
+                'type' => TaxRateTypeEnum::PERCENTAGE,
                 'sales_account_id' => $salesAccount?->id,
                 'purchase_account_id' => $purchaseAccount?->id,
             ]
@@ -43,7 +44,7 @@ class TaxSeeder extends Seeder
             ['name' => 'IGST 18%'],
             [
                 'rate' => 18.00,
-                'type' => 'percentage',
+                'type' => TaxRateTypeEnum::PERCENTAGE,
                 'sales_account_id' => $salesAccount?->id,
                 'purchase_account_id' => $purchaseAccount?->id,
             ]
@@ -53,7 +54,7 @@ class TaxSeeder extends Seeder
             ['name' => 'Zero Rate'],
             [
                 'rate' => 0.00,
-                'type' => 'percentage',
+                'type' => TaxRateTypeEnum::PERCENTAGE,
                 'sales_account_id' => $salesAccount?->id,
                 'purchase_account_id' => $purchaseAccount?->id,
             ]

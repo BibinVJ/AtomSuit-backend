@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\PaymentStatus;
 use App\Enums\TenantStatusEnum;
 use App\Models\ArchivedTenant;
 use App\Models\Plan;
@@ -84,10 +85,10 @@ class TenantService
         }
 
         // Revenue stats (from subscription invoices)
-        $totalRevenue = SubscriptionInvoice::where('payment_status', 'paid')
+        $totalRevenue = SubscriptionInvoice::where('payment_status', PaymentStatus::PAID)
             ->sum('amount');
 
-        $monthlyRevenue = SubscriptionInvoice::where('payment_status', 'paid')
+        $monthlyRevenue = SubscriptionInvoice::where('payment_status', PaymentStatus::PAID)
             ->whereMonth('invoice_date', now()->month)
             ->whereYear('invoice_date', now()->year)
             ->sum('amount');
@@ -185,7 +186,7 @@ class TenantService
                 'subscription_id' => $subscription->id,
                 'amount' => $plan->price,
                 'currency' => 'USD',
-                'payment_status' => 'paid',
+                'payment_status' => PaymentStatus::PAID,
                 'transaction_id' => 'manual_'.$subscription->id.'_initial',
                 'invoice_date' => now(),
                 'metadata' => [

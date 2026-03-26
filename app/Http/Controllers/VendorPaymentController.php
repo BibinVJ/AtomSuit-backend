@@ -9,6 +9,7 @@ use App\Http\Requests\Purchase\VendorPaymentRequest;
 use App\Http\Resources\VendorPaymentResource;
 use App\Models\VendorPayment;
 use App\Repositories\VendorPaymentRepository;
+use App\Services\DocumentSequenceService;
 use App\Services\VendorPaymentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -18,7 +19,8 @@ class VendorPaymentController extends Controller
 {
     public function __construct(
         protected VendorPaymentRepository $paymentRepository,
-        protected VendorPaymentService $paymentService
+        protected VendorPaymentService $paymentService,
+        protected DocumentSequenceService $sequenceService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_VENDOR_PAYMENT->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_VENDOR_PAYMENT->value)->only(['store']);
@@ -86,14 +88,7 @@ class VendorPaymentController extends Controller
 
     public function nextPaymentNumber(): JsonResponse
     {
-        $nextId = VendorPayment::max('id') + 1;
-        $prefix = 'VPAY-'.now()->format('Ym').'-';
-        $paymentNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-
-        while (VendorPayment::where('payment_number', $paymentNumber)->exists()) {
-            $nextId++;
-            $paymentNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-        }
+        $paymentNumber = $this->sequenceService->generateNext('vendor_payment');
 
         return ApiResponse::success('Next Vendor Payment number retrieved.', ['payment_number' => $paymentNumber]);
     }

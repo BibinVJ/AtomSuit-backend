@@ -13,6 +13,7 @@ class VendorPayment extends Model
         'payment_number',
         'vendor_id',
         'account_id',
+        'cost_center_id',
         'payment_method',
         'reference_number',
         'amount',
@@ -41,6 +42,11 @@ class VendorPayment extends Model
     public function allocations(): HasMany
     {
         return $this->hasMany(VendorPaymentAllocation::class);
+    }
+
+    public function costCenter(): BelongsTo
+    {
+        return $this->belongsTo(CostCenter::class);
     }
 
     public function creator(): BelongsTo

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DiscountType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -27,6 +28,7 @@ class PurchaseOrderItem extends Model
     protected $casts = [
         'item_meta' => 'array',
         'tax_meta' => 'array',
+        'discount_type' => DiscountType::class,
     ];
 
     public function purchaseOrder(): BelongsTo

@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DiscountType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,11 +15,12 @@ return new class extends Migration
         Schema::create('debit_note_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('debit_note_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('item_id')->constrained();
+            $table->foreignId('item_id')->constrained()->restrictOnDelete();
+            $table->foreignId('batch_id')->nullable()->constrained()->nullOnDelete();
             $table->json('item_meta')->nullable();
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_price', 15, 4);
-            $table->string('discount_type')->nullable();
+            $table->string('discount_type')->default(DiscountType::PERCENTAGE->value);
             $table->decimal('discount_value', 15, 4)->default(0);
             $table->decimal('discount_amount', 15, 4)->default(0);
             $table->decimal('sub_total', 15, 4)->default(0);

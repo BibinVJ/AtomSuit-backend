@@ -21,7 +21,7 @@ class CreateDebitNoteStockMovementsAction
 
             $this->stockRepo->create([
                 'item_id' => $item->item_id,
-                'batch_id' => null, // Placeholder for future batch tracking support
+                'batch_id' => $item->batch_id,
                 'transaction_date' => $debitNote->date ?? now(),
                 'quantity' => -($item->quantity), // We are pulling stock out
                 'rate' => $item->unit_price,

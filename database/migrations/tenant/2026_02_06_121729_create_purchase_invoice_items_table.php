@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DiscountType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -21,7 +22,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->decimal('quantity', 15, 4);
             $table->decimal('unit_price', 15, 4);
-            $table->string('discount_type')->nullable();
+            $table->string('discount_type')->default(DiscountType::PERCENTAGE->value);
             $table->decimal('discount_value', 15, 4)->default(0);
             $table->decimal('discount_amount', 15, 4)->default(0);
             $table->decimal('sub_total', 15, 4)->default(0);

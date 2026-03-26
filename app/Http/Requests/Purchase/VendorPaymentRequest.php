@@ -16,6 +16,7 @@ class VendorPaymentRequest extends FormRequest
         return [
             'vendor_id' => ['required', 'exists:vendors,id'],
             'account_id' => ['required', 'exists:chart_of_accounts,id'],
+            'cost_center_id' => ['required', 'exists:cost_centers,id'],
             'payment_method' => ['nullable', 'string', 'max:255'],
             'reference_number' => ['nullable', 'string', 'max:255'],
             'amount' => ['required', 'numeric', 'min:0.01'],

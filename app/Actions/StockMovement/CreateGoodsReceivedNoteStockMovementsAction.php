@@ -15,7 +15,7 @@ class CreateGoodsReceivedNoteStockMovementsAction
         foreach ($grn->items as $item) {
             $this->stockRepo->create([
                 'item_id' => $item->item_id,
-                'batch_id' => null, // Placeholder for future batch tracking support on GRNs
+                'batch_id' => $item->batch_id,
                 'transaction_date' => $grn->received_date ?? now(),
                 'quantity' => $item->accepted_quantity,
                 'rate' => $item->unit_price,

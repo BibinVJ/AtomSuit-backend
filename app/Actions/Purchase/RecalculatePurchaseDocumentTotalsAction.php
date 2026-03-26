@@ -2,6 +2,7 @@
 
 namespace App\Actions\Purchase;
 
+use App\Enums\DiscountType;
 use App\Enums\TaxRateTypeEnum;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,7 +31,7 @@ class RecalculatePurchaseDocumentTotalsAction
 
             // 2. Evaluate Discount Math
             $lineDiscount = 0.0;
-            if ($item->discount_type === 'percentage') {
+            if ($item->discount_type === DiscountType::PERCENTAGE) {
                 $lineDiscount = $lineSubTotal * (((float) ($item->discount_value ?? 0)) / 100);
             } else {
                 $lineDiscount = (float) ($item->discount_value ?? 0);
@@ -44,7 +45,7 @@ class RecalculatePurchaseDocumentTotalsAction
             if (is_array($item->tax_meta) && isset($item->tax_meta['rates'])) {
                 foreach ($item->tax_meta['rates'] as $taxRateData) {
                     $rateValue = (float) $taxRateData['rate'];
-                    if (($taxRateData['type'] ?? 'percentage') === TaxRateTypeEnum::PERCENTAGE->value) {
+                    if ($taxRateData['type'] === TaxRateTypeEnum::PERCENTAGE->value) {
                         $lineTax += $afterDiscount * ($rateValue / 100);
                     } else {
                         // Fixed tax is considered a per-unit fee in typical ERP handling

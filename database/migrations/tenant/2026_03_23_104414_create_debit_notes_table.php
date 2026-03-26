@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\DebitNoteStatus;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->string('debit_note_number')->unique();
             $table->string('reference_number')->nullable();
             $table->date('date');
-            $table->string('status')->default('POSTED');
+            $table->string('status')->default(DebitNoteStatus::POSTED->value);
             $table->decimal('sub_total', 15, 4)->default(0);
             $table->decimal('discount_total', 15, 4)->default(0);
             $table->decimal('tax_total', 15, 4)->default(0);

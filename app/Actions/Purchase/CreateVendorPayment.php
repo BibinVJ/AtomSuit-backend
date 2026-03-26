@@ -6,6 +6,7 @@ use App\Actions\GeneralLedger\PostVendorPaymentToLedgerAction;
 use App\Models\User;
 use App\Models\Vendor;
 use App\Models\VendorPayment;
+use App\Services\DocumentSequenceService;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -13,7 +14,8 @@ class CreateVendorPayment
 {
     public function __construct(
         protected AllocateVendorPaymentAction $allocateAction,
-        protected PostVendorPaymentToLedgerAction $postVendorPaymentGL
+        protected PostVendorPaymentToLedgerAction $postVendorPaymentGL,
+        protected DocumentSequenceService $sequenceService
     ) {}
 
     public function handle(array $data, ?User $creator = null): VendorPayment
@@ -34,13 +36,14 @@ class CreateVendorPayment
             }
 
             // 2. Generate Payment Number if not provided
-            $paymentNumber = $data['payment_number'] ?? $this->generatePaymentNumber();
+            $paymentNumber = $data['payment_number'] ?? $this->sequenceService->generateNext('vendor_payment');
 
             // 3. Create the Vendor Payment Header
             $vendorPayment = VendorPayment::create([
                 'payment_number' => $paymentNumber,
                 'vendor_id' => $vendor->id,
                 'account_id' => $data['account_id'],
+                'cost_center_id' => $data['cost_center_id'],
                 'payment_method' => $data['payment_method'] ?? null,
                 'reference_number' => $data['reference_number'] ?? null,
                 'amount' => $totalAmount,
@@ -65,13 +68,5 @@ class CreateVendorPayment
 
             return $vendorPayment;
         });
-    }
-
-    private function generatePaymentNumber(): string
-    {
-        $nextId = VendorPayment::max('id') + 1;
-        $prefix = 'VPAY-'.now()->format('Ym').'-';
-
-        return $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
     }
 }

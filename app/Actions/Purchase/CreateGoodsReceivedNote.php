@@ -4,6 +4,7 @@ namespace App\Actions\Purchase;
 
 use App\Enums\GoodsReceivedNoteStatus;
 use App\Enums\PurchaseOrderStatus;
+use App\Models\Batch;
 use App\Models\GoodsReceivedNote;
 use App\Models\GoodsReceivedNoteItem;
 use App\Models\Item;
@@ -17,7 +18,8 @@ class CreateGoodsReceivedNote
 {
     public function __construct(
         protected ValidateGrnQuantities $validator,
-        protected StockMovementService $stockService // We can refactor this to an Action later too
+        protected StockMovementService $stockService,
+        protected RecalculatePurchaseDocumentTotalsAction $calculator
     ) {}
 
     public function handle(?PurchaseOrder $po, array $data, ?User $creator = null): GoodsReceivedNote
@@ -66,12 +68,6 @@ class CreateGoodsReceivedNote
             // Preload Master Data
             $itemIds = array_column($data['items'], 'item_id');
             $taxIds = array_column($data['items'], 'tax_group_id');
-            if ($po) {
-                // Also pull from PO items if needed, but usually we just prefer the fresh DB copies to avoid stale info
-                // Actually if a PO item is linked, the GRN inherits its snapshot in standard ERP.
-                // For Atom Suit, we'll snapshot the current DB state.
-            }
-
             $itemsDb = Item::with(['category', 'unit'])->whereIn('id', $itemIds)->get()->keyBy('id');
             $taxesDb = TaxGroup::with('taxRates')->whereIn('id', array_filter($taxIds))->get()->keyBy('id');
 
@@ -117,8 +113,19 @@ class CreateGoodsReceivedNote
                     ];
                 }
 
+                // 3a. Create/Resolve Batch
+                $batchNumber = $itemData['batch_number'] ?? 'B-'.now()->format('Ymd').'-'.strtoupper(bin2hex(random_bytes(2)));
+                $batch = Batch::create([
+                    'item_id' => $itemData['item_id'],
+                    'batch_number' => $batchNumber,
+                    'manufacture_date' => $itemData['manufacture_date'] ?? null,
+                    'expiry_date' => $itemData['expiry_date'] ?? null,
+                    'cost_price' => $unitPrice,
+                ]);
+
                 $grn->items()->create([
                     'item_id' => $itemData['item_id'],
+                    'batch_id' => $batch->id,
                     'purchase_order_item_id' => $itemData['purchase_order_item_id'] ?? null,
                     'item_meta' => $itemMeta,
                     'tax_meta' => $taxMeta,
@@ -134,8 +141,7 @@ class CreateGoodsReceivedNote
             }
 
             // Fire Global Calculator
-            $calculator = app(RecalculatePurchaseDocumentTotalsAction::class);
-            $calculator->execute($grn);
+            $this->calculator->execute($grn);
 
             // 4. Update Stock
             $this->stockService->createStockMovements($grn);

@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('provider_id')->nullable();
             $table->rememberToken();
 
-            $table->string('status')->default(UserStatus::PENDING);
+            $table->string('status')->default(UserStatus::PENDING->value);
             $table->timestamp('status_updated_at')->nullable();
 
             $table->softDeletes();

@@ -66,4 +66,11 @@ class StockMovementRepository
     {
         return StockMovement::where('batch_id', $batchId)->sum('quantity');
     }
+
+    public function totalByItemAndWarehouse(int $itemId, int $warehouseId): int
+    {
+        return StockMovement::where('item_id', $itemId)
+            ->where('warehouse_id', $warehouseId)
+            ->sum('quantity');
+    }
 }

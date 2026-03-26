@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use App\Listeners\LogUserLogin;
-use App\Models\Sale;
 use App\Models\User;
-use App\Observers\SaleObserver;
 use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Event;
@@ -25,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         User::observe(UserObserver::class);
-        Sale::observe(SaleObserver::class);
 
         Event::listen(AccessTokenCreated::class, LogUserLogin::class);
 

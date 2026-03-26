@@ -25,7 +25,6 @@ return new class extends Migration
             $table->decimal('discount_total', 15, 4)->default(0);
             $table->decimal('tax_total', 15, 4)->default(0);
             $table->decimal('total_amount', 15, 4)->default(0);
-            $table->string('reference_number')->nullable()->comment('Vendor Quote/Ref Number');
             $table->foreignId('cost_center_id')->constrained()->restrictOnDelete();
             $table->foreignId('warehouse_id')->constrained()->restrictOnDelete();
             $table->text('notes')->nullable();

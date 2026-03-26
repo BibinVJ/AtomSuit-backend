@@ -21,9 +21,11 @@ class VendorPaymentResource extends BaseResource
             'notes' => $this->notes,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
+            'cost_center_id' => $this->cost_center_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
 
+            'cost_center' => CostCenterResource::make($this->whenLoaded('costCenter')),
             'vendor' => VendorResource::make($this->whenLoaded('vendor')),
             'account' => ChartOfAccountResource::make($this->whenLoaded('account')),
             'allocations' => VendorPaymentAllocationResource::collection($this->whenLoaded('allocations')),

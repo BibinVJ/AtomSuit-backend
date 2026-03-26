@@ -11,6 +11,7 @@ use App\Models\GoodsReceivedNote;
 use App\Models\PurchaseInvoice;
 use App\Models\PurchaseOrder;
 use App\Repositories\PurchaseInvoiceRepository;
+use App\Services\DocumentSequenceService;
 use App\Services\PurchaseInvoiceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -20,7 +21,8 @@ class PurchaseInvoiceController extends Controller
 {
     public function __construct(
         protected PurchaseInvoiceRepository $piRepository,
-        protected PurchaseInvoiceService $piService
+        protected PurchaseInvoiceService $piService,
+        protected DocumentSequenceService $sequenceService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_PURCHASE_INVOICE->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_PURCHASE_INVOICE->value)->only(['store']);
@@ -100,14 +102,7 @@ class PurchaseInvoiceController extends Controller
 
     public function nextInvoiceNumber(): JsonResponse
     {
-        $nextId = PurchaseInvoice::max('id') + 1;
-        $prefix = 'PI-'.now()->format('Ym').'-';
-        $invoiceNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-
-        while (PurchaseInvoice::where('invoice_number', $invoiceNumber)->exists()) {
-            $nextId++;
-            $invoiceNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-        }
+        $invoiceNumber = $this->sequenceService->generateNext('purchase_invoice');
 
         return ApiResponse::success('Next Invoice number retrieved.', ['invoice_number' => $invoiceNumber]);
     }

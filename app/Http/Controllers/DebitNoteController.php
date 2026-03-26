@@ -6,10 +6,11 @@ use App\Actions\Purchase\CreateDebitNote;
 use App\Enums\PermissionsEnum;
 use App\Helpers\ApiResponse;
 use App\Http\Requests\Purchase\DebitNoteRequest;
-use App\Http\Resources\DebitNoteResource; // Assuming standard dynamic API resource usage
+use App\Http\Resources\DebitNoteResource;
 use App\Models\DebitNote;
 use App\Repositories\DebitNoteRepository;
 use App\Services\DebitNoteService;
+use App\Services\DocumentSequenceService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 // Fallback
@@ -19,7 +20,8 @@ class DebitNoteController extends Controller
 {
     public function __construct(
         protected DebitNoteRepository $debitNoteRepository,
-        protected DebitNoteService $debitNoteService
+        protected DebitNoteService $debitNoteService,
+        protected DocumentSequenceService $sequenceService
     ) {
         $this->middleware('permission:'.PermissionsEnum::VIEW_DEBIT_NOTE->value)->only(['index', 'show']);
         $this->middleware('permission:'.PermissionsEnum::CREATE_DEBIT_NOTE->value)->only(['store']);
@@ -89,14 +91,7 @@ class DebitNoteController extends Controller
 
     public function nextDebitNoteNumber(): JsonResponse
     {
-        $nextId = DebitNote::max('id') + 1;
-        $prefix = 'DN-'.now()->format('Ym').'-';
-        $dnNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-
-        while (DebitNote::where('debit_note_number', $dnNumber)->exists()) {
-            $nextId++;
-            $dnNumber = $prefix.str_pad((string) $nextId, 4, '0', STR_PAD_LEFT);
-        }
+        $dnNumber = $this->sequenceService->generateNext('debit_note');
 
         return ApiResponse::success('Next Debit Note number retrieved.', ['debit_note_number' => $dnNumber]);
     }
