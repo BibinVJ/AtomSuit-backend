@@ -36,7 +36,7 @@ class PurchaseOrderController extends Controller
     {
         $filters = $request->only([
             'search', 'from', 'to', 'sort_by', 'sort_direction',
-            'status', 'vendor_id', 'date_from', 'date_to',
+            'status', 'vendor_id', 'date_from', 'date_to', 'trashed',
         ]);
 
         $paginate = ! ($request->boolean('unpaginated') || ($request->has('from') && $request->has('to')));

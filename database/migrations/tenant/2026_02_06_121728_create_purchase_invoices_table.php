@@ -30,6 +30,7 @@ return new class extends Migration
             $table->decimal('paid_amount', 15, 4)->default(0);
             $table->foreignId('cost_center_id')->constrained()->restrictOnDelete();
             $table->foreignId('warehouse_id')->nullable()->constrained()->restrictOnDelete(); // For Direct Invoice
+            $table->text('notes')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->softDeletes();

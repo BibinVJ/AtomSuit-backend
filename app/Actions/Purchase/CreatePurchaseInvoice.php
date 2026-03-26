@@ -56,6 +56,7 @@ class CreatePurchaseInvoice
                 'reference_number' => $data['reference_number'] ?? null,
                 'posting_date' => $data['posting_date'],
                 'due_date' => $data['due_date'],
+                'notes' => $data['notes'] ?? null,
                 'status' => PurchaseInvoiceStatus::POSTED,
                 'cost_center_id' => $data['cost_center_id'] ?? $grn->cost_center_id ?? $po->cost_center_id,
                 'warehouse_id' => $data['warehouse_id'] ?? $grn->warehouse_id ?? $po->warehouse_id,

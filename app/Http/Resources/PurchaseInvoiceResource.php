@@ -18,6 +18,7 @@ class PurchaseInvoiceResource extends BaseResource
             'posting_date' => $this->posting_date,
             'due_date' => $this->due_date,
             'status' => $this->status,
+            'notes' => $this->notes,
             'sub_total' => $this->sub_total,
             'discount_total' => $this->discount_total,
             'tax_total' => $this->tax_total,

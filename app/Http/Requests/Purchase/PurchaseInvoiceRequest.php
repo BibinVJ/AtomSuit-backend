@@ -32,6 +32,7 @@ class PurchaseInvoiceRequest extends FormRequest
             'due_date' => ['required', 'date', 'after_or_equal:posting_date'],
             'cost_center_id' => ['required', 'exists:cost_centers,id'],
             'warehouse_id' => ['required', 'exists:warehouses,id'],
+            'notes' => ['nullable', 'string'],
 
             // Items
             'items' => ['required', 'array', 'min:1'],

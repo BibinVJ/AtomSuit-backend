@@ -31,6 +31,7 @@ class PurchaseInvoice extends Model
         'paid_amount',
         'cost_center_id',
         'warehouse_id',
+        'notes',
         'created_by',
         'updated_by',
     ];
