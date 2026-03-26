@@ -26,7 +26,7 @@ class CreateSalesInvoice
     {
         return DB::transaction(function () use ($dn, $so, $data, $creator) {
 
-            $customerId = $data['customer_id'] ?? $dn?->customer_id ?? $so?->customer_id;
+            $customerId = $data['customer_id'] ?? $dn->customer_id ?? $so->customer_id;
             $customer = Customer::find($customerId);
             $customerMeta = $customer ? [
                 'name' => $customer->name,
@@ -56,7 +56,7 @@ class CreateSalesInvoice
                 'invoice_date' => $data['invoice_date'],
                 'due_date' => $data['due_date'] ?? null,
                 'status' => SalesInvoiceStatus::POSTED,
-                'cost_center_id' => $data['cost_center_id'] ?? $dn?->cost_center_id ?? $so?->cost_center_id,
+                'cost_center_id' => $data['cost_center_id'] ?? $dn->cost_center_id ?? $so->cost_center_id,
                 'notes' => $data['notes'] ?? null,
                 'created_by' => $creator?->id,
                 'updated_by' => $creator?->id,
@@ -119,7 +119,7 @@ class CreateSalesInvoice
                     'sales_order_item_id' => $itemData['sales_order_item_id'] ?? null,
                     'item_meta' => $itemMeta,
                     'tax_meta' => $taxMeta,
-                    'description' => $itemData['description'] ?? $dnItem?->description ?? $soItem?->description,
+                    'description' => $itemData['description'] ?? $dnItem->description ?? $soItem->description,
                     'quantity' => $itemData['quantity'],
                     'unit_price' => $unitPrice,
                     'discount_type' => $discountType,

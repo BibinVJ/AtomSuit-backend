@@ -76,9 +76,9 @@ class Item extends Model
         return $this->hasMany(ItemPrice::class);
     }
 
-    public function saleItems(): HasMany
+    public function salesInvoiceItems(): HasMany
     {
-        return $this->hasMany(SaleItem::class);
+        return $this->hasMany(SalesInvoiceItem::class);
     }
 
     public function stockMovements(): HasMany
@@ -124,7 +124,7 @@ class Item extends Model
     public function totalSold(): int
     {
         return abs($this->stockMovements()
-            ->where('source_type', Sale::class) // TODO: Change to DeliveryNote::class, when using proper structure later
+            ->where('source_type', DeliveryNote::class)
             ->sum('quantity'));
     }
 }

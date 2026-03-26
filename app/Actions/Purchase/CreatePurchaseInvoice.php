@@ -26,7 +26,7 @@ class CreatePurchaseInvoice
     {
         return DB::transaction(function () use ($grn, $po, $data, $creator) {
 
-            $vendorId = $data['vendor_id'] ?? $grn?->vendor_id ?? $po?->vendor_id;
+            $vendorId = $data['vendor_id'] ?? $grn->vendor_id ?? $po->vendor_id;
             $vendor = Vendor::find($vendorId);
             $vendorMeta = $vendor ? [
                 'name' => $vendor->name,
@@ -57,8 +57,8 @@ class CreatePurchaseInvoice
                 'posting_date' => $data['posting_date'],
                 'due_date' => $data['due_date'],
                 'status' => PurchaseInvoiceStatus::POSTED,
-                'cost_center_id' => $data['cost_center_id'] ?? $grn?->cost_center_id ?? $po?->cost_center_id,
-                'warehouse_id' => $data['warehouse_id'] ?? $grn?->warehouse_id ?? $po?->warehouse_id,
+                'cost_center_id' => $data['cost_center_id'] ?? $grn->cost_center_id ?? $po->cost_center_id,
+                'warehouse_id' => $data['warehouse_id'] ?? $grn->warehouse_id ?? $po->warehouse_id,
                 'created_by' => $creator?->id,
                 'updated_by' => $creator?->id,
             ]);

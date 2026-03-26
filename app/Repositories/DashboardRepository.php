@@ -9,9 +9,11 @@ use App\DataTransferObjects\DashboardStockItemDTO;
 use App\DataTransferObjects\DashboardTopItemDTO;
 use App\Models\Batch;
 use App\Models\Customer;
+use App\Models\DeliveryNote;
+use App\Models\GoodsReceivedNote;
 use App\Models\Item;
-use App\Models\PurchaseOrder;
-use App\Models\Sale;
+use App\Models\PurchaseInvoice;
+use App\Models\SalesInvoice;
 use App\Models\StockMovement;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -20,18 +22,18 @@ class DashboardRepository
 {
     public function getTotalSalesAmount(): float
     {
-        return Sale::with('items')->get()->sum(fn ($sale) => $sale->total);
+        return SalesInvoice::with('items')->get()->sum(fn ($invoice) => $invoice->total_amount);
     }
 
     public function getTotalPurchaseAmount(): float
     {
-        return PurchaseOrder::with('items')->get()->sum(fn ($purchase) => $purchase->total);
+        return PurchaseInvoice::with('items')->get()->sum(fn ($purchase) => $purchase->total_amount);
     }
 
     public function getTopSellingItems(int $limit = 5): Collection
     {
         return StockMovement::selectRaw('item_id, ABS(SUM(quantity)) as total_quantity')
-            ->where('source_type', Sale::class) // TODO: Will become DeliveryNote later
+            ->where('source_type', DeliveryNote::class)
             ->groupBy('item_id')
             ->with('item:id,sku,name')
             ->orderByDesc('total_quantity')
@@ -48,7 +50,7 @@ class DashboardRepository
     public function getTopPurchasedItems(int $limit = 5): Collection
     {
         return StockMovement::selectRaw('item_id, SUM(quantity) as total_quantity')
-            ->where('source_type', PurchaseOrder::class) // TODO: Change to GoodsReceivedNote::class, when using proper structure later
+            ->where('source_type', GoodsReceivedNote::class)
             ->groupBy('item_id')
             ->with('item:id,sku,name')
             ->orderByDesc('total_quantity')
@@ -66,9 +68,8 @@ class DashboardRepository
     {
         return Batch::with('item')
             ->where('expiry_date', '<', now()->addDays(30))
-            // ->whereBetween('expiry_date', [now(), now()->addDays(30)])
             ->get()
-            ->map(function ($batch) {
+            ->map(function (Batch $batch) {
                 /** @var \App\Models\Item $item */
                 $item = $batch->item;
 
@@ -118,7 +119,7 @@ class DashboardRepository
         $cutoff = now()->subDays($days);
 
         return Item::whereDoesntHave('stockMovements', function ($query) use ($cutoff) {
-            $query->where('source_type', Sale::class) // TODO: Later: change to DeliveryNote::class
+            $query->where('source_type', DeliveryNote::class)
                 ->where('created_at', '>=', $cutoff);
         })
             ->with('stockMovements')
@@ -134,9 +135,9 @@ class DashboardRepository
 
     public function getBestCustomers(int $limit = 5): Collection
     {
-        return Customer::with('sales.items')
+        return Customer::with('invoices.items')
             ->get()
-            ->map(fn ($customer) => new DashboardCustomerDTO(
+            ->map(fn (Customer $customer) => new DashboardCustomerDTO(
                 id: $customer->id,
                 name: $customer->name,
                 email: $customer->email ?? null,
@@ -151,13 +152,13 @@ class DashboardRepository
 
     public function getSalesChartData(): array
     {
-        return Sale::with('items')
-            ->orderBy('sale_date')
+        return SalesInvoice::with('items')
+            ->orderBy('invoice_date')
             ->get()
-            ->groupBy(fn ($sale) => $sale->sale_date->toDateString())
-            ->map(fn ($sales, $date) => new DashboardChartPointDTO(
+            ->groupBy(fn ($invoice) => $invoice->invoice_date->toDateString())
+            ->map(fn ($invoices, $date) => new DashboardChartPointDTO(
                 date: Carbon::parse($date),
-                total: $sales->sum(fn ($sale) => $sale->total)
+                total: $invoices->sum(fn ($invoice) => $invoice->total_amount)
             ))
             ->values()
             ->toArray();
@@ -165,13 +166,13 @@ class DashboardRepository
 
     public function getPurchaseChartData(): array
     {
-        return PurchaseOrder::with('items')
-            ->orderBy('order_date')
+        return PurchaseInvoice::with('items')
+            ->orderBy('posting_date')
             ->get()
-            ->groupBy(fn ($purchase) => $purchase->order_date->toDateString())
+            ->groupBy(fn ($purchase) => $purchase->posting_date->toDateString())
             ->map(fn ($purchases, $date) => new DashboardChartPointDTO(
                 date: Carbon::parse($date),
-                total: $purchases->sum(fn ($purchase) => $purchase->total)
+                total: $purchases->sum(fn ($purchase) => $purchase->total_amount)
             ))
             ->values()
             ->toArray();

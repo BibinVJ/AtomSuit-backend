@@ -49,7 +49,7 @@ class ValidateDnQuantities
                 $availableStock = $this->stockMovementRepository->totalByItemAndWarehouse($itemData['item_id'], $warehouseId);
 
                 if ($itemData['dispatched_quantity'] > $availableStock) {
-                    $itemName = $soItem?->item?->name ?? "Item ID: {$itemData['item_id']}";
+                    $itemName = $soItem->item->name ?? "Item ID: {$itemData['item_id']}";
                     throw ValidationException::withMessages([
                         'items' => "Insufficient stock for {$itemName} in the selected warehouse. Available: {$availableStock}, Requested: {$itemData['dispatched_quantity']}.",
                     ]);

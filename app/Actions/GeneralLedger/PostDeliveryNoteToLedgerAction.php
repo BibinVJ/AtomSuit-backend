@@ -37,11 +37,11 @@ class PostDeliveryNoteToLedgerAction
             }
 
             $cogsAccountId = $item->cogs_account_id
-                ?? $item->category?->cogs_account_id
+                ?? $item->category->cogs_account_id
                 ?? Setting::getValue('default_cogs_account');
 
             $inventoryAccountId = $item->inventory_account_id
-                ?? $item->category?->inventory_account_id
+                ?? $item->category->inventory_account_id
                 ?? Setting::getValue('default_inventory_account');
 
             if (! $cogsAccountId || ! $inventoryAccountId) {

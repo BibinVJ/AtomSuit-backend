@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\AppAudit;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Customer extends Model
@@ -71,8 +72,13 @@ class Customer extends Model
         return $this->belongsTo(TaxGroup::class);
     }
 
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
     public function totalSpent(): float
     {
-        return (float) $this->sales->sum(fn (Sale $sale) => $sale->total);
+        return (float) $this->invoices->sum(fn (SalesInvoice $invoice) => $invoice->total_amount);
     }
 }
