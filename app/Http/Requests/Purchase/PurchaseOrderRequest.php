@@ -24,6 +24,7 @@ class PurchaseOrderRequest extends FormRequest
             'reference_number' => ['nullable', 'string', 'max:255'],
             'order_date' => ['required', 'date'],
             'expected_delivery_date' => ['nullable', 'date', 'after_or_equal:order_date'],
+            'status' => ['nullable', \Illuminate\Validation\Rule::enum(\App\Enums\PurchaseOrderStatus::class)],
             'cost_center_id' => ['required', 'exists:cost_centers,id'],
             'warehouse_id' => ['required', 'exists:warehouses,id'],
             'notes' => ['nullable', 'string'],

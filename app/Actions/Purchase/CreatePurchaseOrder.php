@@ -43,7 +43,7 @@ class CreatePurchaseOrder
                 'reference_number' => $data['reference_number'] ?? null,
                 'order_date' => $data['order_date'],
                 'expected_delivery_date' => $data['expected_delivery_date'] ?? null,
-                'status' => PurchaseOrderStatus::DRAFT,
+                'status' => $data['status'] ?? PurchaseOrderStatus::DRAFT,
                 'notes' => $data['notes'] ?? null,
                 'cost_center_id' => $data['cost_center_id'],
                 'warehouse_id' => $data['warehouse_id'],

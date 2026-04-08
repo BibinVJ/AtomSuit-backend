@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Currency;
 use App\Models\Setting;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,11 @@ class CentralSettingSeeder extends Seeder
      */
     public function run(): void
     {
+        $defaultCurrency = Currency::firstOrCreate(
+            ['code' => 'INR'],
+            ['name' => 'Indian Rupee', 'symbol' => '₹']
+        );
+
         $settings = [
             // General Settings
             [
@@ -97,17 +103,10 @@ class CentralSettingSeeder extends Seeder
             // Payment/Currency Settings
             [
                 'key' => 'currency',
-                'value' => 'USD',
-                'type' => 'string',
+                'value' => $defaultCurrency->id,
+                'type' => 'integer',
                 'group' => 'payment',
-                'description' => 'Default currency code (ISO 4217)',
-            ],
-            [
-                'key' => 'currency_symbol',
-                'value' => '$',
-                'type' => 'string',
-                'group' => 'payment',
-                'description' => 'Currency symbol to display',
+                'description' => 'Default currency ID',
             ],
             [
                 'key' => 'currency_position',

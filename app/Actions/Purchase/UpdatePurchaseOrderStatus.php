@@ -19,9 +19,10 @@ class UpdatePurchaseOrderStatus
         // Validate Transitions
         // This is a simple state machine. For complex ones, consider dedicated classes.
         $allowed = match ($po->status) {
-            PurchaseOrderStatus::DRAFT => [PurchaseOrderStatus::CONFIRMED, PurchaseOrderStatus::CANCELLED],
-            PurchaseOrderStatus::CONFIRMED => [PurchaseOrderStatus::COMPLETED, PurchaseOrderStatus::CANCELLED],
-            default => [], // Terminating states (COMPLETED, CANCELLED) cannot be changed manually usually
+            PurchaseOrderStatus::DRAFT => [PurchaseOrderStatus::SENT, PurchaseOrderStatus::CONFIRMED, PurchaseOrderStatus::CANCELLED],
+            PurchaseOrderStatus::SENT => [PurchaseOrderStatus::CONFIRMED, PurchaseOrderStatus::CANCELLED],
+            PurchaseOrderStatus::CONFIRMED => [PurchaseOrderStatus::CANCELLED], // Only if no GRN/PI linked
+            default => [], // Terminating states and auto-calculated states cannot be changed manually
         };
 
         if (! in_array($newStatus, $allowed)) {
@@ -30,11 +31,18 @@ class UpdatePurchaseOrderStatus
             ]);
         }
 
-        // Specific Logic for certain transitions (e.g. validation before Confirm)
         if ($newStatus === PurchaseOrderStatus::CONFIRMED) {
-            // Check items?
             if ($po->items()->count() === 0) {
                 throw ValidationException::withMessages(['items' => 'Cannot confirm an empty order.']);
+            }
+        }
+
+        if ($newStatus === PurchaseOrderStatus::CANCELLED && $po->status === PurchaseOrderStatus::CONFIRMED) {
+            // Prevent cancellation if we already received or billed against this PO
+            if ($po->goodsReceivedNotes()->exists() || $po->purchaseInvoices()->exists()) {
+                throw ValidationException::withMessages([
+                    'status' => 'Cannot cancel a confirmed order that has associated receipts or invoices. Void those documents first.',
+                ]);
             }
         }
 

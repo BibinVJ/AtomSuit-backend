@@ -52,25 +52,21 @@ class SettingService
     public function bulkUpdate(array $settings): array
     {
         $updated = [];
+        $virtualSettings = ['currency_symbol', 'currency_code'];
 
         foreach ($settings as $key => $value) {
+            if (in_array($key, $virtualSettings)) {
+                continue;
+            }
+
             try {
                 // Check if it's a file upload
                 if ($value instanceof UploadedFile) {
                     $value = $this->handleFileUpload($key, $value);
                 }
 
-                $setting = Setting::where('key', $key)->first();
-
-                if ($setting) {
-                    $setting->value = $value;
-                    $setting->save();
-                    $updated[$key] = $setting->value;
-                } else {
-                    // Create new setting if doesn't exist
-                    Setting::setValue($key, $value);
-                    $updated[$key] = $value;
-                }
+                Setting::setValue($key, $value);
+                $updated[$key] = $value;
 
                 Setting::clearCache();
             } catch (\Exception $e) {
@@ -114,8 +110,7 @@ class SettingService
                 Storage::disk('public')->delete($setting->value);
             }
 
-            $setting->value = null;
-            $setting->save();
+            Setting::setValue($key, null, 'file');
             Setting::clearCache();
 
             return true;

@@ -223,6 +223,12 @@ enum PermissionsEnum: string
             self::VIEW_MODULE->value,
             self::MANAGE_MODULE->value,
 
+            // Currency
+            self::VIEW_CURRENCY->value,
+            self::CREATE_CURRENCY->value,
+            self::UPDATE_CURRENCY->value,
+            self::DELETE_CURRENCY->value,
+
             // Plan
             self::CREATE_PLAN->value,
             self::UPDATE_PLAN->value,

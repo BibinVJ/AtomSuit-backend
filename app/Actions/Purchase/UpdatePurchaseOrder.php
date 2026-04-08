@@ -17,9 +17,12 @@ class UpdatePurchaseOrder
 
     public function handle(PurchaseOrder $po, array $data, ?User $updater = null): PurchaseOrder
     {
-        if ($po->status !== PurchaseOrderStatus::DRAFT) {
+        // We allow updates if it's DRAFT, or if it's SENT. CONFIRMED shouldn't have items/vendors changed usually,
+        // but maybe the user just wants to change the status. I'll rely on the dedicated `UpdatePurchaseOrderStatus` mostly,
+        // but if they send a status here, we should update it if it's a valid manual transition.
+        if (in_array($po->status, [PurchaseOrderStatus::COMPLETED, PurchaseOrderStatus::CANCELLED])) {
             throw ValidationException::withMessages([
-                'status' => 'Only draft purchase orders can be updated.',
+                'status' => 'Completed or cancelled purchase orders cannot be modified.',
             ]);
         }
 
@@ -53,6 +56,7 @@ class UpdatePurchaseOrder
                 'cost_center_id' => $data['cost_center_id'] ?? $po->cost_center_id,
                 'warehouse_id' => $data['warehouse_id'] ?? $po->warehouse_id,
                 'reference_number' => $data['reference_number'] ?? $po->reference_number,
+                'status' => $data['status'] ?? $po->status,
                 'updated_by' => $updater?->id,
             ]);
 

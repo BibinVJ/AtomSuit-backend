@@ -41,10 +41,27 @@ class SettingRepository
      */
     public function getAllGrouped(): array
     {
-        return Setting::orderBy('id')
-            ->get()
-            ->groupBy('group')
-            ->map(fn ($settings) => SettingResource::collection($settings))
+        $settings = Setting::orderBy('id')->get();
+        $currencySetting = $settings->where('key', 'currency')->first();
+
+        if ($currencySetting) {
+            $currency = \App\Models\Currency::find($currencySetting->value);
+            if ($currency) {
+                if (! $settings->where('key', 'currency_symbol')->first()) {
+                    $currencySymbol = new Setting(['key' => 'currency_symbol', 'value' => $currency->symbol, 'type' => 'string', 'group' => 'payment']);
+                    $currencySymbol->id = 9991; // Dummy ID to prevent null pointer exceptions
+                    $settings->push($currencySymbol);
+                }
+                if (! $settings->where('key', 'currency_code')->first()) {
+                    $currencyCode = new Setting(['key' => 'currency_code', 'value' => $currency->code, 'type' => 'string', 'group' => 'payment']);
+                    $currencyCode->id = 9992; // Dummy ID
+                    $settings->push($currencyCode);
+                }
+            }
+        }
+
+        return $settings->groupBy('group')
+            ->map(fn ($groupSettings) => SettingResource::collection($groupSettings))
             ->toArray();
     }
 }

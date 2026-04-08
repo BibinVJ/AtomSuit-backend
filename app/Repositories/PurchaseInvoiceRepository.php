@@ -28,7 +28,19 @@ class PurchaseInvoiceRepository
         }
 
         if (! empty($filters['status'])) {
-            $query->where('status', $filters['status']);
+            if (is_array($filters['status'])) {
+                $query->whereIn('status', $filters['status']);
+            } else {
+                $query->where('status', $filters['status']);
+            }
+        }
+
+        if (! empty($filters['exclude_status'])) {
+            if (is_array($filters['exclude_status'])) {
+                $query->whereNotIn('status', $filters['exclude_status']);
+            } else {
+                $query->where('status', '!=', $filters['exclude_status']);
+            }
         }
 
         if (! empty($filters['vendor_id'])) {
